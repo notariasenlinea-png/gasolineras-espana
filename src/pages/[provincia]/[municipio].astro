@@ -1,0 +1,576 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GasolineraCard from '../../components/GasolineraCard.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import AmazonV16 from '../../components/AmazonV16.astro';
+import SavingsCalculator from '../../components/SavingsCalculator.astro';
+import provincesMeta from '../../data/provinces.json';
+
+export async function getStaticPaths() {
+  const paths = [];
+
+  for (const prov of provincesMeta) {
+    const provModule = await import(`../../data/provincias/${prov.slug}.json`);
+    const provData = provModule.default;
+    const allStations = provData.all_stations || [];
+    const municipalities = provData.municipalities || [];
+
+    for (const muni of municipalities) {
+      const stations = allStations.filter((s: any) => s.town_slug === muni.slug);
+      if (!stations || stations.length === 0) continue;
+
+      const p95Stations = stations.filter((s: any) => s.prices?.gasolina95 != null);
+      const dieselStations = stations.filter((s: any) => s.prices?.diesel != null);
+
+      const sortedG95 = [...p95Stations].sort((a: any, b: any) => a.prices.gasolina95 - b.prices.gasolina95);
+      const sortedDiesel = [...dieselStations].sort((a: any, b: any) => a.prices.diesel - b.prices.diesel);
+
+      const minG95 = sortedG95.length > 0 ? sortedG95[0].prices.gasolina95 : null;
+      const maxG95 = sortedG95.length > 0 ? sortedG95[sortedG95.length - 1].prices.gasolina95 : null;
+      const avgG95 = sortedG95.length > 0
+        ? sortedG95.reduce((acc: number, s: any) => acc + s.prices.gasolina95, 0) / sortedG95.length
+        : (prov.avg_gasolina95 || 1.65);
+
+      const minDiesel = sortedDiesel.length > 0 ? sortedDiesel[0].prices.diesel : null;
+      const maxDiesel = sortedDiesel.length > 0 ? sortedDiesel[sortedDiesel.length - 1].prices.diesel : null;
+      const avgDiesel = sortedDiesel.length > 0
+        ? sortedDiesel.reduce((acc: number, s: any) => acc + s.prices.diesel, 0) / sortedDiesel.length
+        : (prov.avg_diesel || 1.55);
+
+      const stations24h = stations.filter((s: any) => s.is_24h);
+
+      // Nearby towns in the same province for rich contextual internal linking
+      const neighbors = municipalities
+        .filter((m: any) => m.slug !== muni.slug)
+        .slice(0, 15);
+
+      paths.push({
+        params: { provincia: prov.slug, municipio: muni.slug },
+        props: {
+          province: prov,
+          municipality: muni,
+          stations,
+          sortedG95,
+          sortedDiesel,
+          minG95,
+          maxG95,
+          avgG95,
+          minDiesel,
+          maxDiesel,
+          avgDiesel,
+          stations24h,
+          neighbors,
+          updatedAt: provData.updated_at || 'Actualizado hoy'
+        }
+      });
+    }
+  }
+
+  return paths;
+}
+
+interface Props {
+  province: typeof provincesMeta[0];
+  municipality: {
+    name: string;
+    slug: string;
+    count: number;
+    min_p95: number | null;
+    min_diesel: number | null;
+  };
+  stations: any[];
+  sortedG95: any[];
+  sortedDiesel: any[];
+  minG95: number | null;
+  maxG95: number | null;
+  avgG95: number;
+  minDiesel: number | null;
+  maxDiesel: number | null;
+  avgDiesel: number;
+  stations24h: any[];
+  neighbors: Array<{ name: string; slug: string; count: number; min_p95: number | null; min_diesel: number | null }>;
+  updatedAt: string;
+}
+
+const {
+  province,
+  municipality,
+  stations,
+  sortedG95,
+  sortedDiesel,
+  minG95,
+  maxG95,
+  avgG95,
+  minDiesel,
+  maxDiesel,
+  avgDiesel,
+  stations24h,
+  neighbors,
+  updatedAt
+} = Astro.props;
+
+const title = `Gasolineras Más Baratas en ${municipality.name} (${province.name}) Hoy | Precios Gasolina y Diésel`;
+const description = `Consulta los precios en directo de las ${stations.length} gasolineras en ${municipality.name} (${province.name}). Gasolina 95 desde ${minG95 ? minG95.toFixed(3) : '-'} €/L y Diésel desde ${minDiesel ? minDiesel.toFixed(3) : '-'} €/L. Ahorra hasta 15€ al repostar.`;
+
+// 50L savings calculation
+const savingsDeposit95 = minG95 && maxG95 && maxG95 > minG95
+  ? ((maxG95 - minG95) * 50).toFixed(2)
+  : minG95 && avgG95 && avgG95 > minG95
+  ? ((avgG95 - minG95) * 50).toFixed(2)
+  : '7.50';
+
+const savingsDepositDiesel = minDiesel && maxDiesel && maxDiesel > minDiesel
+  ? ((maxDiesel - minDiesel) * 50).toFixed(2)
+  : minDiesel && avgDiesel && avgDiesel > minDiesel
+  ? ((avgDiesel - minDiesel) * 50).toFixed(2)
+  : '6.80';
+
+const faqs = [
+  {
+    question: `¿Cuál es la gasolinera más barata en ${municipality.name} hoy?`,
+    answer: sortedG95.length > 0
+      ? `Hoy la estación más económica para repostar gasolina 95 en ${municipality.name} es ${sortedG95[0].brand} situada en ${sortedG95[0].address}, a un precio de ${sortedG95[0].prices.gasolina95?.toFixed(3)} € por litro.`
+      : `Los precios se recogen directamente del Registro Oficial del Ministerio para la Transición Ecológica (MITECO).`
+  },
+  {
+    question: `¿Dónde repostar diésel más barato en ${municipality.name}?`,
+    answer: sortedDiesel.length > 0
+      ? `La gasolinera con el diésel (gasóleo A) más barato en ${municipality.name} es ${sortedDiesel[0].brand} en ${sortedDiesel[0].address}, con un precio de ${sortedDiesel[0].prices.diesel?.toFixed(3)} €/litro.`
+      : `Consulta nuestro comparador para ver las opciones disponibles en ${municipality.name} y pueblos limítrofes.`
+  },
+  {
+    question: `¿Hay gasolineras abiertas 24 horas en ${municipality.name}?`,
+    answer: stations24h.length > 0
+      ? `Sí, en ${municipality.name} dispones de ${stations24h.length} estación(es) de servicio con horario 24 horas: ${stations24h.map(s => `${s.brand} (${s.address})`).join(', ')}.`
+      : `Actualmente ninguna gasolinera de ${municipality.name} figura con horario nocturno 24 horas continuo. Te recomendamos consultar las estaciones 24h de municipios cercanos en ${province.name}.`
+  },
+  {
+    question: `¿Cuánto dinero puedo ahorrar llenando un depósito en ${municipality.name}?`,
+    answer: `Entre la gasolinera más cara y la más barata del municipio puedes ahorrar hasta ${savingsDeposit95} € en un depósito estándar de 50 litros de Gasolina 95, y hasta ${savingsDepositDiesel} € en Diésel.`
+  }
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  'mainEntity': faqs.map((f) => ({
+    '@type': 'Question',
+    'name': f.question,
+    'acceptedAnswer': {
+      '@type': 'Answer',
+      'text': f.answer
+    }
+  }))
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': 'Inicio',
+      'item': 'https://gasolinerasenlinea.es/'
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': `Gasolineras ${province.name}`,
+      'item': `https://gasolinerasenlinea.es/${province.slug}/`
+    },
+    {
+      '@type': 'ListItem',
+      'position': 3,
+      'name': `Gasolineras ${municipality.name}`,
+      'item': `https://gasolinerasenlinea.es/${province.slug}/${municipality.slug}/`
+    }
+  ]
+};
+---
+
+<Layout title={title} description={description} schema={[faqSchema, breadcrumbSchema]}>
+  <!-- Accessible Breadcrumb -->
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 text-xs text-slate-600 flex items-center gap-2 flex-wrap" aria-label="Ruta de navegación">
+    <a href="/" class="hover:text-emerald-700 transition-colors font-medium">Inicio</a>
+    <span class="text-slate-400">/</span>
+    <a href={`/${province.slug}/`} class="hover:text-emerald-700 transition-colors font-medium">{province.name}</a>
+    <span class="text-slate-400">/</span>
+    <span class="text-slate-900 font-bold" aria-current="page">{municipality.name}</span>
+  </nav>
+
+  <!-- Municipality Hero Section -->
+  <section class="relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white pt-10 pb-16 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.12),transparent_50%)] pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(14,165,233,0.1),transparent_50%)] pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="flex flex-wrap items-center gap-2 mb-4">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-black tracking-wide uppercase">
+          📍 {municipality.name}
+        </span>
+        <a href={`/${province.slug}/`} class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-800/80 text-slate-300 border border-slate-700 text-xs font-bold hover:bg-slate-700 transition-colors">
+          Provincia de {province.name}
+        </a>
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800/80 text-slate-400 text-xs font-semibold">
+          {province.ccaa}
+        </span>
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/50 text-[11px] font-bold ml-auto">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Precios MITECO en vivo
+        </span>
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white mb-4">
+        Gasolineras Más Baratas en <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">{municipality.name}</span> Hoy
+      </h1>
+
+      <p class="text-slate-300 text-sm sm:text-base max-w-3xl leading-relaxed mb-8">
+        Compara los precios actualizados de las <strong class="text-white">{stations.length}</strong> estaciones de servicio en <strong class="text-white">{municipality.name}</strong>. Reposta al precio más bajo y ahorra hasta <strong class="text-emerald-400">{savingsDeposit95} €</strong> por depósito.
+      </p>
+
+      <!-- Key KPI Stats Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <!-- Min Gasolina 95 -->
+        <div class="bg-slate-850/80 backdrop-blur-sm rounded-2xl p-4 border border-emerald-500/30 bg-gradient-to-br from-emerald-950/40 to-slate-900">
+          <div class="flex items-center justify-between text-xs text-emerald-300 font-bold uppercase mb-1">
+            <span>Mín. Gasolina 95</span>
+            <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-[10px]">Mejor Precio</span>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-emerald-400 tabular-nums">
+            {minG95 ? `${minG95.toFixed(3)} €` : 'N/D'}
+          </div>
+          <p class="text-[11px] text-slate-300 truncate mt-1">
+            {sortedG95.length > 0 ? `${sortedG95[0].brand}` : 'No disponible'}
+          </p>
+        </div>
+
+        <!-- Min Diésel A -->
+        <div class="bg-slate-850/80 backdrop-blur-sm rounded-2xl p-4 border border-sky-500/30 bg-gradient-to-br from-sky-950/40 to-slate-900">
+          <div class="flex items-center justify-between text-xs text-sky-300 font-bold uppercase mb-1">
+            <span>Mín. Diésel A</span>
+            <span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-[10px]">Mejor Precio</span>
+          </div>
+          <div class="text-2xl sm:text-3xl font-black text-sky-400 tabular-nums">
+            {minDiesel ? `${minDiesel.toFixed(3)} €` : 'N/D'}
+          </div>
+          <p class="text-[11px] text-slate-300 truncate mt-1">
+            {sortedDiesel.length > 0 ? `${sortedDiesel[0].brand}` : 'No disponible'}
+          </p>
+        </div>
+
+        <!-- Total Stations -->
+        <div class="bg-slate-850/80 backdrop-blur-sm rounded-2xl p-4 border border-slate-700/80">
+          <div class="text-xs text-slate-400 font-bold uppercase mb-1">Gasolineras Activas</div>
+          <div class="text-2xl sm:text-3xl font-black text-white tabular-nums">
+            {stations.length}
+          </div>
+          <p class="text-[11px] text-slate-400 mt-1">
+            {stations24h.length > 0 ? `${stations24h.length} abiertas 24h` : 'En el municipio'}
+          </p>
+        </div>
+
+        <!-- Ahorro Depósito -->
+        <div class="bg-slate-850/80 backdrop-blur-sm rounded-2xl p-4 border border-amber-500/30 bg-gradient-to-br from-amber-950/30 to-slate-900">
+          <div class="text-xs text-amber-300 font-bold uppercase mb-1">Ahorro Máx. / Depósito</div>
+          <div class="text-2xl sm:text-3xl font-black text-amber-400 tabular-nums">
+            Hasta {savingsDeposit95} €
+          </div>
+          <p class="text-[11px] text-slate-300 mt-1">
+            En un depósito de 50L
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ad Slot Top -->
+  <AdSlot format="horizontal" slotId={`municipio-${province.slug}-${municipality.slug}-top`} />
+
+  <!-- Top Ranked Stations Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14" aria-labelledby="ranking-muni-title">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+      <div>
+        <h2 id="ranking-muni-title" class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
+          Ranking de Gasolineras en {municipality.name}
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+          Estaciones ordenadas por precio de menor a mayor. Datos oficiales certificados.
+        </p>
+      </div>
+
+      <!-- Fuel Switch Tabs with ARIA -->
+      <div class="inline-flex p-1 bg-slate-200/90 rounded-2xl self-start sm:self-auto" role="tablist" aria-label="Combustible a mostrar">
+        <button
+          id="muni-tab-g95"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="muni-content-g95"
+          class="px-4 py-2 text-xs font-black rounded-xl transition-all bg-white text-slate-950 shadow-2xs cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-600"
+        >
+          Gasolina 95
+        </button>
+        <button
+          id="muni-tab-diesel"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="muni-content-diesel"
+          class="px-4 py-2 text-xs font-bold rounded-xl transition-all text-slate-700 hover:text-slate-950 cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-600"
+        >
+          Diésel A
+        </button>
+      </div>
+    </div>
+
+    <!-- Gasolina 95 Cards -->
+    <div id="muni-content-g95" role="tabpanel" aria-labelledby="muni-tab-g95" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {sortedG95.map((st, i) => (
+        <GasolineraCard
+          station={st}
+          rank={i + 1}
+          avgGasolina95={avgG95}
+          avgDiesel={avgDiesel}
+          highlightFuel="gasolina95"
+        />
+      ))}
+      {sortedG95.length === 0 && (
+        <div class="col-span-full py-12 text-center text-slate-500 bg-slate-50 rounded-2xl border border-slate-200">
+          No hay estaciones con precio registrado de Gasolina 95 en {municipality.name} en este momento.
+        </div>
+      )}
+    </div>
+
+    <!-- Diésel Cards (hidden by default) -->
+    <div id="muni-content-diesel" role="tabpanel" aria-labelledby="muni-tab-diesel" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {sortedDiesel.map((st, i) => (
+        <GasolineraCard
+          station={st}
+          rank={i + 1}
+          avgGasolina95={avgG95}
+          avgDiesel={avgDiesel}
+          highlightFuel="diesel"
+        />
+      ))}
+      {sortedDiesel.length === 0 && (
+        <div class="col-span-full py-12 text-center text-slate-500 bg-slate-50 rounded-2xl border border-slate-200">
+          No hay estaciones con precio registrado de Diésel en {municipality.name} en este momento.
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Interactive Savings Calculator -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <SavingsCalculator
+      avgGasolina95={avgG95}
+      minGasolina95={minG95 || avgG95 - 0.15}
+      avgDiesel={avgDiesel}
+      minDiesel={minDiesel || avgDiesel - 0.15}
+    />
+  </div>
+
+  <!-- Amazon V16 Equipment Affiliate Block -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <AmazonV16 />
+  </div>
+
+  <!-- Full Table of Stations in Municipality -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" aria-labelledby="table-muni-title">
+    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-soft-card overflow-hidden">
+      <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 id="table-muni-title" class="text-xl font-black text-slate-950">
+            Todas las Gasolineras en {municipality.name}
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Mostrando {stations.length} estaciones con precios y ubicación GPS.
+          </p>
+        </div>
+        <a
+          href={`/${province.slug}/`}
+          class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100/80 px-3.5 py-2 rounded-xl transition-colors shrink-0"
+        >
+          ← Ver toda la provincia de {province.name}
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200/80 uppercase tracking-wider text-[11px]">
+              <th scope="col" class="py-3 px-4">Estación / Marca</th>
+              <th scope="col" class="py-3 px-4">Dirección</th>
+              <th scope="col" class="py-3 px-4 text-right">Gasolina 95</th>
+              <th scope="col" class="py-3 px-4 text-right">Diésel A</th>
+              <th scope="col" class="py-3 px-4 text-center">Horario</th>
+              <th scope="col" class="py-3 px-4 text-center">GPS</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {stations.map((st) => (
+              <tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="py-3.5 px-4 font-black text-slate-900 whitespace-nowrap">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    {st.brand}
+                  </span>
+                </td>
+                <td class="py-3.5 px-4 text-slate-600 max-w-xs truncate" title={st.address}>
+                  {st.address}
+                </td>
+                <td class="py-3.5 px-4 text-right font-black text-slate-950 whitespace-nowrap tabular-nums">
+                  {st.prices?.gasolina95 ? (
+                    <span class={minG95 && st.prices.gasolina95 <= minG95 + 0.02 ? 'text-emerald-700 font-extrabold' : ''}>
+                      {st.prices.gasolina95.toFixed(3)} €
+                    </span>
+                  ) : (
+                    <span class="text-slate-400 font-normal">-</span>
+                  )}
+                </td>
+                <td class="py-3.5 px-4 text-right font-black text-slate-950 whitespace-nowrap tabular-nums">
+                  {st.prices?.diesel ? (
+                    <span class={minDiesel && st.prices.diesel <= minDiesel + 0.02 ? 'text-sky-700 font-extrabold' : ''}>
+                      {st.prices.diesel.toFixed(3)} €
+                    </span>
+                  ) : (
+                    <span class="text-slate-400 font-normal">-</span>
+                  )}
+                </td>
+                <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                  {st.is_24h ? (
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-[10px] border border-emerald-300">
+                      24h
+                    </span>
+                  ) : (
+                    <span class="text-slate-600 text-[11px] truncate max-w-[120px] inline-block">{st.schedule}</span>
+                  )}
+                </td>
+                <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                  <a
+                    href={st.maps_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-900 font-bold hover:underline py-1 px-2 rounded-lg hover:bg-emerald-50"
+                  >
+                    GPS
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contextual Internal Linking: Nearby Municipalities -->
+  {neighbors.length > 0 && (
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" aria-labelledby="neighbors-title">
+      <div class="border-t border-slate-200/80 pt-10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 id="neighbors-title" class="text-xl font-black text-slate-950">
+              Gasolineras en Otras Poblaciones de {province.name}
+            </h2>
+            <p class="text-xs text-slate-600 mt-0.5">
+              Consulta precios y estaciones de servicio en municipios cercanos.
+            </p>
+          </div>
+          <a
+            href={`/${province.slug}/`}
+            class="text-xs font-bold text-emerald-700 hover:underline shrink-0"
+          >
+            Ver todos los municipios de {province.name} →
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          {neighbors.map((nb) => (
+            <a
+              href={`/${province.slug}/${nb.slug}/`}
+              class="group block p-3 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-500 hover:shadow-soft-card transition-all"
+            >
+              <div class="font-bold text-xs text-slate-900 group-hover:text-emerald-700 truncate">
+                {nb.name}
+              </div>
+              <div class="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
+                <span>{nb.count} {nb.count === 1 ? 'estación' : 'estaciones'}</span>
+                {nb.min_p95 && (
+                  <span class="font-black text-emerald-600 tabular-nums">
+                    {nb.min_p95.toFixed(3)} €
+                  </span>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Ad Slot Bottom -->
+  <AdSlot format="horizontal" slotId={`municipio-${province.slug}-${municipality.slug}-bottom`} />
+
+  <!-- Municipality FAQs Accordion -->
+  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-labelledby="muni-faq-title">
+    <div class="text-center mb-8">
+      <h2 id="muni-faq-title" class="text-2xl font-black text-slate-950 tracking-tight">
+        Preguntas Frecuentes sobre Gasolineras en {municipality.name}
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-600 mt-1">
+        Respuestas directas para ahorrar en combustible hoy en {municipality.name} ({province.name}).
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      {faqs.map((faq) => (
+        <details class="group bg-white rounded-2xl border border-slate-200/90 p-5 open:shadow-soft-card transition-all">
+          <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-slate-900 group-open:text-emerald-800 text-sm sm:text-base select-none focus:outline-none">
+            <span>{faq.question}</span>
+            <span class="ml-4 shrink-0 transition-transform duration-200 group-open:rotate-180 text-slate-500">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="mt-3 text-xs sm:text-sm text-slate-700 leading-relaxed pt-3 border-t border-slate-100">
+            {faq.answer}
+          </div>
+        </details>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<script>
+  // Tab switch for municipality page
+  const mBtnG95 = document.getElementById('muni-tab-g95');
+  const mBtnDiesel = document.getElementById('muni-tab-diesel');
+  const mContentG95 = document.getElementById('muni-content-g95');
+  const mContentDiesel = document.getElementById('muni-content-diesel');
+
+  if (mBtnG95 && mBtnDiesel && mContentG95 && mContentDiesel) {
+    mBtnG95.addEventListener('click', () => {
+      mBtnG95.className = 'px-4 py-2 text-xs font-black rounded-xl transition-all bg-white text-slate-950 shadow-2xs cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-600';
+      mBtnG95.setAttribute('aria-selected', 'true');
+      mBtnDiesel.className = 'px-4 py-2 text-xs font-bold rounded-xl transition-all text-slate-700 hover:text-slate-950 cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-600';
+      mBtnDiesel.setAttribute('aria-selected', 'false');
+      mContentG95.classList.remove('hidden');
+      mContentDiesel.classList.add('hidden');
+    });
+
+    mBtnDiesel.addEventListener('click', () => {
+      mBtnDiesel.className = 'px-4 py-2 text-xs font-black rounded-xl transition-all bg-white text-slate-950 shadow-2xs cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-600';
+      mBtnDiesel.setAttribute('aria-selected', 'true');
+      mBtnG95.className = 'px-4 py-2 text-xs font-bold rounded-xl transition-all text-slate-700 hover:text-slate-950 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-600';
+      mBtnG95.setAttribute('aria-selected', 'false');
+      mContentDiesel.classList.remove('hidden');
+      mContentG95.classList.add('hidden');
+    });
+  }
+</script>

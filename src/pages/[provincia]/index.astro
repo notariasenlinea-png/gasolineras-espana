@@ -354,6 +354,48 @@ const breadcrumbSchema = {
     </div>
   </section>
 
+  <!-- Municipalities Grid Section for Comprehensive Crawling & pSEO -->
+  {detail.municipalities && detail.municipalities.length > 0 && (
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14" aria-labelledby="munis-prov-title">
+      <div class="border-t border-slate-200/80 pt-10">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div>
+            <h2 id="munis-prov-title" class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
+              Gasolineras por Municipios en {name}
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">
+              Explora las {total_stations} gasolineras repartidas en los {detail.municipalities.length} municipios con servicio de la provincia.
+            </p>
+          </div>
+          <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 shrink-0">
+            {detail.municipalities.length} municipios con gasolinera
+          </span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          {detail.municipalities.map((m) => (
+            <a
+              href={`/${province.slug}/${m.slug}/`}
+              class="group block p-3 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-500 hover:shadow-soft-card transition-all"
+            >
+              <div class="font-black text-xs text-slate-900 group-hover:text-emerald-700 truncate">
+                {m.name}
+              </div>
+              <div class="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
+                <span>{m.count} {m.count === 1 ? 'estación' : 'estaciones'}</span>
+                {m.min_p95 && (
+                  <span class="font-bold text-emerald-600 tabular-nums">
+                    {m.min_p95.toFixed(3)} €
+                  </span>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
   <!-- Ad Slot Bottom -->
   <AdSlot format="horizontal" slotId={`provincia-${province.slug}-bottom`} />
 
