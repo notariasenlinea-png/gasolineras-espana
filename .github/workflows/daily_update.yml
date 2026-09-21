@@ -2,9 +2,9 @@ name: Actualización Diaria Precios Gasolineras España
 
 on:
   schedule:
-    # Se ejecuta todos los días a las 06:00 UTC (08:00 AM hora peninsular de España)
-    # Justo tras la consolidación matutina de precios del Ministerio (MITECO)
-    - cron: '0 6 * * *'
+    # Se ejecuta cada 2 horas en punto durante todo el día (12 veces al día)
+    # 00:00, 02:00, 04:00, 06:00, 08:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00, 22:00 UTC
+    - cron: '0 */2 * * *'
   workflow_dispatch: # Botón manual para forzar actualización inmediata desde GitHub
 
 jobs:
