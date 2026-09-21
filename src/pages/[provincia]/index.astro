@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import GasolineraCard from '../../components/GasolineraCard.astro';
 import AdSlot from '../../components/AdSlot.astro';
+import AmazonV16 from '../../components/AmazonV16.astro';
 import provincesMeta from '../../data/provinces.json';
 
 export async function getStaticPaths() {
@@ -244,6 +245,11 @@ const breadcrumbSchema = {
       ))}
     </div>
   </section>
+
+  <!-- Amazon Affiliate V16 Recommendation -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <AmazonV16 />
+  </div>
 
   <!-- Complete Table / Directory for the Province -->
   <section class="bg-white border-y border-slate-200/90 py-10 sm:py-16" aria-labelledby="table-title">
