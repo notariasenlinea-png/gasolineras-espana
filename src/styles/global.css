@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased selection:bg-emerald-600 selection:text-white min-h-screen flex flex-col;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  /* Accessible focus indicators for all interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  summary:focus-visible {
+    @apply outline-none ring-2 ring-emerald-600 ring-offset-2 ring-offset-white;
+  }
+}
+
+/* Authentic Brand Badge Colors */
+.badge-repsol {
+  background-color: #fff7ed;
+  color: #9a3412;
+  border-color: #fed7aa;
+}
+.badge-cepsa, .badge-moeve {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+.badge-bp {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border-color: #a7f3d0;
+}
+.badge-shell {
+  background-color: #fefce8;
+  color: #854d0e;
+  border-color: #fef08a;
+}
+.badge-galp {
+  background-color: #fffbeb;
+  color: #92400e;
+  border-color: #fde68a;
+}
+.badge-plenoil, .badge-ballenoil, .badge-petroprix {
+  background-color: #f0f9ff;
+  color: #075985;
+  border-color: #bae6fd;
+}
+.badge-carrefour, .badge-alcampo {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+.badge-default {
+  background-color: #f8fafc;
+  color: #334155;
+  border-color: #e2e8f0;
+}
+
+/* Custom modern scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Shimmer animation for loading states */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}

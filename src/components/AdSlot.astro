@@ -1,0 +1,45 @@
+---
+interface Props {
+  slotId?: string;
+  format?: 'horizontal' | 'rectangle' | 'in-feed' | 'sticky-bottom';
+  className?: string;
+}
+
+const {
+  slotId = 'default-slot',
+  format = 'horizontal',
+  className = '',
+} = Astro.props;
+
+const formatClasses = {
+  horizontal: 'min-h-[100px] sm:min-h-[120px] max-w-4xl mx-auto my-6',
+  rectangle: 'min-h-[250px] max-w-sm mx-auto my-4',
+  'in-feed': 'min-h-[110px] w-full my-4',
+  'sticky-bottom': 'min-h-[60px] sm:min-h-[90px] w-full',
+};
+---
+
+<div class={`ad-container w-full px-2 ${formatClasses[format]} ${className}`}>
+  <div class="relative w-full h-full rounded-xl border border-dashed border-slate-300/80 bg-gradient-to-b from-slate-50 to-slate-100/60 p-3 flex flex-col items-center justify-center text-center overflow-hidden transition-all shadow-xs">
+    <span class="text-[10px] font-bold text-slate-400 tracking-wider uppercase mb-1">
+      Publicidad
+    </span>
+    
+    <!-- Google AdSense Container Placeholder -->
+    <ins
+      class="adsbygoogle"
+      style="display:block; width:100%; text-align:center;"
+      data-ad-client={import.meta.env.PUBLIC_ADSENSE_CLIENT || "ca-pub-3058147259550236"}
+      data-ad-slot={slotId}
+      data-ad-format="auto"
+      data-full-width-responsive="true"
+    >
+      <div class="flex flex-col items-center justify-center gap-1.5 py-4 text-slate-400">
+        <svg class="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <span class="text-xs font-medium text-slate-400">Espacio Publicitario AdSense</span>
+      </div>
+    </ins>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+{
+  "name": "espana_gasolineras",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "etl": "python scripts/fetch_gasolineras.py"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^7.3.3",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^7.0.2"
+  }
+}

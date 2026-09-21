@@ -1,0 +1,247 @@
+---
+interface GasStation {
+  id: string;
+  brand: string;
+  brand_raw?: string;
+  address: string;
+  town: string;
+  postal_code?: string;
+  province: string;
+  province_slug?: string;
+  lat: number;
+  lng: number;
+  schedule: string;
+  is_24h: boolean;
+  prices: {
+    gasolina95: number | null;
+    gasolina95_e10?: number | null;
+    gasolina98?: number | null;
+    gasolina98_e10?: number | null;
+    diesel: number | null;
+    diesel_plus?: number | null;
+    gasoleo_b?: number | null;
+    glp?: number | null;
+    adblue?: number | null;
+    gnc?: number | null;
+    gnl?: number | null;
+    hvo?: number | null;
+  };
+  maps_url: string;
+}
+
+interface Props {
+  station: GasStation;
+  rank?: number;
+  avgGasolina95?: number;
+  avgDiesel?: number;
+  highlightFuel?: 'gasolina95' | 'diesel';
+}
+
+const {
+  station,
+  rank,
+  avgGasolina95 = 1.90,
+  avgDiesel = 1.90,
+  highlightFuel = 'gasolina95',
+} = Astro.props;
+
+// Brand badge class mapping
+const getBrandBadgeClass = (brand: string) => {
+  const b = brand.toLowerCase();
+  if (b.includes('repsol')) return 'badge-repsol';
+  if (b.includes('cepsa') || b.includes('moeve')) return 'badge-cepsa';
+  if (b.includes('bp')) return 'badge-bp';
+  if (b.includes('shell')) return 'badge-shell';
+  if (b.includes('galp')) return 'badge-galp';
+  if (b.includes('plenoil') || b.includes('ballenoil') || b.includes('petroprix')) {
+    return 'badge-plenoil';
+  }
+  if (b.includes('carrefour') || b.includes('alcampo')) return 'badge-carrefour';
+  return 'badge-default';
+};
+
+// Calculate savings compared to average
+const p95 = station.prices?.gasolina95;
+const pDiesel = station.prices?.diesel;
+
+const diff95 = p95 && avgGasolina95 ? (p95 - avgGasolina95) : null;
+const diffDiesel = pDiesel && avgDiesel ? (pDiesel - avgDiesel) : null;
+
+const rankBadges: Record<number, { bg: string; label: string }> = {
+  1: { bg: 'bg-amber-400 text-amber-950 ring-2 ring-amber-300 font-black', label: '1º TOP' },
+  2: { bg: 'bg-slate-200 text-slate-900 ring-2 ring-slate-300 font-bold', label: '2º' },
+  3: { bg: 'bg-amber-700 text-amber-50 ring-2 ring-amber-600 font-bold', label: '3º' },
+};
+---
+
+<article
+  class="group relative bg-white rounded-2xl border border-slate-200/90 hover:border-emerald-500 hover:shadow-soft-card hover:-translate-y-0.5 transition-all duration-200 p-4 sm:p-5 flex flex-col justify-between"
+  data-station-id={station.id}
+  itemscope
+  itemtype="https://schema.org/GasStation"
+>
+  <!-- Microdata for Schema.org -->
+  <meta itemprop="latitude" content={station.lat.toString()} />
+  <meta itemprop="longitude" content={station.lng.toString()} />
+
+  <!-- Card Top: Rank, Brand Pill, 24h & Mobile Maps -->
+  <div>
+    <div class="flex items-start justify-between gap-2 mb-3">
+      <div class="flex items-center gap-2 flex-wrap">
+        {rank !== undefined && (
+          <span
+            class={`inline-flex items-center justify-center px-2 py-0.5 rounded-lg text-xs shrink-0 shadow-2xs ${rankBadges[rank]?.bg || 'bg-slate-100 text-slate-800 font-semibold'}`}
+            title={`Puesto #${rank} en el ranking de precio más bajo`}
+          >
+            {rankBadges[rank]?.label || `#${rank}`}
+          </span>
+        )}
+        <span
+          itemprop="brand"
+          class={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border tracking-wide uppercase shadow-2xs ${getBrandBadgeClass(station.brand)}`}
+        >
+          {station.brand}
+        </span>
+        {station.is_24h ? (
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+            24H
+          </span>
+        ) : (
+          <span class="text-[11px] font-medium text-slate-600 truncate max-w-[130px]" title={station.schedule}>
+            {station.schedule}
+          </span>
+        )}
+      </div>
+
+      <!-- Quick Maps External Link -->
+      <a
+        href={station.maps_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="sm:hidden p-2 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-colors"
+        title="Abrir en Google Maps"
+        aria-label={`Abrir ${station.brand} en Google Maps`}
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Station Name & Address -->
+    <div class="mb-4">
+      <h3 itemprop="name" class="text-base font-extrabold text-slate-900 group-hover:text-emerald-800 transition-colors line-clamp-1">
+        {station.brand} - {station.town}
+      </h3>
+      <p itemprop="address" class="text-xs text-slate-600 mt-1 flex items-start gap-1.5">
+        <svg class="w-4 h-4 text-slate-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span class="line-clamp-2">
+          {station.address}{station.postal_code ? `, ${station.postal_code}` : ''} ({station.province})
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Price Grid Box -->
+  <div>
+    <div class="grid grid-cols-2 gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 mb-3">
+      <!-- Gasolina 95 Price -->
+      <div class={`p-2.5 rounded-xl transition-all ${highlightFuel === 'gasolina95' ? 'bg-emerald-500/15 border-2 border-emerald-600/40 shadow-2xs' : 'bg-white border border-slate-200/80'}`}>
+        <div class="flex items-center justify-between text-[11px] text-slate-700 font-bold mb-0.5">
+          <span>Gasolina 95</span>
+          {diff95 !== null && diff95 < 0 && (
+            <span class="text-[10px] font-black text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded-md border border-emerald-200">
+              {diff95.toFixed(2)}€
+            </span>
+          )}
+        </div>
+        <div class="flex items-baseline gap-1">
+          {p95 ? (
+            <>
+              <span class="text-xl sm:text-2xl font-black text-slate-950 tracking-tight tabular-nums">
+                {p95.toFixed(3)}
+              </span>
+              <span class="text-[11px] font-bold text-slate-600">€/L</span>
+            </>
+          ) : (
+            <span class="text-xs text-slate-500 font-medium py-1">No disp.</span>
+          )}
+        </div>
+      </div>
+
+      <!-- Diésel Price -->
+      <div class={`p-2.5 rounded-xl transition-all ${highlightFuel === 'diesel' ? 'bg-sky-500/15 border-2 border-sky-600/40 shadow-2xs' : 'bg-white border border-slate-200/80'}`}>
+        <div class="flex items-center justify-between text-[11px] text-slate-700 font-bold mb-0.5">
+          <span>Diésel (A)</span>
+          {diffDiesel !== null && diffDiesel < 0 && (
+            <span class="text-[10px] font-black text-sky-800 bg-sky-100 px-1.5 py-0.5 rounded-md border border-sky-200">
+              {diffDiesel.toFixed(2)}€
+            </span>
+          )}
+        </div>
+        <div class="flex items-baseline gap-1">
+          {pDiesel ? (
+            <>
+              <span class="text-xl sm:text-2xl font-black text-slate-950 tracking-tight tabular-nums">
+                {pDiesel.toFixed(3)}
+              </span>
+              <span class="text-[11px] font-bold text-slate-600">€/L</span>
+            </>
+          ) : (
+            <span class="text-xs text-slate-500 font-medium py-1">No disp.</span>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <!-- Extra fuels badges (GLP, Gasolina 98, AdBlue, HVO, GNC) -->
+    {(station.prices?.glp || station.prices?.gasolina98 || station.prices?.adblue || station.prices?.hvo || station.prices?.gnc) && (
+      <div class="flex items-center gap-1.5 mb-3 text-[11px] text-slate-700 flex-wrap">
+        {station.prices?.gasolina98 && (
+          <span class="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 font-semibold">
+            G98: <strong>{station.prices.gasolina98.toFixed(3)}€</strong>
+          </span>
+        )}
+        {station.prices?.glp && (
+          <span class="px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-300 font-semibold">
+            GLP: <strong>{station.prices.glp.toFixed(3)}€</strong>
+          </span>
+        )}
+        {station.prices?.adblue && (
+          <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-900 border border-blue-300 font-semibold">
+            AdBlue: <strong>{station.prices.adblue.toFixed(3)}€</strong>
+          </span>
+        )}
+        {station.prices?.hvo && (
+          <span class="px-2 py-0.5 rounded-md bg-teal-50 text-teal-900 border border-teal-300 font-semibold">
+            HVO100: <strong>{station.prices.hvo.toFixed(3)}€</strong>
+          </span>
+        )}
+        {station.prices?.gnc && (
+          <span class="px-2 py-0.5 rounded-md bg-cyan-50 text-cyan-900 border border-cyan-300 font-semibold">
+            GNC: <strong>{station.prices.gnc.toFixed(3)}€</strong>
+          </span>
+        )}
+      </div>
+    )}
+
+    <!-- Action Button: Cómo llegar Google Maps Navigation -->
+    <a
+      href={station.maps_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-slate-950 text-white hover:bg-emerald-700 text-xs font-black transition-all duration-150 shadow-xs hover:shadow-md active:scale-[0.98]"
+      aria-label={`Ver ruta GPS en Google Maps para ${station.brand} ${station.town}`}
+    >
+      <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      Cómo Llegar (Navegación GPS)
+    </a>
+  </div>
+</article>

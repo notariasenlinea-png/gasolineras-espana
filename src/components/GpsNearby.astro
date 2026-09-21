@@ -1,0 +1,389 @@
+---
+---
+
+<section id="cerca-de-mi" class="scroll-mt-24 my-10 sm:my-16" aria-labelledby="gps-title">
+  <div class="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden border border-slate-800">
+    <!-- Decorative glow backdrop -->
+    <div class="absolute -right-24 -top-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-24 -bottom-24 w-96 h-96 bg-teal-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-4xl mx-auto text-center">
+      <!-- Radar Pulse Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+        </span>
+        Localizador Inteligente GPS
+      </div>
+
+      <h2 id="gps-title" class="text-2xl sm:text-4xl font-black tracking-tight text-white mb-3">
+        Encuentra las Gasolineras Más Baratas <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300">Cerca de Ti</span>
+      </h2>
+      <p class="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+        Activa tu ubicación GPS y calcularemos en tiempo récord las estaciones de servicio con los precios más bajos en tu radio de conducción.
+      </p>
+
+      <!-- Interactive Controls Panel -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xl mx-auto mb-6">
+        <!-- Main GPS Button -->
+        <button
+          id="btn-gps-locate"
+          type="button"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 disabled:cursor-not-allowed text-slate-950 font-black text-sm shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all active:scale-95 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-300"
+        >
+          <svg id="gps-icon-pin" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <svg id="gps-icon-spinner" class="hidden w-5 h-5 animate-spin shrink-0 text-slate-950" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span id="btn-gps-text">Activar GPS y Buscar Cerca</span>
+        </button>
+
+        <!-- Fuel Toggle Switch -->
+        <div class="flex items-center bg-slate-800/90 rounded-2xl p-1 border border-slate-700 w-full sm:w-auto" role="group" aria-label="Seleccionar combustible">
+          <button
+            id="gps-filter-95"
+            type="button"
+            class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all bg-emerald-500 text-slate-950 focus-visible:ring-2 focus-visible:ring-emerald-300"
+            aria-pressed="true"
+          >
+            Gasolina 95
+          </button>
+          <button
+            id="gps-filter-diesel"
+            type="button"
+            class="flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white focus-visible:ring-2 focus-visible:ring-sky-300"
+            aria-pressed="false"
+          >
+            Diésel A
+          </button>
+        </div>
+
+        <!-- Radius Dropdown Selector -->
+        <select
+          id="gps-radius-select"
+          aria-label="Seleccionar radio de búsqueda en kilómetros"
+          class="bg-slate-800/90 text-white text-xs font-bold rounded-2xl px-4 py-3.5 border border-slate-700 focus:outline-none focus:border-emerald-400 w-full sm:w-auto cursor-pointer"
+        >
+          <option value="10">Radio: 10 km</option>
+          <option value="15" selected>Radio: 15 km</option>
+          <option value="25">Radio: 25 km</option>
+          <option value="50">Radio: 50 km</option>
+        </select>
+      </div>
+
+      <!-- Live Status & Feedback Box -->
+      <div id="gps-status-box" class="hidden max-w-lg mx-auto p-3.5 rounded-2xl text-xs font-semibold mb-6 transition-all" aria-live="polite"></div>
+
+      <!-- Quick Province Fallback (Shown when GPS denied) -->
+      <div id="gps-fallback-provinces" class="hidden max-w-xl mx-auto mb-6 p-4 rounded-2xl bg-slate-800/90 border border-slate-700 text-left">
+        <p class="text-xs text-slate-300 font-bold mb-2">O selecciona directamente tu provincia:</p>
+        <div class="flex flex-wrap gap-2">
+          <a href="/madrid/" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-emerald-600 text-xs font-bold text-white transition-colors">Madrid</a>
+          <a href="/barcelona/" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-emerald-600 text-xs font-bold text-white transition-colors">Barcelona</a>
+          <a href="/valencia/" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-emerald-600 text-xs font-bold text-white transition-colors">Valencia</a>
+          <a href="/sevilla/" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-emerald-600 text-xs font-bold text-white transition-colors">Sevilla</a>
+          <a href="/alicante/" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-emerald-600 text-xs font-bold text-white transition-colors">Alicante</a>
+          <a href="/malaga/" class="px-3 py-1 rounded-lg bg-slate-700 hover:bg-emerald-600 text-xs font-bold text-white transition-colors">Málaga</a>
+          <a href="/#provincias" class="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition-colors">Ver las 52 provincias &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Results Grid Container -->
+      <div id="gps-results-grid" class="hidden mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-left"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  interface StationLight {
+    i: string;
+    b: string;
+    a: string;
+    t: string;
+    p: string;
+    ps: string;
+    lt: number;
+    ln: number;
+    p95: number | null;
+    d: number | null;
+    h24: boolean;
+  }
+
+  interface StationWithDistance extends StationLight {
+    distance: number;
+  }
+
+  let cachedStations: StationLight[] | null = null;
+  let userLat: number | null = null;
+  let userLng: number | null = null;
+  let selectedFuel: 'gasolina95' | 'diesel' = 'gasolina95';
+  let isFetching = false;
+
+  const btnLocate = document.getElementById('btn-gps-locate') as HTMLButtonElement | null;
+  const btnText = document.getElementById('btn-gps-text');
+  const iconPin = document.getElementById('gps-icon-pin');
+  const iconSpinner = document.getElementById('gps-icon-spinner');
+  const statusBox = document.getElementById('gps-status-box');
+  const fallbackBox = document.getElementById('gps-fallback-provinces');
+  const resultsGrid = document.getElementById('gps-results-grid');
+  const filter95 = document.getElementById('gps-filter-95');
+  const filterDiesel = document.getElementById('gps-filter-diesel');
+  const radiusSelect = document.getElementById('gps-radius-select') as HTMLSelectElement | null;
+
+  // Haversine formula in km
+  function calculateHaversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; // Earth's radius in km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  // Pre-load station data in background immediately
+  async function loadStations(): Promise<StationLight[]> {
+    if (cachedStations) return cachedStations;
+    try {
+      const res = await fetch('/data/stations_light.json');
+      if (!res.ok) throw new Error('No se pudo cargar la base de datos de gasolineras.');
+      cachedStations = await res.json();
+      return cachedStations!;
+    } catch (err) {
+      console.warn('Error precargando stations_light.json:', err);
+      throw err;
+    }
+  }
+
+  // Kick off background prefetch on page idle
+  if (typeof window !== 'undefined') {
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => { loadStations(); });
+    } else {
+      setTimeout(() => { loadStations(); }, 1500);
+    }
+  }
+
+  function setButtonLoading(loading: boolean) {
+    isFetching = loading;
+    if (btnLocate) {
+      if (loading) {
+        btnLocate.setAttribute('disabled', 'true');
+        iconPin?.classList.add('hidden');
+        iconSpinner?.classList.remove('hidden');
+        if (btnText) btnText.textContent = 'Calculando GPS...';
+      } else {
+        btnLocate.removeAttribute('disabled');
+        iconSpinner?.classList.add('hidden');
+        iconPin?.classList.remove('hidden');
+        if (btnText) btnText.textContent = userLat ? 'Actualizar Mi Ubicación' : 'Activar GPS y Buscar Cerca';
+      }
+    }
+  }
+
+  function renderResults(stations: StationWithDistance[]) {
+    if (!resultsGrid) return;
+    resultsGrid.innerHTML = '';
+
+    if (stations.length === 0) {
+      resultsGrid.classList.remove('hidden');
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'col-span-full text-center py-8 text-slate-300';
+      emptyDiv.innerHTML = `
+        <p class="font-bold text-base">No se encontraron gasolineras en este radio con el combustible seleccionado.</p>
+        <p class="text-xs text-slate-400 mt-1">Prueba ampliando el radio a 25 km o 50 km arriba.</p>
+      `;
+      resultsGrid.appendChild(emptyDiv);
+      return;
+    }
+
+    resultsGrid.classList.remove('hidden');
+
+    stations.forEach((st) => {
+      const price = selectedFuel === 'gasolina95' ? st.p95 : st.d;
+      const fuelLabel = selectedFuel === 'gasolina95' ? 'Gasolina 95' : 'Diésel';
+      const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${st.lt},${st.ln}`;
+
+      const card = document.createElement('div');
+      card.className = 'bg-slate-800/90 rounded-2xl p-4 border border-slate-700 hover:border-emerald-400/80 transition-all flex flex-col justify-between shadow-lg';
+
+      // Card Header
+      const headerDiv = document.createElement('div');
+      const topRow = document.createElement('div');
+      topRow.className = 'flex items-center justify-between gap-2 mb-2';
+
+      const brandBadge = document.createElement('span');
+      brandBadge.className = 'inline-flex items-center px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      brandBadge.textContent = st.b;
+
+      const distBadge = document.createElement('span');
+      distBadge.className = 'text-xs font-bold text-amber-300 flex items-center gap-1';
+      distBadge.textContent = `📍 a ${st.distance.toFixed(1)} km`;
+
+      topRow.appendChild(brandBadge);
+      topRow.appendChild(distBadge);
+
+      const title = document.createElement('h4');
+      title.className = 'font-bold text-white text-sm line-clamp-1';
+      title.textContent = `${st.b} - ${st.t}`;
+
+      const address = document.createElement('p');
+      address.className = 'text-xs text-slate-400 mt-1 line-clamp-1';
+      address.textContent = `${st.a} (${st.p})`;
+
+      headerDiv.appendChild(topRow);
+      headerDiv.appendChild(title);
+      headerDiv.appendChild(address);
+
+      // Card Bottom: Price & Button
+      const bottomDiv = document.createElement('div');
+      bottomDiv.className = 'mt-4 pt-3 border-t border-slate-700/60 flex items-center justify-between';
+
+      const priceContainer = document.createElement('div');
+      const priceLabel = document.createElement('span');
+      priceLabel.className = 'text-[10px] text-slate-400 uppercase font-bold block';
+      priceLabel.textContent = fuelLabel;
+
+      const priceVal = document.createElement('span');
+      priceVal.className = 'text-xl font-black text-emerald-400 tabular-nums';
+      priceVal.textContent = price ? `${price.toFixed(3)} €/L` : 'N/D';
+
+      priceContainer.appendChild(priceLabel);
+      priceContainer.appendChild(priceVal);
+
+      const mapLink = document.createElement('a');
+      mapLink.href = mapsUrl;
+      mapLink.target = '_blank';
+      mapLink.rel = 'noopener noreferrer';
+      mapLink.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black transition-all shadow-sm active:scale-95';
+      mapLink.innerHTML = `
+        Cómo ir
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      `;
+
+      bottomDiv.appendChild(priceContainer);
+      bottomDiv.appendChild(mapLink);
+
+      card.appendChild(headerDiv);
+      card.appendChild(bottomDiv);
+      resultsGrid.appendChild(card);
+    });
+  }
+
+  async function computeNearby() {
+    if (userLat === null || userLng === null) return;
+    setButtonLoading(true);
+    try {
+      const allStations = await loadStations();
+      const radius = radiusSelect ? parseFloat(radiusSelect.value) : 15;
+
+      const filtered: StationWithDistance[] = [];
+      for (const st of allStations) {
+        const p = selectedFuel === 'gasolina95' ? st.p95 : st.d;
+        if (!p) continue;
+
+        const dist = calculateHaversineDistance(userLat, userLng, st.lt, st.ln);
+        if (dist <= radius) {
+          filtered.push({ ...st, distance: dist });
+        }
+      }
+
+      // Sort primarily by price ascending, secondarily by distance
+      filtered.sort((a, b) => {
+        const pa = selectedFuel === 'gasolina95' ? (a.p95 || 99) : (a.d || 99);
+        const pb = selectedFuel === 'gasolina95' ? (b.p95 || 99) : (b.d || 99);
+        if (pa !== pb) return pa - pb;
+        return a.distance - b.distance;
+      });
+
+      renderResults(filtered.slice(0, 9));
+      if (statusBox) {
+        statusBox.className = 'max-w-lg mx-auto p-3.5 rounded-2xl text-xs font-bold mb-6 bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 block';
+        statusBox.textContent = `¡Encontradas ${filtered.length} gasolineras a menos de ${radius} km! Mostrando las más económicas:`;
+      }
+      if (fallbackBox) fallbackBox.classList.add('hidden');
+    } catch (err) {
+      if (statusBox) {
+        statusBox.className = 'max-w-lg mx-auto p-3.5 rounded-2xl text-xs font-bold mb-6 bg-red-950/80 text-red-200 border border-red-700/50 block';
+        statusBox.textContent = 'Error al procesar las gasolineras cercanas. Por favor, intenta de nuevo.';
+      }
+    } finally {
+      setButtonLoading(false);
+    }
+  }
+
+  function handleGeolocation() {
+    if (isFetching) return;
+
+    if (!navigator.geolocation) {
+      if (statusBox) {
+        statusBox.className = 'max-w-lg mx-auto p-3.5 rounded-2xl text-xs font-bold mb-6 bg-amber-950/80 text-amber-200 border border-amber-700/50 block';
+        statusBox.textContent = 'Tu navegador no dispone de geolocalización GPS. Puedes elegir tu provincia abajo:';
+      }
+      if (fallbackBox) fallbackBox.classList.remove('hidden');
+      return;
+    }
+
+    setButtonLoading(true);
+    if (statusBox) {
+      statusBox.className = 'max-w-lg mx-auto p-3.5 rounded-2xl text-xs font-bold mb-6 bg-slate-800 text-slate-300 border border-slate-700 block';
+      statusBox.textContent = 'Solicitando acceso a tu GPS para calcular distancias exactas...';
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        userLat = pos.coords.latitude;
+        userLng = pos.coords.longitude;
+        computeNearby();
+      },
+      (err) => {
+        setButtonLoading(false);
+        if (statusBox) {
+          statusBox.className = 'max-w-lg mx-auto p-3.5 rounded-2xl text-xs font-bold mb-6 bg-amber-950/80 text-amber-200 border border-amber-700/50 block';
+          statusBox.textContent = 'No pudimos acceder a tu GPS (Permiso denegado o tiempo de espera agotado).';
+        }
+        if (fallbackBox) fallbackBox.classList.remove('hidden');
+      },
+      { timeout: 12000, enableHighAccuracy: true }
+    );
+  }
+
+  if (btnLocate) {
+    btnLocate.addEventListener('click', handleGeolocation);
+  }
+
+  if (filter95 && filterDiesel) {
+    filter95.addEventListener('click', () => {
+      selectedFuel = 'gasolina95';
+      filter95.className = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-black transition-all bg-emerald-500 text-slate-950 focus-visible:ring-2 focus-visible:ring-emerald-300';
+      filter95.setAttribute('aria-pressed', 'true');
+      filterDiesel.className = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white focus-visible:ring-2 focus-visible:ring-sky-300';
+      filterDiesel.setAttribute('aria-pressed', 'false');
+      if (userLat !== null) computeNearby();
+    });
+
+    filterDiesel.addEventListener('click', () => {
+      selectedFuel = 'diesel';
+      filterDiesel.className = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-black transition-all bg-sky-500 text-slate-950 focus-visible:ring-2 focus-visible:ring-sky-300';
+      filterDiesel.setAttribute('aria-pressed', 'true');
+      filter95.className = 'flex-1 sm:flex-initial px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-300 hover:text-white focus-visible:ring-2 focus-visible:ring-emerald-300';
+      filter95.setAttribute('aria-pressed', 'false');
+      if (userLat !== null) computeNearby();
+    });
+  }
+
+  if (radiusSelect) {
+    radiusSelect.addEventListener('change', () => {
+      if (userLat !== null) computeNearby();
+    });
+  }
+</script>

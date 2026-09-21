@@ -1,0 +1,48 @@
+name: Actualización Diaria Precios Gasolineras España
+
+on:
+  schedule:
+    # Se ejecuta todos los días a las 06:00 UTC (08:00 AM hora peninsular de España)
+    # Justo tras la consolidación matutina de precios del Ministerio (MITECO)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Botón manual para forzar actualización inmediata desde GitHub
+
+jobs:
+  update-and-deploy:
+    name: Descarga MITECO + Compilación Astro + Deploy Cloudflare
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 1. Descargar código fuente del repositorio
+        uses: actions/checkout@v4
+
+      - name: 2. Configurar entorno Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 3. Ejecutar ETL de Precios Oficiales (MITECO)
+        run: |
+          python scripts/fetch_gasolineras.py
+
+      - name: 4. Configurar entorno Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 5. Instalar dependencias del proyecto
+        run: |
+          npm ci
+
+      - name: 6. Compilar portal estático (Astro Build)
+        run: |
+          npm run build
+
+      - name: 7. Desplegar en vivo a Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=gasolineras-espana --branch=main --commit-dirty=true
