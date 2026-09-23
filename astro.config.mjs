@@ -5,4 +5,9 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://gasolinerasenlinea.es',
   integrations: [tailwind({ applyBaseStyles: false }), sitemap()],
+  vite: {
+    build: {
+      cssMinify: 'esbuild'
+    }
+  }
 });
