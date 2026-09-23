@@ -1,0 +1,379 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import GasolineraCard from '../../components/GasolineraCard.astro';
+import { loadAllProvinces, provincesMeta, townStats } from '../../lib/data';
+import {
+  FUELS,
+  brandBadgeClass,
+  fmtEuros,
+  fmtPrice,
+  isLowCost,
+  mapsUrl,
+  openingHoursSpecification,
+  parseSchedule,
+  slugify,
+  stationSlug,
+  stationUrl,
+  wazeUrl,
+  type GasStation,
+} from '../../lib/stations';
+
+export async function getStaticPaths() {
+  const provinces = await loadAllProvinces();
+  const paths = [];
+
+  for (const meta of provincesMeta) {
+    const detail = provinces.get(meta.slug);
+    if (!detail) continue;
+    const all = detail.all_stations || [];
+    const muniNames = new Map((detail.municipalities || []).map((m) => [m.slug, m.name]));
+
+    const byTown = new Map<string, GasStation[]>();
+    for (const s of all) {
+      const key = s.town_slug || slugify(s.town);
+      if (!byTown.has(key)) byTown.set(key, []);
+      byTown.get(key)!.push(s);
+    }
+
+    const byG95 = (a: GasStation, b: GasStation) =>
+      (a.prices?.gasolina95 ?? a.prices?.diesel ?? 99) - (b.prices?.gasolina95 ?? b.prices?.diesel ?? 99);
+    const provinceCheapest = [...all].sort(byG95).slice(0, 8);
+
+    for (const [townSlug, townStations] of byTown) {
+      const stats = townStats(townStations);
+      const sortedTown = [...townStations].sort(byG95);
+      const town = {
+        name: muniNames.get(townSlug) || townStations[0].town,
+        slug: townSlug,
+        hasPage: muniNames.has(townSlug),
+        ...stats,
+      };
+
+      for (const station of townStations) {
+        const related = sortedTown.filter((s) => s.id !== station.id).slice(0, 3);
+        for (const s of provinceCheapest) {
+          if (related.length >= 3) break;
+          if (s.id !== station.id && !related.some((r) => r.id === s.id)) related.push(s);
+        }
+
+        paths.push({
+          params: { slug: stationSlug(station.brand, station.town, station.id) },
+          props: {
+            station,
+            province: {
+              name: meta.name,
+              slug: meta.slug,
+              ccaa: meta.ccaa,
+              avgG95: meta.avg_gasolina95 as number | null,
+              avgDiesel: meta.avg_diesel as number | null,
+            },
+            town,
+            related,
+            updatedAt: detail.updated_at,
+          },
+        });
+      }
+    }
+  }
+
+  return paths;
+}
+
+interface Props {
+  station: GasStation;
+  province: { name: string; slug: string; ccaa: string; avgG95: number | null; avgDiesel: number | null };
+  town: { name: string; slug: string; hasPage: boolean; avgG95: number | null; avgDiesel: number | null; count: number };
+  related: GasStation[];
+  updatedAt: string;
+}
+
+const { station, province, town, related, updatedAt } = Astro.props;
+const site = 'https://gasolinerasenlinea.es';
+const url = `${site}${stationUrl(station)}`;
+const p95 = station.prices?.gasolina95 ?? null;
+const pDiesel = station.prices?.diesel ?? null;
+const lowCost = isLowCost(station.brand);
+const week = parseSchedule(station.schedule);
+const townUrl = town.hasPage ? `/${province.slug}/${town.slug}/` : `/${province.slug}/`;
+
+const availableFuels = FUELS.filter((f) => typeof station.prices?.[f.key] === 'number');
+const priceValues = availableFuels
+  .filter((f) => f.key !== 'adblue')
+  .map((f) => station.prices[f.key] as number);
+const priceRange = priceValues.length
+  ? `${fmtPrice(Math.min(...priceValues))} € - ${fmtPrice(Math.max(...priceValues))} € /L`
+  : undefined;
+
+// Savings on a 50 L tank vs. provincial and municipal averages
+const TANK = 50;
+const comparisons = [
+  { key: 'gasolina95', label: 'Gasolina 95', price: p95, prov: province.avgG95, muni: town.avgG95, tone: 'emerald' },
+  { key: 'diesel', label: 'Diésel A', price: pDiesel, prov: province.avgDiesel, muni: town.avgDiesel, tone: 'sky' },
+].filter((c) => c.price !== null) as Array<{
+  key: string; label: string; price: number; prov: number | null; muni: number | null; tone: 'emerald' | 'sky';
+}>;
+const primary = comparisons[0];
+const primarySaving = primary && primary.prov ? (primary.prov - primary.price) * TANK : null;
+
+const cheapestLabel = p95 !== null ? `Gasolina 95 a ${fmtPrice(p95)} €/L` : pDiesel !== null ? `Diésel a ${fmtPrice(pDiesel)} €/L` : 'precios actualizados';
+const title = `${station.brand} ${station.address}, ${town.name} | Precio Gasolina y Diésel Hoy`;
+const description = `Precios de hoy en la gasolinera ${station.brand} de ${station.address} (${town.name}, ${province.name}): ${cheapestLabel}. Horario ${station.is_24h ? '24 horas' : station.schedule}, cómo llegar y ahorro frente a la media provincial.`;
+
+const gasStationSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'GasStation',
+  '@id': url,
+  name: `${station.brand} ${town.name} - ${station.address}`,
+  brand: { '@type': 'Brand', name: station.brand },
+  url,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: station.address,
+    addressLocality: station.town,
+    addressRegion: province.name,
+    ...(station.postal_code ? { postalCode: station.postal_code } : {}),
+    addressCountry: 'ES',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: station.lat, longitude: station.lng },
+  hasMap: mapsUrl(station.lat, station.lng),
+  ...(priceRange ? { priceRange } : {}),
+  ...(week ? { openingHoursSpecification: openingHoursSpecification(week) } : {}),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${site}/` },
+    { '@type': 'ListItem', position: 2, name: province.name, item: `${site}/${province.slug}/` },
+    { '@type': 'ListItem', position: 3, name: town.name, item: `${site}${townUrl}` },
+    { '@type': 'ListItem', position: 4, name: `${station.brand} - ${station.address}`, item: url },
+  ],
+};
+---
+
+<Layout title={title} description={description} canonical={url} schema={[gasStationSchema, breadcrumbSchema]}>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav class="py-3.5 text-xs text-slate-600 flex items-center gap-1.5 flex-wrap" aria-label="Ruta de navegación">
+      <a href="/" class="hover:text-emerald-700 font-medium">Inicio</a>
+      <span class="text-slate-400">›</span>
+      <a href={`/${province.slug}/`} class="hover:text-emerald-700 font-medium">{province.name}</a>
+      <span class="text-slate-400">›</span>
+      <a href={townUrl} class="hover:text-emerald-700 font-medium">{town.name}</a>
+      <span class="text-slate-400">›</span>
+      <span class="text-slate-900 font-bold truncate max-w-[16rem]" aria-current="page">{station.brand} - {station.address}</span>
+    </nav>
+  </div>
+
+  <AdSlot format="horizontal" slotId="ficha-top" />
+
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-6">
+    <!-- Header -->
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7">
+      <div class="flex items-center gap-2 flex-wrap mb-3">
+        <span class={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border uppercase tracking-wide ${brandBadgeClass(station.brand)}`}>
+          {station.brand}
+        </span>
+        {lowCost && <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-sky-50 text-sky-800 border border-sky-200">Low-cost</span>}
+        {station.is_24h ? (
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+            </span>
+            Abierta 24 horas
+          </span>
+        ) : week ? (
+          <span
+            id="open-status"
+            data-week={JSON.stringify(week)}
+            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200"
+          >
+            <span class="status-dot w-2 h-2 rounded-full bg-slate-400"></span>
+            <span class="status-text">Horario: {station.schedule}</span>
+          </span>
+        ) : null}
+      </div>
+
+      <h1 class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
+        Gasolinera {station.brand} en {town.name}
+      </h1>
+      <p class="mt-2 text-sm text-slate-600 flex items-start gap-1.5">
+        <svg class="w-4 h-4 text-slate-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span>{station.address}, {station.postal_code ? `${station.postal_code} ` : ''}{station.town} ({province.name}) · {province.ccaa}</span>
+      </p>
+      <p class="mt-1 text-sm text-slate-600">
+        <span class="font-semibold text-slate-800">Horario:</span> {station.is_24h ? 'Abierta las 24 horas, todos los días' : station.schedule}
+      </p>
+    </section>
+
+    <!-- Live prices -->
+    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" aria-labelledby="precios-title">
+      <div class="px-5 sm:px-7 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <h2 id="precios-title" class="text-lg font-black text-slate-950">Precios de hoy</h2>
+        <p class="text-[11px] font-semibold text-slate-500 inline-flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Última actualización oficial MITECO: <time>{updatedAt}</time>
+        </p>
+      </div>
+      {availableFuels.length > 0 ? (
+        <ul class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 divide-slate-100">
+          {availableFuels.map((f) => {
+            const price = station.prices[f.key] as number;
+            const featured = f.key === 'gasolina95' || f.key === 'diesel';
+            return (
+              <li class={`flex items-center justify-between gap-3 px-5 sm:px-7 py-3.5 sm:border-b sm:border-slate-100 ${featured ? 'bg-slate-50/60' : ''}`}>
+                <span class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                  <span class={`w-2.5 h-2.5 rounded-full ${f.dot}`}></span>
+                  {f.label}
+                </span>
+                <span class="tabular-nums">
+                  <span class={`${featured ? 'text-2xl' : 'text-lg'} font-black text-slate-950`}>{fmtPrice(price)}</span>
+                  <span class="text-xs font-bold text-slate-500"> €/L</span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p class="px-5 sm:px-7 py-6 text-sm text-slate-500">Esta estación no tiene precios publicados en este momento.</p>
+      )}
+    </section>
+
+    <!-- Savings comparator -->
+    {comparisons.length > 0 && (
+      <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7" aria-labelledby="ahorro-title">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
+          <div>
+            <h2 id="ahorro-title" class="text-lg font-black text-slate-950">Comparador de ahorro</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Frente a la media de {town.name} ({town.count} {town.count === 1 ? 'gasolinera' : 'gasolineras'}) y de la provincia de {province.name}.</p>
+          </div>
+          <label class="text-xs font-semibold text-slate-600 flex items-center gap-2">
+            Depósito:
+            <input id="tank-liters" type="range" min="20" max="90" step="5" value={TANK} class="accent-emerald-600 w-28" />
+            <span id="tank-liters-label" class="font-black text-slate-900 tabular-nums w-10">{TANK} L</span>
+          </label>
+        </div>
+
+        {primarySaving !== null && (
+          <div class={`rounded-xl p-4 mb-4 border ${primarySaving >= 0 ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'}`}>
+            <p class="text-sm font-semibold">
+              {primarySaving >= 0 ? 'Ahorro estimado de ' : 'Pagarías '}
+              <strong class="text-lg font-black tabular-nums savings-amount" data-diff={(primary.prov! - primary.price).toFixed(4)}>{fmtEuros(Math.abs(primarySaving))}</strong>
+              {primarySaving >= 0 ? ' ' : ' más '}en un depósito de <span class="tank-label">{TANK}</span> L de {primary.label} frente a la media provincial.
+            </p>
+          </div>
+        )}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {comparisons.map((c) => (
+            <div class="rounded-xl border border-slate-200 p-4">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase tracking-wide text-slate-600">{c.label}</span>
+                <span class="text-base font-black tabular-nums text-slate-950">{fmtPrice(c.price)} €/L</span>
+              </div>
+              <dl class="space-y-1.5 text-xs">
+                {[{ label: `Media ${town.name}`, avg: c.muni }, { label: `Media ${province.name}`, avg: c.prov }].map((row) =>
+                  row.avg !== null ? (
+                    <div class="flex items-center justify-between gap-2">
+                      <dt class="text-slate-500 truncate">{row.label} ({fmtPrice(row.avg)} €)</dt>
+                      <dd
+                        class={`font-bold tabular-nums savings-amount ${row.avg - c.price >= 0 ? 'text-emerald-700' : 'text-rose-600'}`}
+                        data-diff={(row.avg - c.price).toFixed(4)}
+                        data-signed="1"
+                      >
+                        {row.avg - c.price >= 0 ? '−' : '+'}{fmtEuros(Math.abs((row.avg - c.price) * TANK))}
+                      </dd>
+                    </div>
+                  ) : null
+                )}
+              </dl>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <AdSlot format="horizontal" slotId="ficha-mid" />
+
+    <!-- Related stations -->
+    {related.length > 0 && (
+      <section aria-labelledby="relacionadas-title">
+        <div class="flex items-end justify-between gap-3 mb-3">
+          <h2 id="relacionadas-title" class="text-lg font-black text-slate-950">Otras gasolineras baratas en {town.name}</h2>
+          <a href={townUrl} class="text-xs font-bold text-emerald-700 hover:underline shrink-0">Ver todas →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {related.map((s) => (
+            <GasolineraCard station={s} avgGasolina95={town.avgG95} avgDiesel={town.avgDiesel} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Final CTA -->
+    <section class="bg-slate-900 rounded-2xl p-5 sm:p-7 text-white">
+      <h2 class="text-lg font-black">¿Vas a repostar aquí?</h2>
+      <p class="text-sm text-slate-300 mt-1 mb-4">{station.address}, {station.town}. Abre la ruta en tu navegador GPS favorito.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <a
+          href={mapsUrl(station.lat, station.lng)}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+          class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-black transition-colors"
+        >
+          📍 Cómo llegar con Google Maps
+        </a>
+        <a
+          href={wazeUrl(station.lat, station.lng)}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+          class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-bold transition-colors"
+        >
+          🚗 Abrir en Waze
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  import { isOpenAt, type WeekSchedule } from '../../lib/stations';
+
+  const status = document.getElementById('open-status');
+  if (status?.dataset.week) {
+    try {
+      const week = JSON.parse(status.dataset.week) as WeekSchedule;
+      const open = isOpenAt(week, new Date());
+      const dot = status.querySelector('.status-dot');
+      const text = status.querySelector('.status-text');
+      status.className = `inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border ${
+        open ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'
+      }`;
+      dot?.classList.replace('bg-slate-400', open ? 'bg-emerald-600' : 'bg-rose-500');
+      if (open) dot?.classList.add('animate-pulse');
+      if (text) text.textContent = open ? 'Abierta ahora' : 'Cerrada ahora';
+    } catch {
+      /* keep the static schedule text */
+    }
+  }
+
+  const slider = document.getElementById('tank-liters') as HTMLInputElement | null;
+  const sliderLabel = document.getElementById('tank-liters-label');
+  const fmt = (v: number) => `${v.toFixed(2).replace('.', ',')} €`;
+
+  slider?.addEventListener('input', () => {
+    const liters = Number(slider.value);
+    if (sliderLabel) sliderLabel.textContent = `${liters} L`;
+    document.querySelectorAll<HTMLElement>('.tank-label').forEach((el) => (el.textContent = String(liters)));
+    document.querySelectorAll<HTMLElement>('.savings-amount').forEach((el) => {
+      const diff = Number(el.dataset.diff);
+      const amount = fmt(Math.abs(diff * liters));
+      el.textContent = el.dataset.signed ? `${diff >= 0 ? '−' : '+'}${amount}` : amount;
+    });
+  });
+</script>

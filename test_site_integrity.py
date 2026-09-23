@@ -69,7 +69,8 @@ def test_essential_pages_exist():
 
 
 def test_seo_and_schema_meta():
-    html_files = list(DIST_DIR.rglob("*.html"))
+    # Skip search-console verification files (e.g. google*.html), which are not site pages
+    html_files = [hf for hf in DIST_DIR.rglob("*.html") if not hf.name.startswith("google")]
     for hf in html_files:
         content = hf.read_text(encoding="utf-8")
         assert "<title>" in content and "</title>" in content, f"{hf.name} missing <title>"
@@ -99,7 +100,7 @@ def test_robots_txt():
     assert robots.exists(), "robots.txt missing in dist"
     content = robots.read_text(encoding="utf-8")
     assert "User-agent: *" in content
-    assert "Sitemap: https://gasolineras-espana.es/sitemap-index.xml" in content
+    assert "Sitemap: https://gasolinerasenlinea.es/sitemap-index.xml" in content
     print("[PASS] robots.txt valid and references sitemap")
 
 
@@ -125,8 +126,8 @@ def test_boosted_ui_elements():
     assert "btn-gps-locate" in content, "Missing GPS locate button"
     assert "calc-tank-slider" in content, "Missing Savings Calculator component"
     assert "Plus+Jakarta+Sans" in content, "Missing Plus Jakarta Sans font link"
-    assert "tab-btn-g95" in content, "Missing fuel switcher tabs"
-    print("[PASS] Boosted UI components verified in index.html (GPS, Calculator, Fonts, Tabs)")
+    assert "top5-g95" in content and "hero-search" in content, "Missing search hero or top 5 lists"
+    print("[PASS] Boosted UI components verified in index.html (GPS, Search, Calculator, Fonts, Top 5)")
 
 
 def test_internal_links_resolution():

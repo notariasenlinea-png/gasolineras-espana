@@ -4,6 +4,7 @@ import GasolineraCard from '../../components/GasolineraCard.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import AmazonV16 from '../../components/AmazonV16.astro';
 import provincesMeta from '../../data/provinces.json';
+import { stationUrl } from '../../lib/stations';
 
 export async function getStaticPaths() {
   const paths = [];
@@ -104,56 +105,37 @@ const breadcrumbSchema = {
     <span class="font-bold text-slate-900" aria-current="page">{name}</span>
   </nav>
 
-  <!-- Province Header Hero -->
-  <section class="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 text-white py-10 sm:py-16 border-b border-slate-700/80 shadow-inner">
+  <!-- Province header -->
+  <section class="bg-white border-y border-slate-200 py-8 sm:py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="max-w-3xl">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold uppercase tracking-wider mb-4 shadow-xs">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          {ccaa} • {total_stations} Gasolineras
+      <p class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-emerald-800 mb-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+        {ccaa} · {total_stations} gasolineras · Actualizado {updated_at}
+      </p>
+      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-slate-950">
+        Gasolineras más baratas en {name} hoy
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 max-w-2xl mt-2">
+        Dónde repostar gasolina 95 y diésel al mejor precio en la provincia de {name}, con datos oficiales del MITECO.
+      </p>
+      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <dt class="text-[11px] font-bold uppercase text-slate-500">Mín. Gasolina 95</dt>
+          <dd class="text-2xl font-black text-emerald-700 tabular-nums">{min_gasolina95 ? `${min_gasolina95.toFixed(3)} €` : 'N/D'}</dd>
         </div>
-        <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-3">
-          Gasolineras Más Baratas en <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">{name}</span>
-        </h1>
-        <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
-          Precios actualizados en tiempo real ({updated_at}). Descubre dónde repostar Gasolina 95 y Diésel al precio más bajo en toda la provincia de {name}.
-        </p>
-
-        <!-- Metrics cards for province -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8">
-          <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700 shadow-sm">
-            <span class="text-[11px] text-slate-400 font-bold block mb-1">Mínimo Gasolina 95</span>
-            <span class="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums">
-              {min_gasolina95 ? `${min_gasolina95.toFixed(3)} €` : 'N/D'}
-            </span>
-            <span class="text-[10px] text-emerald-300/80 block mt-0.5">Precio récord hoy</span>
-          </div>
-
-          <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700 shadow-sm">
-            <span class="text-[11px] text-slate-400 font-bold block mb-1">Mínimo Diésel A</span>
-            <span class="text-xl sm:text-2xl font-black text-sky-400 tabular-nums">
-              {min_diesel ? `${min_diesel.toFixed(3)} €` : 'N/D'}
-            </span>
-            <span class="text-[10px] text-sky-300/80 block mt-0.5">Precio récord hoy</span>
-          </div>
-
-          <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700 shadow-sm">
-            <span class="text-[11px] text-slate-400 font-bold block mb-1">Media Gasolina 95</span>
-            <span class="text-xl sm:text-2xl font-black text-white tabular-nums">
-              {avg_gasolina95 ? `${avg_gasolina95.toFixed(3)} €` : 'N/D'}
-            </span>
-            <span class="text-[10px] text-slate-400 block mt-0.5">Media provincial</span>
-          </div>
-
-          <div class="bg-slate-800/90 rounded-2xl p-4 border border-slate-700 shadow-sm">
-            <span class="text-[11px] text-slate-400 font-bold block mb-1">Media Diésel A</span>
-            <span class="text-xl sm:text-2xl font-black text-white tabular-nums">
-              {avg_diesel ? `${avg_diesel.toFixed(3)} €` : 'N/D'}
-            </span>
-            <span class="text-[10px] text-slate-400 block mt-0.5">Media provincial</span>
-          </div>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <dt class="text-[11px] font-bold uppercase text-slate-500">Mín. Diésel A</dt>
+          <dd class="text-2xl font-black text-sky-700 tabular-nums">{min_diesel ? `${min_diesel.toFixed(3)} €` : 'N/D'}</dd>
         </div>
-      </div>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <dt class="text-[11px] font-bold uppercase text-slate-500">Media Gasolina 95</dt>
+          <dd class="text-2xl font-black text-slate-950 tabular-nums">{avg_gasolina95 ? `${avg_gasolina95.toFixed(3)} €` : 'N/D'}</dd>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <dt class="text-[11px] font-bold uppercase text-slate-500">Media Diésel A</dt>
+          <dd class="text-2xl font-black text-slate-950 tabular-nums">{avg_diesel ? `${avg_diesel.toFixed(3)} €` : 'N/D'}</dd>
+        </div>
+      </dl>
     </div>
   </section>
 
@@ -289,7 +271,7 @@ const breadcrumbSchema = {
               <th scope="col" class="py-3.5 px-4 text-right">Gasolina 95</th>
               <th scope="col" class="py-3.5 px-4 text-right">Diésel A</th>
               <th scope="col" class="py-3.5 px-4 text-center">Horario</th>
-              <th scope="col" class="py-3.5 px-4 text-center">Navegación</th>
+              <th scope="col" class="py-3.5 px-4 text-center">Detalles</th>
             </tr>
           </thead>
           <tbody id="stations-table-body" class="divide-y divide-slate-100 bg-white">
@@ -335,15 +317,10 @@ const breadcrumbSchema = {
                 </td>
                 <td class="py-3.5 px-4 text-center whitespace-nowrap">
                   <a
-                    href={st.maps_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={stationUrl(st)}
                     class="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-900 font-bold hover:underline py-1 px-2 rounded-lg hover:bg-emerald-50"
                   >
-                    GPS
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
+                    Ver ficha →
                   </a>
                 </td>
               </tr>

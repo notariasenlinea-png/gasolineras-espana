@@ -1,15 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import GasolineraCard from '../components/GasolineraCard.astro';
-import GpsNearby from '../components/GpsNearby.astro';
+import HeroSearch from '../components/HeroSearch.astro';
 import SavingsCalculator from '../components/SavingsCalculator.astro';
 import AdSlot from '../components/AdSlot.astro';
 import AmazonV16 from '../components/AmazonV16.astro';
 
 import summary from '../data/summary.json';
 import provinces from '../data/provinces.json';
+import { brandBadgeClass, fmtEuros, fmtPrice, stationUrl, type GasStation } from '../lib/stations';
 
 const { national_averages, cheapest_gasolina95, cheapest_diesel, updated_at, total_stations } = summary;
+
+const topLists = [
+  { id: 'top5-g95', label: 'Gasolina 95', fuel: 'gasolina95', dot: 'bg-emerald-600', more: '/gasolina-95/', stations: cheapest_gasolina95.slice(0, 5) as GasStation[] },
+  { id: 'top5-diesel', label: 'Diésel A', fuel: 'diesel', dot: 'bg-sky-600', more: '/diesel/', stations: cheapest_diesel.slice(0, 5) as GasStation[] },
+] as const;
 
 const title = 'Precio Gasolina y Diésel Hoy en España | Gasolineras Más Baratas en Directo';
 const description = `Consulta en directo el precio de la gasolina 95 (${national_averages.gasolina95} €/L) y diésel (${national_averages.diesel} €/L) en más de ${total_stations.toLocaleString('es-ES')} gasolineras de España. Ahorra hasta 30 céntimos por litro con datos oficiales MITECO.`;
@@ -25,7 +30,7 @@ const faqs = [
   },
   {
     question: '¿Cómo puedo encontrar las gasolineras más baratas cerca de mí?',
-    answer: 'Utiliza nuestro botón "Activar GPS y Buscar Cerca" situado en la sección superior. El sistema solicitará permiso a tu dispositivo y calculará en menos de 1 segundo mediante la fórmula de Haversine la distancia exacta a todas las estaciones cercanas, mostrándote en primer lugar las más baratas.'
+    answer: 'Pulsa el botón "Gasolineras cerca de mí" en la parte superior. Tras dar permiso de ubicación, calculamos al instante la distancia a todas las estaciones y te mostramos las 5 más cercanas con su precio. También puedes buscar por municipio, código postal o marca.'
   },
   {
     question: '¿Por qué hay tanta diferencia de precio entre gasolineras?',
@@ -52,162 +57,84 @@ const faqSchema = {
 ---
 
 <Layout title={title} description={description} schema={faqSchema} activeFuel="home">
-  <!-- Hero Section -->
-  <section class="relative bg-gradient-to-b from-emerald-950/10 via-slate-50 to-slate-50 pt-10 pb-8 sm:pt-16 sm:pb-14 border-b border-slate-200/80">
+  <!-- Hero: search & nearby first -->
+  <section class="bg-white border-b border-slate-200 pt-10 pb-10 sm:pt-16 sm:pb-14">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center max-w-3xl mx-auto">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-900 text-xs font-black uppercase tracking-wider mb-4 border border-emerald-300 shadow-2xs">
-          <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-          Precios Oficiales de Hoy: {updated_at}
-        </div>
-        
-        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-950 tracking-tight leading-tight sm:leading-none mb-4">
-          Precios de Gasolina y Diésel <br class="hidden sm:inline" />
-          <span class="text-emerald-700">Hoy en España</span>
-        </h1>
-        
-        <p class="text-base sm:text-lg text-slate-700 mb-8 leading-relaxed max-w-2xl mx-auto">
-          Monitorizamos en directo <strong>{total_stations.toLocaleString('es-ES')} gasolineras</strong> en toda España. Compara precios al instante y ahorra hasta <strong>{((national_averages.gasolina95 - national_averages.min_gasolina95) * 50).toFixed(1)}€</strong> por cada depósito.
+        <p class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold uppercase tracking-wider mb-4 border border-emerald-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+          Precios oficiales MITECO · {updated_at}
         </p>
-
-        <!-- Bento-Style National Averages KPI Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto">
-          <!-- Gasolina 95 Media -->
-          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-soft-card hover:border-emerald-500 hover:-translate-y-0.5 transition-all text-left">
-            <div class="flex items-center justify-between text-xs text-slate-600 font-bold mb-1">
-              <span>Media Gasolina 95</span>
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
-            </div>
-            <div class="flex items-baseline gap-1 my-1.5">
-              <span class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight tabular-nums">
-                {national_averages.gasolina95.toFixed(3)}
-              </span>
-              <span class="text-xs font-bold text-slate-500">€/L</span>
-            </div>
-            <p class="text-xs text-emerald-800 font-bold">Mínimo: {national_averages.min_gasolina95.toFixed(3)} €</p>
-          </div>
-
-          <!-- Diésel Media -->
-          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-soft-card hover:border-sky-500 hover:-translate-y-0.5 transition-all text-left">
-            <div class="flex items-center justify-between text-xs text-slate-600 font-bold mb-1">
-              <span>Media Diésel A</span>
-              <span class="w-2.5 h-2.5 rounded-full bg-sky-600"></span>
-            </div>
-            <div class="flex items-baseline gap-1 my-1.5">
-              <span class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight tabular-nums">
-                {national_averages.diesel.toFixed(3)}
-              </span>
-              <span class="text-xs font-bold text-slate-500">€/L</span>
-            </div>
-            <p class="text-xs text-sky-800 font-bold">Mínimo: {national_averages.min_diesel.toFixed(3)} €</p>
-          </div>
-
-          <!-- Estaciones Monitorizadas -->
-          <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-soft-card text-left">
-            <div class="flex items-center justify-between text-xs text-slate-600 font-bold mb-1">
-              <span>Gasolineras Activas</span>
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-            </div>
-            <div class="flex items-baseline gap-1 my-1.5">
-              <span class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight tabular-nums">
-                {total_stations.toLocaleString('es-ES')}
-              </span>
-            </div>
-            <p class="text-xs text-slate-600 font-semibold">50 prov. + Ceuta/Melilla</p>
-          </div>
-
-          <!-- Ahorro Potencial Máximo -->
-          <div class="bg-gradient-to-br from-emerald-700 via-emerald-800 to-teal-900 rounded-2xl p-4 sm:p-5 text-white shadow-md shadow-emerald-900/20 text-left">
-            <div class="text-xs font-black text-emerald-200 uppercase tracking-wider mb-1">
-              Ahorro / Depósito
-            </div>
-            <div class="flex items-baseline gap-1 my-1.5">
-              <span class="text-2xl sm:text-3xl font-black tracking-tight text-white tabular-nums">
-                {((national_averages.gasolina95 - national_averages.min_gasolina95) * 50).toFixed(2)}
-              </span>
-              <span class="text-xs font-bold text-emerald-200">€ (50L)</span>
-            </div>
-            <p class="text-xs text-emerald-100 font-medium">Eligiendo la más barata</p>
-          </div>
-        </div>
+        <h1 class="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight leading-tight mb-3">
+          Encuentra la gasolinera más barata <span class="text-emerald-700">cerca de ti</span>
+        </h1>
+        <p class="text-sm sm:text-base text-slate-600 mb-8 max-w-2xl mx-auto">
+          Compara al instante los precios de gasolina y diésel en las {total_stations.toLocaleString('es-ES')} gasolineras de España.
+        </p>
       </div>
+
+      <HeroSearch />
+
+      <dl class="mt-8 grid grid-cols-3 max-w-2xl mx-auto divide-x divide-slate-200 rounded-2xl border border-slate-200 bg-slate-50 text-center">
+        <div class="p-3">
+          <dt class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Media G95</dt>
+          <dd class="text-lg sm:text-xl font-black text-slate-950 tabular-nums">{fmtPrice(national_averages.gasolina95)} €</dd>
+        </div>
+        <div class="p-3">
+          <dt class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Media Diésel</dt>
+          <dd class="text-lg sm:text-xl font-black text-slate-950 tabular-nums">{fmtPrice(national_averages.diesel)} €</dd>
+        </div>
+        <div class="p-3">
+          <dt class="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Ahorro / 50 L</dt>
+          <dd class="text-lg sm:text-xl font-black text-emerald-700 tabular-nums">hasta {fmtEuros((national_averages.gasolina95 - national_averages.min_gasolina95) * 50)}</dd>
+        </div>
+      </dl>
     </div>
   </section>
 
-  <!-- GPS Nearby Section Component -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <GpsNearby />
-  </div>
-
-  <!-- Ad Slot Top -->
   <AdSlot format="horizontal" slotId="home-top-banner" />
 
-  <!-- Top 10 National Cheapest Section -->
+  <!-- Top 5 national -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14" aria-labelledby="top-cheapest-title">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-      <div>
-        <div class="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-emerald-800 mb-1">
-          <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-          Precios Mínimos Verificados
+    <div class="mb-6">
+      <h2 id="top-cheapest-title" class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
+        Las 5 gasolineras más baratas de España hoy
+      </h2>
+      <p class="text-sm text-slate-600 mt-1">Ranking nacional según los precios oficiales comunicados al MITECO.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      {topLists.map((list) => (
+        <div id={list.id} class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100">
+            <h3 class="flex items-center gap-2 text-base font-black text-slate-950">
+              <span class={`w-2.5 h-2.5 rounded-full ${list.dot}`}></span>
+              {list.label}
+            </h3>
+            <a href={list.more} class="text-xs font-bold text-emerald-700 hover:underline">Ver top 15 →</a>
+          </div>
+          <ol class="divide-y divide-slate-100">
+            {list.stations.map((st, i) => (
+              <li>
+                <a href={stationUrl(st)} class="group flex items-center gap-3 px-5 py-3 hover:bg-slate-50 transition-colors">
+                  <span class={`w-7 h-7 shrink-0 rounded-lg flex items-center justify-center text-xs font-black ${i === 0 ? 'bg-amber-400 text-amber-950' : 'bg-slate-100 text-slate-600'}`}>{i + 1}</span>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2">
+                      <span class={`px-1.5 py-0.5 rounded text-[10px] font-bold border uppercase ${brandBadgeClass(st.brand)}`}>{st.brand}</span>
+                      {st.is_24h && <span class="text-[10px] font-bold text-emerald-700">24H</span>}
+                    </div>
+                    <p class="text-xs text-slate-600 truncate mt-0.5">{st.address} · <strong class="text-slate-800">{st.town}</strong> ({st.province})</p>
+                  </div>
+                  <span class="text-right tabular-nums shrink-0">
+                    <span class="block text-lg font-black text-slate-950">{fmtPrice(st.prices[list.fuel])}</span>
+                    <span class="block text-[10px] font-bold text-slate-500">€/L</span>
+                  </span>
+                  <span class="text-slate-300 group-hover:text-emerald-600" aria-hidden="true">›</span>
+                </a>
+              </li>
+            ))}
+          </ol>
         </div>
-        <h2 id="top-cheapest-title" class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
-          Top 10 Gasolineras Más Baratas de España Hoy
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-600 mt-1">
-          Compara las estaciones con los precios más bajos del territorio nacional según el MITECO.
-        </p>
-      </div>
-
-      <!-- Fuel Switch Tabs with accessible ARIA -->
-      <div class="inline-flex p-1 bg-slate-200/90 rounded-2xl" role="tablist" aria-label="Selección de combustible para ranking">
-        <button
-          id="tab-btn-g95"
-          type="button"
-          role="tab"
-          aria-selected="true"
-          aria-controls="tab-content-g95"
-          class="px-4 py-2 text-xs font-black rounded-xl transition-all bg-white text-slate-950 shadow-2xs cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-600"
-        >
-          Gasolina 95
-        </button>
-        <button
-          id="tab-btn-diesel"
-          type="button"
-          role="tab"
-          aria-selected="false"
-          aria-controls="tab-content-diesel"
-          class="px-4 py-2 text-xs font-bold rounded-xl transition-all text-slate-700 hover:text-slate-950 cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-600"
-        >
-          Diésel / Gasóleo A
-        </button>
-      </div>
-    </div>
-
-    <!-- Gasolina 95 Grid -->
-    <div id="tab-content-g95" role="tabpanel" aria-labelledby="tab-btn-g95" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      {cheapest_gasolina95.slice(0, 9).map((st, i) => (
-        <GasolineraCard
-          station={st}
-          rank={i + 1}
-          avgGasolina95={national_averages.gasolina95}
-          avgDiesel={national_averages.diesel}
-          highlightFuel="gasolina95"
-        />
-      ))}
-    </div>
-
-    <!-- Diésel Grid (hidden by default) -->
-    <div id="tab-content-diesel" role="tabpanel" aria-labelledby="tab-btn-diesel" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      {cheapest_diesel.slice(0, 9).map((st, i) => (
-        <GasolineraCard
-          station={st}
-          rank={i + 1}
-          avgGasolina95={national_averages.gasolina95}
-          avgDiesel={national_averages.diesel}
-          highlightFuel="diesel"
-        />
       ))}
     </div>
   </section>
@@ -313,32 +240,6 @@ const faqSchema = {
 </Layout>
 
 <script>
-  // Top 10 Fuel Tabs Switcher with ARIA support
-  const btnG95 = document.getElementById('tab-btn-g95');
-  const btnDiesel = document.getElementById('tab-btn-diesel');
-  const contentG95 = document.getElementById('tab-content-g95');
-  const contentDiesel = document.getElementById('tab-content-diesel');
-
-  if (btnG95 && btnDiesel && contentG95 && contentDiesel) {
-    btnG95.addEventListener('click', () => {
-      btnG95.className = 'px-4 py-2 text-xs font-black rounded-xl transition-all bg-white text-slate-950 shadow-2xs cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-600';
-      btnG95.setAttribute('aria-selected', 'true');
-      btnDiesel.className = 'px-4 py-2 text-xs font-bold rounded-xl transition-all text-slate-700 hover:text-slate-950 cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-600';
-      btnDiesel.setAttribute('aria-selected', 'false');
-      contentG95.classList.remove('hidden');
-      contentDiesel.classList.add('hidden');
-    });
-
-    btnDiesel.addEventListener('click', () => {
-      btnDiesel.className = 'px-4 py-2 text-xs font-black rounded-xl transition-all bg-white text-slate-950 shadow-2xs cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-600';
-      btnDiesel.setAttribute('aria-selected', 'true');
-      btnG95.className = 'px-4 py-2 text-xs font-bold rounded-xl transition-all text-slate-700 hover:text-slate-950 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-600';
-      btnG95.setAttribute('aria-selected', 'false');
-      contentDiesel.classList.remove('hidden');
-      contentG95.classList.add('hidden');
-    });
-  }
-
   // Live filter for 52 provinces
   const searchInput = document.getElementById('province-search') as HTMLInputElement | null;
   const countBadge = document.getElementById('province-count-badge');
