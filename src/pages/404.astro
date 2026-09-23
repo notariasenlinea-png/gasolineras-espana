@@ -1,79 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
 import provinces from '../data/provinces.json';
-
-const title = 'Página o Municipio no Encontrado (404) | Gasolineras en Línea';
-const description = 'El municipio solicitado no cuenta con estaciones de servicio activas en el registro oficial MITECO o la página ha cambiado de dirección. Consulta las gasolineras de tu provincia.';
 ---
 
-<Layout title={title} description={description} robots="noindex, follow">
-  <div class="min-h-[70vh] bg-gradient-to-b from-slate-50 via-white to-slate-50 py-12 sm:py-16">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      
-      <!-- 404 Badge -->
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider mb-6 border border-amber-300 shadow-2xs">
-        <span>⚠️ Código 404 · Ruta no encontrada</span>
-      </div>
-
-      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-4">
-        ¿Buscabas una localidad o gasolinera?
-      </h1>
-
-      <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Si has llegado aquí buscando un municipio que no cuenta con estaciones de repostaje operativas en el registro del <strong>Ministerio para la Transición Ecológica (MITECO)</strong>, puedes consultar las estaciones más baratas en los municipios vecinos seleccionando tu provincia a continuación.
-      </p>
-
-      <!-- Primary Action Buttons -->
-      <div class="flex flex-wrap justify-center items-center gap-3 mb-14">
-        <a
-          href="/"
-          class="px-6 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2"
-        >
-          <span>⛽ Ver gasolineras más baratas de España</span>
-        </a>
-        <a
-          href="/gasolina-95/"
-          class="px-6 py-3 rounded-xl bg-white border border-slate-300 hover:border-emerald-600 text-slate-700 hover:text-emerald-700 font-bold text-sm shadow-2xs transition-all inline-flex items-center gap-2"
-        >
-          <span>Ranking Gasolina 95</span>
-        </a>
-        <a
-          href="/diesel/"
-          class="px-6 py-3 rounded-xl bg-white border border-slate-300 hover:border-emerald-600 text-slate-700 hover:text-emerald-700 font-bold text-sm shadow-2xs transition-all inline-flex items-center gap-2"
-        >
-          <span>Ranking Diésel</span>
-        </a>
-      </div>
-
-      <!-- Province Hub Grid -->
-      <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 text-left shadow-2xs">
-        <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
-          <div>
-            <h2 class="text-xl font-black text-slate-900">
-              Directorio de Gasolineras por Provincia
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
-              52 provincias con precios en directo y más de 3.200 municipios activos
-            </p>
-          </div>
-          <span class="hidden sm:inline-block text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-            11.483 Estaciones
-          </span>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
-          {provinces.map((prov) => (
-            <a
-              href={`/${prov.slug}/`}
-              class="px-3 py-2 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-xs font-semibold text-slate-700 hover:text-emerald-800 transition-colors flex items-center justify-between"
-            >
-              <span class="truncate">{prov.name}</span>
-              <span class="text-[10px] text-slate-400">→</span>
-            </a>
-          ))}
-        </div>
-      </div>
-
+<Layout title="Página no encontrada | Gasolineras en Línea" description="La página que buscas no existe. Busca tu municipio o consulta las gasolineras de tu provincia." robots="noindex, follow">
+  <section class="wrap py-16 sm:py-24">
+    <p class="eyebrow mb-4">Error 404</p>
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-[-0.035em] max-w-2xl">Esta página se ha quedado sin gasolina.</h1>
+    <p class="text-lg text-ink-500 mt-4 max-w-xl">Puede que la gasolinera haya dejado de comunicar precios o que el enlace haya cambiado.</p>
+    <div class="flex flex-wrap gap-2 mt-8">
+      <a href="/#buscar" class="btn-volt"><Icon name="search" class="w-4 h-4" /> Buscar gasolinera</a>
+      <a href="/mapa/" class="btn-ghost"><Icon name="map" class="w-4 h-4" /> Ver el mapa</a>
     </div>
-  </div>
+    <h2 class="text-xl font-bold mt-16 mb-4">O elige tu provincia</h2>
+    <ul class="flex flex-wrap gap-2">
+      {provinces.map((p) => <li><a href={`/${p.slug}/`} class="chip">{p.name}</a></li>)}
+    </ul>
+  </section>
 </Layout>

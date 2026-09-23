@@ -1,0 +1,13 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PriceMap from '../../components/PriceMap.astro';
+import summary from '../../data/summary.json';
+
+const title = 'Mapa de precios de gasolineras en España | Gasolina y diésel hoy';
+const description = `Mapa interactivo con las ${summary.total_stations.toLocaleString('es-ES')} gasolineras de España coloreadas por precio. Encuentra de un vistazo la gasolina y el diésel más baratos en tu zona.`;
+---
+
+<Layout title={title} description={description} active="mapa" footer={false}>
+  <h1 class="sr-only">Mapa de precios de gasolineras en España</h1>
+  <PriceMap id="full-map" source="all" panel class="h-[calc(100dvh-4rem-4.25rem)] md:h-[calc(100dvh-4rem)]" />
+</Layout>

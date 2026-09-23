@@ -125,9 +125,10 @@ def test_boosted_ui_elements():
     content = index_file.read_text(encoding="utf-8")
     assert "btn-gps-locate" in content, "Missing GPS locate button"
     assert "calc-tank-slider" in content, "Missing Savings Calculator component"
-    assert "Plus+Jakarta+Sans" in content, "Missing Plus Jakarta Sans font link"
-    assert "top5-g95" in content and "hero-search" in content, "Missing search hero or top 5 lists"
-    print("[PASS] Boosted UI components verified in index.html (GPS, Search, Calculator, Fonts, Top 5)")
+    assert "finder-input" in content, "Missing search box"
+    assert "top5-g95" in content, "Missing top 5 lists"
+    assert "home-map" in content, "Missing price map"
+    print("[PASS] Core UI components verified in index.html (GPS, Search, Calculator, Top 5, Map)")
 
 
 def test_internal_links_resolution():

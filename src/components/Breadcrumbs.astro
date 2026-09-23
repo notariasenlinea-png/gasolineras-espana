@@ -1,0 +1,25 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  items: Array<{ label: string; href?: string }>;
+  dark?: boolean;
+}
+
+const { items, dark = false } = Astro.props;
+---
+
+<nav aria-label="Ruta de navegación" class={`text-[13px] ${dark ? 'text-white/60' : 'text-ink-500'}`}>
+  <ol class="flex items-center gap-1 flex-wrap">
+    {items.map((it, i) => (
+      <li class="flex items-center gap-1 min-w-0">
+        {i > 0 && <Icon name="chevron-right" class="w-3.5 h-3.5 opacity-50 shrink-0" />}
+        {it.href ? (
+          <a href={it.href} class={`hover:underline underline-offset-4 ${dark ? 'hover:text-white' : 'hover:text-ink'}`}>{it.label}</a>
+        ) : (
+          <span aria-current="page" class={`font-medium truncate max-w-[14rem] ${dark ? 'text-white' : 'text-ink'}`}>{it.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

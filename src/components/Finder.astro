@@ -1,0 +1,380 @@
+---
+// Search-first finder for the home hero: autocompletado + GPS "cerca de mí".
+import Icon from './Icon.astro';
+---
+
+<div id="buscar" class="finder scroll-mt-24 w-full">
+  <div class="relative">
+    <label for="finder-input" class="sr-only">Busca por municipio, código postal, provincia o marca</label>
+    <Icon name="search" class="w-5 h-5 text-ink-400 absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none" />
+    <input
+      id="finder-input"
+      type="search"
+      autocomplete="off"
+      spellcheck="false"
+      enterkeyhint="search"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-expanded="false"
+      aria-controls="finder-options"
+      placeholder="Municipio, código postal o marca"
+      class="w-full h-16 pl-14 pr-5 rounded-3xl bg-white text-ink text-[17px] placeholder:text-ink-300 shadow-lift border-0 focus:outline-none focus:ring-4 focus:ring-volt/60"
+    />
+    <ul id="finder-options" role="listbox" class="hidden absolute z-50 mt-2 w-full max-h-[22rem] overflow-y-auto rounded-3xl bg-white shadow-lift p-2 text-ink"></ul>
+  </div>
+
+  <div class="mt-3 flex flex-wrap items-center gap-2">
+    <button id="btn-gps-locate" type="button" class="btn-volt h-12">
+      <Icon name="locate" class="w-[18px] h-[18px]" />
+      <span id="btn-gps-text">Gasolineras cerca de mí</span>
+    </button>
+    <div class="seg-dark" role="group" aria-label="Combustible">
+      <button type="button" class="finder-fuel" data-fuel="g95" aria-pressed="true">SP95</button>
+      <button type="button" class="finder-fuel" data-fuel="diesel" aria-pressed="false">Diésel</button>
+    </div>
+    <div class="flex gap-1.5" role="group" aria-label="Filtros">
+      <button type="button" class="finder-filter h-9 px-3 rounded-full text-[13px] font-medium border border-white/15 text-white/70 hover:text-white aria-pressed:bg-white aria-pressed:text-ink aria-pressed:border-white" data-filter="24h" aria-pressed="false">24h</button>
+      <button type="button" class="finder-filter h-9 px-3 rounded-full text-[13px] font-medium border border-white/15 text-white/70 hover:text-white aria-pressed:bg-white aria-pressed:text-ink aria-pressed:border-white" data-filter="lowcost" aria-pressed="false">Low-cost</button>
+    </div>
+  </div>
+
+  <div id="finder-results" class="hidden mt-5 rounded-3xl bg-white text-ink shadow-lift overflow-hidden animate-rise" aria-live="polite">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 pt-4 pb-3">
+      <div class="min-w-0">
+        <p id="finder-title" class="font-display font-bold text-[17px] truncate"></p>
+        <p id="finder-sub" class="text-[13px] text-ink-500 truncate"></p>
+      </div>
+      <div id="finder-sort" class="seg shrink-0 self-start sm:self-auto hidden" role="group" aria-label="Ordenar">
+        <button type="button" data-sort="near" aria-pressed="true">Cerca</button>
+        <button type="button" data-sort="cheap" aria-pressed="false">Barato</button>
+      </div>
+    </div>
+    <ol id="finder-list" class="divide-y divide-ink-100 border-t border-ink-100"></ol>
+    <a id="finder-map" href="/mapa/" class="flex items-center justify-center gap-2 py-3.5 text-[14px] font-semibold border-t border-ink-100 hover:bg-ink-50">
+      <Icon name="map" class="w-4 h-4" /> Ver todas en el mapa
+    </a>
+  </div>
+  <p id="finder-status" class="hidden mt-3 text-[13px] text-white/70"></p>
+</div>
+
+<script>
+  import { brandStyle, fmtKm, haversineKm, isLowCost, lightStationUrl, type StationLight } from '../lib/stations';
+
+  type SearchIndex = { p: Array<[string, string, number]>; m: Array<[string, string, string, number, string]>; b: Array<[string, number]> };
+  type Item = { label: string; sub: string; href?: string; brand?: string; tag: string };
+  type Row = StationLight & { km?: number };
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
+  const input = $<HTMLInputElement>('finder-input');
+  const options = $<HTMLUListElement>('finder-options');
+  const btnGps = $<HTMLButtonElement>('btn-gps-locate');
+  const btnGpsText = $('btn-gps-text');
+  const results = $('finder-results');
+  const title = $('finder-title');
+  const sub = $('finder-sub');
+  const list = $('finder-list');
+  const sortSeg = $('finder-sort');
+  const status = $('finder-status');
+
+  const norm = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const fmt = (p: number | null) => (p === null ? '–' : p.toFixed(3).replace('.', ','));
+
+  let indexP: Promise<SearchIndex> | null = null;
+  let stationsP: Promise<StationLight[]> | null = null;
+  const loadIndex = () => (indexP ??= fetch('/data/search-index.json').then((r) => r.json()));
+  const loadStations = () => (stationsP ??= fetch('/data/stations_light.json').then((r) => r.json()));
+
+  let fuel: 'g95' | 'diesel' = 'g95';
+  try {
+    if (localStorage.getItem('gel:fuel') === 'diesel') fuel = 'diesel';
+  } catch {}
+  const filters = new Set<string>();
+  let sort: 'near' | 'cheap' = 'near';
+  let userPos: { lat: number; lng: number } | null = null;
+  let brandMode: string | null = null;
+
+  const priceOf = (s: StationLight) => (fuel === 'g95' ? s.p95 : s.d);
+  const passes = (s: StationLight) =>
+    priceOf(s) !== null && (!filters.has('24h') || s.h24) && (!filters.has('lowcost') || isLowCost(s.b));
+
+  /* ---------------- Autocomplete ---------------- */
+  let items: Item[] = [];
+  let active = -1;
+
+  function score(name: string, q: string) {
+    const n = norm(name);
+    if (n === q) return 0;
+    if (n.startsWith(q)) return 1;
+    if (n.split(/[\s-]+/).some((w) => w.startsWith(q))) return 2;
+    return n.includes(q) ? 3 : -1;
+  }
+
+  async function search(raw: string): Promise<Item[]> {
+    const q = norm(raw);
+    if (q.length < 2) return [];
+    const idx = await loadIndex();
+    if (/^\d{2,5}$/.test(q)) {
+      const out: Item[] = [];
+      for (const [name, prov, href, count, cps] of idx.m) {
+        const cp = cps.split(' ').find((c) => c.startsWith(q));
+        if (cp) out.push({ label: name, sub: `${cp} · ${prov} · ${count} gasolineras`, href, tag: 'CP' });
+        if (out.length >= 8) break;
+      }
+      return out;
+    }
+    const munis = idx.m
+      .map(([name, prov, href, count]) => ({ name, prov, href, count, s: score(name, q) }))
+      .filter((m) => m.s >= 0)
+      .sort((a, b) => a.s - b.s || b.count - a.count)
+      .slice(0, 6)
+      .map((m) => ({ label: m.name, sub: `${m.prov} · ${m.count} ${m.count === 1 ? 'gasolinera' : 'gasolineras'}`, href: m.href, tag: 'Municipio' }));
+    const provs = idx.p
+      .map(([name, href, count]) => ({ name, href, count, s: score(name, q) }))
+      .filter((p) => p.s >= 0 && p.s <= 2)
+      .sort((a, b) => a.s - b.s)
+      .slice(0, 2)
+      .map((p) => ({ label: p.name, sub: `Provincia · ${p.count} gasolineras`, href: p.href, tag: 'Provincia' }));
+    const brands = idx.b
+      .map(([name, count]) => ({ name, count, s: score(name, q) }))
+      .filter((b) => b.s >= 0 && b.s <= 2)
+      .slice(0, 2)
+      .map((b) => ({ label: b.name, sub: `${b.count} gasolineras · ver las mejores`, brand: b.name, tag: 'Marca' }));
+    return [...munis, ...provs, ...brands].slice(0, 9);
+  }
+
+  function renderOptions() {
+    if (!options || !input) return;
+    options.replaceChildren();
+    const open = items.length > 0;
+    options.classList.toggle('hidden', !open);
+    input.setAttribute('aria-expanded', String(open));
+    input.setAttribute('aria-activedescendant', active >= 0 ? `finder-opt-${active}` : '');
+    items.forEach((it, i) => {
+      const li = document.createElement('li');
+      li.id = `finder-opt-${i}`;
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', String(i === active));
+      li.className = `flex items-center gap-3 px-3 py-2.5 rounded-2xl cursor-pointer ${i === active ? 'bg-ink-50' : ''}`;
+      const ic = document.createElement('span');
+      ic.className = 'w-9 h-9 rounded-xl bg-ink-50 flex items-center justify-center text-[11px] font-bold text-ink-500 shrink-0';
+      ic.textContent = it.tag === 'Marca' ? '★' : it.tag === 'Provincia' ? 'P' : it.tag === 'CP' ? 'CP' : '📍';
+      const txt = document.createElement('div');
+      txt.className = 'min-w-0 flex-1';
+      const a = document.createElement('div');
+      a.className = 'text-[15px] font-semibold truncate';
+      a.textContent = it.label;
+      const b = document.createElement('div');
+      b.className = 'text-[12px] text-ink-400 truncate';
+      b.textContent = it.sub;
+      txt.append(a, b);
+      li.append(ic, txt);
+      li.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        choose(it);
+      });
+      li.addEventListener('mousemove', () => {
+        if (active !== i) {
+          active = i;
+          renderOptions();
+        }
+      });
+      options.appendChild(li);
+    });
+  }
+
+  function choose(it: Item) {
+    if (it.href) {
+      window.location.href = it.href;
+      return;
+    }
+    if (it.brand && input) {
+      input.value = it.brand;
+      items = [];
+      renderOptions();
+      brandMode = it.brand;
+      showStations();
+    }
+  }
+
+  let t: number | undefined;
+  input?.addEventListener('focus', () => loadIndex());
+  input?.addEventListener('input', () => {
+    window.clearTimeout(t);
+    t = window.setTimeout(async () => {
+      items = await search(input.value);
+      active = items.length ? 0 : -1;
+      renderOptions();
+    }, 80);
+  });
+  input?.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' && items.length) {
+      e.preventDefault();
+      active = (active + 1) % items.length;
+      renderOptions();
+    } else if (e.key === 'ArrowUp' && items.length) {
+      e.preventDefault();
+      active = (active - 1 + items.length) % items.length;
+      renderOptions();
+    } else if (e.key === 'Enter' && items[active]) {
+      e.preventDefault();
+      choose(items[active]);
+    } else if (e.key === 'Escape') {
+      items = [];
+      renderOptions();
+    }
+  });
+  input?.addEventListener('blur', () => window.setTimeout(() => { items = []; renderOptions(); }, 150));
+
+  /* ---------------- Results ---------------- */
+
+  function setStatus(msg: string) {
+    if (!status) return;
+    status.textContent = msg;
+    status.classList.toggle('hidden', !msg);
+  }
+
+  async function showStations() {
+    if (!userPos && !brandMode) return;
+    const all = await loadStations();
+    let pool: Row[] = all.filter((s) => passes(s) && (!brandMode || s.b === brandMode));
+    if (userPos) pool = pool.map((s) => ({ ...s, km: haversineKm(userPos!.lat, userPos!.lng, s.lt, s.ln) }));
+
+    // Reference: average price within 10 km (or the whole pool for brand search)
+    const zone = userPos ? pool.filter((s) => (s.km ?? 99) <= 10) : pool;
+    const avg = zone.length ? zone.reduce((a, s) => a + (priceOf(s) as number), 0) / zone.length : null;
+
+    let rows: Row[];
+    if (userPos) {
+      const radius = pool.filter((s) => (s.km ?? 99) <= 10);
+      rows = sort === 'cheap' && radius.length
+        ? radius.sort((a, b) => (priceOf(a) as number) - (priceOf(b) as number) || a.km! - b.km!)
+        : pool.sort((a, b) => a.km! - b.km!);
+    } else {
+      rows = pool.sort((a, b) => (priceOf(a) as number) - (priceOf(b) as number));
+    }
+    rows = rows.slice(0, 5);
+
+    const fuelName = fuel === 'g95' ? 'Gasolina 95' : 'Diésel';
+    if (title) title.textContent = brandMode ? `${brandMode} · las más baratas` : sort === 'cheap' ? 'Las más baratas a menos de 10 km' : 'Las más cercanas a ti';
+    if (sub) sub.textContent = avg ? `${fuelName} · media de la zona ${fmt(avg)} €/L` : fuelName;
+    sortSeg?.classList.toggle('hidden', !userPos || !!brandMode);
+
+    list?.replaceChildren();
+    for (const s of rows) {
+      const p = priceOf(s) as number;
+      const diff = avg ? (p - avg) * 100 : 0;
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = lightStationUrl(s);
+      a.className = 'flex items-center gap-3 px-5 py-3 hover:bg-ink-50 transition-colors';
+
+      const { bg, fg, initials } = brandStyle(s.b);
+      const mark = document.createElement('span');
+      mark.className = 'w-10 h-10 rounded-2xl flex items-center justify-center font-display font-extrabold text-xs shrink-0';
+      mark.style.background = bg;
+      mark.style.color = fg;
+      mark.textContent = initials;
+
+      const info = document.createElement('div');
+      info.className = 'min-w-0 flex-1';
+      const l1 = document.createElement('div');
+      l1.className = 'flex items-center gap-1.5';
+      const nm = document.createElement('span');
+      nm.className = 'text-[15px] font-semibold truncate';
+      nm.textContent = s.b;
+      l1.appendChild(nm);
+      if (s.h24) {
+        const tg = document.createElement('span');
+        tg.className = 'tag-24';
+        tg.textContent = '24h';
+        l1.appendChild(tg);
+      }
+      const l2 = document.createElement('div');
+      l2.className = 'text-[13px] text-ink-500 truncate';
+      l2.textContent = s.km !== undefined ? `${fmtKm(s.km)} · ${s.a}` : `${s.a}, ${s.t}`;
+      info.append(l1, l2);
+
+      const right = document.createElement('div');
+      right.className = 'text-right shrink-0';
+      const pr = document.createElement('div');
+      pr.className = 'price text-xl leading-none';
+      pr.textContent = fmt(p);
+      const df = document.createElement('div');
+      df.className = `text-[11px] font-semibold tabular-nums mt-1 ${diff <= -0.5 ? 'text-cheap-ink' : diff >= 0.5 ? 'text-pricey-ink' : 'text-ink-400'}`;
+      df.textContent = avg ? (Math.abs(diff) < 0.5 ? 'en la media' : `${diff < 0 ? '−' : '+'}${Math.abs(diff).toFixed(1).replace('.', ',')} cts`) : '€/L';
+      right.append(pr, df);
+
+      a.append(mark, info, right);
+      li.appendChild(a);
+      list?.appendChild(li);
+    }
+    if (!rows.length) {
+      const li = document.createElement('li');
+      li.className = 'px-5 py-8 text-center text-[14px] text-ink-500';
+      li.textContent = 'Ninguna gasolinera cumple los filtros. Prueba a quitar alguno.';
+      list?.appendChild(li);
+    }
+    results?.classList.remove('hidden');
+    setStatus('');
+  }
+
+  btnGps?.addEventListener('click', () => {
+    brandMode = null;
+    if (input) input.value = '';
+    if (!navigator.geolocation) {
+      setStatus('Tu navegador no permite la ubicación. Busca tu municipio o código postal.');
+      return;
+    }
+    btnGps.disabled = true;
+    if (btnGpsText) btnGpsText.textContent = 'Localizando…';
+    loadStations();
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        await showStations();
+        btnGps.disabled = false;
+        if (btnGpsText) btnGpsText.textContent = 'Actualizar ubicación';
+      },
+      () => {
+        btnGps.disabled = false;
+        if (btnGpsText) btnGpsText.textContent = 'Gasolineras cerca de mí';
+        setStatus('No pudimos acceder a tu ubicación. Escribe tu municipio o código postal arriba.');
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 },
+    );
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.finder-fuel').forEach((b) => {
+    b.setAttribute('aria-pressed', String(b.dataset.fuel === fuel));
+    b.addEventListener('click', () => {
+      fuel = b.dataset.fuel === 'diesel' ? 'diesel' : 'g95';
+      try {
+        localStorage.setItem('gel:fuel', fuel);
+      } catch {}
+      document.querySelectorAll('.finder-fuel').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      showStations();
+    });
+  });
+  document.querySelectorAll<HTMLButtonElement>('.finder-filter').forEach((b) =>
+    b.addEventListener('click', () => {
+      const f = b.dataset.filter!;
+      filters.has(f) ? filters.delete(f) : filters.add(f);
+      b.setAttribute('aria-pressed', String(filters.has(f)));
+      showStations();
+    }),
+  );
+  sortSeg?.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
+    b.addEventListener('click', () => {
+      sort = b.dataset.sort === 'cheap' ? 'cheap' : 'near';
+      sortSeg.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      showStations();
+    }),
+  );
+
+  const q = new URLSearchParams(location.search).get('q');
+  if (q && input) {
+    input.value = q;
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+  }
+</script>

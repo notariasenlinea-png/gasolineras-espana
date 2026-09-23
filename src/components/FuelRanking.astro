@@ -1,0 +1,79 @@
+---
+// Shared body for /gasolina-95/ and /diesel/ ranking pages.
+import Leaderboard from './Leaderboard.astro';
+import PriceTotem from './PriceTotem.astro';
+import AdSlot from './AdSlot.astro';
+import Faq from './Faq.astro';
+import Icon from './Icon.astro';
+import summary from '../data/summary.json';
+import provinces from '../data/provinces.json';
+import { fmtEuros, fmtPrice, type GasStation } from '../lib/stations';
+
+interface Props {
+  fuel: 'gasolina95' | 'diesel';
+  faqs: Array<{ question: string; answer: string }>;
+}
+
+const { fuel, faqs } = Astro.props;
+const nat = summary.national_averages;
+const isG = fuel === 'gasolina95';
+const name = isG ? 'Gasolina 95' : 'Diésel';
+const avg = isG ? nat.gasolina95 : nat.diesel;
+const min = isG ? nat.min_gasolina95 : nat.min_diesel;
+const top = (isG ? summary.cheapest_gasolina95 : summary.cheapest_diesel) as GasStation[];
+const rows = provinces
+  .map((p) => ({ name: p.name, slug: p.slug, ccaa: p.ccaa, avg: (isG ? p.avg_gasolina95 : p.avg_diesel) as number | null, min: (isG ? p.min_gasolina95 : p.min_diesel) as number | null }))
+  .filter((r) => r.avg !== null)
+  .sort((a, b) => a.avg! - b.avg!);
+const lo = rows[0]?.avg ?? 0;
+const hi = rows[rows.length - 1]?.avg ?? 1;
+---
+
+<section class="relative bg-ink text-white">
+  <div class="absolute inset-0 texture pointer-events-none"></div>
+  <div class="wrap relative grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 items-center py-12 sm:py-16">
+    <div>
+      <p class="inline-flex items-center gap-2 text-[12px] font-medium text-white/60 mb-4"><span class="live-dot"></span>Ranking oficial · {summary.updated_at.slice(0, 16)}</p>
+      <h1 class="text-white text-4xl sm:text-6xl font-extrabold leading-[1.02] tracking-[-0.035em]">{name} más barato <span class="text-volt">hoy en España</span></h1>
+      <p class="mt-5 text-lg text-white/60 max-w-xl">Las 15 gasolineras más baratas del país y el precio medio de cada provincia. Elegir bien te ahorra hasta {fmtEuros((avg - min) * 50)} por depósito.</p>
+    </div>
+    <PriceTotem
+      title={`${name} en España`}
+      rows={[
+        { label: 'Precio medio', price: avg, dot: isG ? '#16A34A' : '#E5E7EB' },
+        { label: 'La más barata', price: min, dot: '#D6FF3D', note: top[0] ? `${top[0].brand} · ${top[0].town}` : undefined },
+      ]}
+    />
+  </div>
+</section>
+
+<section class="wrap pt-12 sm:pt-16">
+  <Leaderboard title={`Top 15 · ${name}`} fuel={fuel} stations={top} avg={avg} />
+</section>
+
+<div class="wrap pt-10"><AdSlot slotId={`${isG ? 'gasolina95' : 'diesel'}-top-banner`} /></div>
+
+<section class="wrap pt-12 sm:pt-16" aria-labelledby="prov-rank">
+  <p class="eyebrow mb-2"><Icon name="layers" class="w-4 h-4" /> Por provincia</p>
+  <h2 id="prov-rank" class="text-3xl sm:text-4xl font-bold mb-6">Dónde está el {name.toLowerCase()} más barato</h2>
+  <ol class="card divide-y divide-ink-100 overflow-hidden">
+    {rows.map((r, i) => (
+      <li>
+        <a href={`/${r.slug}/`} class="group grid grid-cols-[2rem_1fr_auto] sm:grid-cols-[2.5rem_12rem_1fr_auto_auto] items-center gap-3 sm:gap-5 px-4 sm:px-6 py-3 hover:bg-ink-50/70">
+          <span class="font-display font-bold tabular-nums text-ink-300">{i + 1}</span>
+          <span class="min-w-0">
+            <span class="block font-semibold text-[15px] truncate group-hover:underline underline-offset-4">{r.name}</span>
+            <span class="block text-[12px] text-ink-400 truncate sm:hidden">Desde {fmtPrice(r.min)} €</span>
+          </span>
+          <span class="hidden sm:block h-2 rounded-full bg-ink-50 overflow-hidden">
+            <span class={`block h-full rounded-full ${i < rows.length / 3 ? 'dot-low' : i >= (2 * rows.length) / 3 ? 'dot-high' : 'dot-mid'}`} style={`width:${Math.round(20 + ((r.avg! - lo) / (hi - lo || 1)) * 80)}%`}></span>
+          </span>
+          <span class="hidden sm:block text-[12px] text-ink-400 tabular-nums">mín. {fmtPrice(r.min)}</span>
+          <span class="price text-lg text-right">{fmtPrice(r.avg)}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<Faq title={`Preguntas sobre el ${name.toLowerCase()}`} faqs={faqs} />

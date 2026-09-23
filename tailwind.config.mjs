@@ -4,39 +4,56 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
-          950: '#022c22',
+        // Warm neutral canvas + near-black ink, with a single "volt" accent
+        paper: '#F5F4EF',
+        ink: {
+          DEFAULT: '#0F1411',
+          50: '#F4F5F4',
+          100: '#E6E8E6',
+          200: '#CDD2CE',
+          300: '#A7AFA9',
+          400: '#7A847D',
+          500: '#5A645D',
+          600: '#434C46',
+          700: '#2F3632',
+          800: '#1C221E',
+          900: '#0F1411',
         },
+        volt: {
+          DEFAULT: '#D6FF3D',
+          soft: '#EEFFB3',
+          deep: '#A8D40F',
+        },
+        // Relative price scale
+        cheap: { DEFAULT: '#12A150', soft: '#E3F6EA', ink: '#0B6B35' },
+        fair: { DEFAULT: '#E09B12', soft: '#FDF3DC', ink: '#8A5A00' },
+        pricey: { DEFAULT: '#E5484D', soft: '#FDE8E8', ink: '#A1262B' },
+        // Pump-handle colours used in Spain
         fuel: {
-          gasolina: '#15803d',
-          diesel: '#0284c7',
-          glp: '#d97706',
-          premium: '#7e22ce',
-          cng: '#0d9488',
-        }
+          g95: '#16A34A',
+          diesel: '#111827',
+          g98: '#166534',
+          glp: '#F59E0B',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        display: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['"Inter Variable"', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        display: ['"Bricolage Grotesque Variable"', '"Inter Variable"', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        'soft-card': '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02)',
-        'glow-emerald': '0 0 25px -5px rgba(16, 185, 129, 0.25)',
-        'glow-sky': '0 0 25px -5px rgba(14, 165, 233, 0.25)',
+        card: '0 1px 2px rgba(15,20,17,0.04), 0 4px 16px -4px rgba(15,20,17,0.08)',
+        lift: '0 2px 4px rgba(15,20,17,0.05), 0 16px 40px -12px rgba(15,20,17,0.22)',
+        glow: '0 0 0 4px rgba(214,255,61,0.35)',
+      },
+      borderRadius: {
+        '4xl': '2rem',
+      },
+      keyframes: {
+        rise: { '0%': { opacity: 0, transform: 'translateY(6px)' }, '100%': { opacity: 1, transform: 'none' } },
       },
       animation: {
-        'pulse-subtle': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-      }
+        rise: 'rise .35s ease-out both',
+      },
     },
   },
   plugins: [],

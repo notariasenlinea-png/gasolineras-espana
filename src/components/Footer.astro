@@ -1,126 +1,59 @@
 ---
-const currentYear = new Date().getFullYear();
+import Logo from './Logo.astro';
+import provinces from '../data/provinces.json';
 
-const topProvinces = [
-  { name: 'Madrid', href: '/madrid/' },
-  { name: 'Barcelona', href: '/barcelona/' },
-  { name: 'Valencia', href: '/valencia/' },
-  { name: 'Sevilla', href: '/sevilla/' },
-  { name: 'Alicante', href: '/alicante/' },
-  { name: 'Málaga', href: '/malaga/' },
-  { name: 'Murcia', href: '/murcia/' },
-  { name: 'Cádiz', href: '/cadiz/' },
-  { name: 'A Coruña', href: '/a-coruna/' },
-  { name: 'Bizkaia', href: '/vizcaya/' },
-  { name: 'Zaragoza', href: '/zaragoza/' },
-  { name: 'Asturias', href: '/asturias/' },
-];
+const year = new Date().getFullYear();
+const top = [...provinces].sort((a, b) => b.total_stations - a.total_stations).slice(0, 12);
 ---
 
-<footer class="bg-slate-950 text-slate-300 mt-auto border-t border-slate-800" aria-label="Pie de página">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
-      <!-- Col 1: Brand & MITECO Info -->
-      <div class="space-y-4 md:col-span-1">
-        <a href="/" class="flex items-center gap-3 focus-visible:ring-2 focus-visible:ring-emerald-400 rounded-xl p-0.5" aria-label="GasolinaHoy España Inicio">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-black text-xl shadow-md">
-            G
-          </div>
-          <span class="text-xl font-black text-white tracking-tight">
-            Gasolina<span class="text-emerald-400">Hoy</span>
-          </span>
-        </a>
-        <p class="text-xs text-slate-400 leading-relaxed">
-          Monitor independiente en tiempo real de precios de carburantes en las más de 11.400 estaciones de servicio de España.
-        </p>
-        <div class="pt-1">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Fuente Oficial: MITECO (Gobierno de España)
-          </div>
-        </div>
-      </div>
-
-      <!-- Col 2: Top Provincias -->
-      <div>
-        <h3 class="text-xs font-black text-white uppercase tracking-wider mb-4">
-          Provincias Principales
-        </h3>
-        <ul class="grid grid-cols-2 gap-y-2.5 gap-x-3 text-xs">
-          {topProvinces.map((p) => (
-            <li>
-              <a href={p.href} class="text-slate-400 hover:text-emerald-400 transition-colors">
-                Gasolineras {p.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Col 3: Combustibles y Secciones -->
-      <div>
-        <h3 class="text-xs font-black text-white uppercase tracking-wider mb-4">
-          Combustibles & Servicios
-        </h3>
-        <ul class="space-y-2.5 text-xs text-slate-400">
-          <li>
-            <a href="/gasolina-95/" class="hover:text-emerald-400 transition-colors flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              Gasolina 95 más barata hoy
-            </a>
-          </li>
-          <li>
-            <a href="/diesel/" class="hover:text-sky-400 transition-colors flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
-              Diésel (Gasóleo A) más barato
-            </a>
-          </li>
-          <li>
-            <a href="/#cerca-de-mi" class="hover:text-amber-400 transition-colors flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-              Gasolineras baratas cerca de mí (GPS)
-            </a>
-          </li>
-          <li>
-            <a href="/#provincias" class="hover:text-white transition-colors">
-              Ranking de 52 provincias españolas
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Col 4: Legal & Transparencia -->
-      <div>
-        <h3 class="text-xs font-black text-white uppercase tracking-wider mb-4">
-          Legal & Transparencia
-        </h3>
-        <ul class="space-y-2.5 text-xs text-slate-400">
-          <li>
-            <a href="/aviso-legal/" class="hover:text-white transition-colors">
-              Aviso Legal
-            </a>
-          </li>
-          <li>
-            <a href="/politica-de-privacidad/" class="hover:text-white transition-colors">
-              Política de Privacidad
-            </a>
-          </li>
-          <li>
-            <a href="/cookies/" class="hover:text-white transition-colors">
-              Política de Cookies
-            </a>
-          </li>
-        </ul>
-        <div class="mt-4 p-3 rounded-xl bg-slate-900 border border-slate-800 text-[11px] text-slate-400 leading-normal">
-          Nota: Datos públicos oficiales de la Orden ITC/2308/2007. Los precios efectivos pueden variar en surtidor si la distribuidora no los ha comunicado telemáticamente.
-        </div>
-      </div>
+<footer class="mt-auto bg-ink text-white/70 pb-20 md:pb-0">
+  <div class="wrap py-14 grid gap-10 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
+    <div class="space-y-4">
+      <Logo dark />
+      <p class="text-sm leading-relaxed max-w-xs">
+        Comparador independiente de precios de carburantes en las más de 11.000 gasolineras de España.
+      </p>
+      <p class="inline-flex items-center gap-2 text-[12px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+        <span class="live-dot"></span> Datos oficiales del MITECO
+      </p>
     </div>
 
-    <!-- Bottom Bar -->
-    <div class="mt-12 pt-8 border-t border-slate-900 text-center sm:flex sm:justify-between sm:text-left text-xs text-slate-500">
-      <p>© {currentYear} GasolinaHoy España. Todos los derechos reservados.</p>
-      <p class="mt-2 sm:mt-0 font-medium">Diseñado con tecnología estática de ultra alta velocidad (Astro + Tailwind CSS).</p>
+    <div>
+      <h2 class="text-white text-sm font-semibold mb-4">Provincias</h2>
+      <ul class="grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+        {top.map((p) => (
+          <li><a href={`/${p.slug}/`} class="hover:text-white">{p.name}</a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-white text-sm font-semibold mb-4">Herramientas</h2>
+      <ul class="space-y-2 text-[13px]">
+        <li><a href="/mapa/" class="hover:text-white">Mapa de precios</a></li>
+        <li><a href="/#buscar" class="hover:text-white">Gasolineras cerca de mí</a></li>
+        <li><a href="/gasolina-95/" class="hover:text-white">Gasolina 95 más barata</a></li>
+        <li><a href="/diesel/" class="hover:text-white">Diésel más barato</a></li>
+        <li><a href="/#provincias" class="hover:text-white">Precios por provincia</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-white text-sm font-semibold mb-4">Legal</h2>
+      <ul class="space-y-2 text-[13px]">
+        <li><a href="/aviso-legal/" class="hover:text-white">Aviso legal</a></li>
+        <li><a href="/politica-de-privacidad/" class="hover:text-white">Privacidad</a></li>
+        <li><a href="/cookies/" class="hover:text-white">Cookies</a></li>
+      </ul>
+      <p class="mt-6 text-[12px] leading-relaxed text-white/45">
+        Precios comunicados por las estaciones al Ministerio (Orden ITC/2308/2007). El precio en surtidor puede variar.
+      </p>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="wrap py-5 text-[12px] text-white/40 flex flex-col sm:flex-row justify-between gap-2">
+      <span>© {year} gasolinerasenlinea.es</span>
+      <span>Hecho en España · Actualizado cada 2 horas</span>
     </div>
   </div>
 </footer>

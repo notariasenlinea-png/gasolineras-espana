@@ -1,0 +1,37 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  active?: string;
+}
+const { active = '' } = Astro.props;
+
+const items = [
+  { id: 'home', label: 'Inicio', href: '/', icon: 'home' },
+  { id: 'cerca', label: 'Cerca', href: '/#buscar', icon: 'locate' },
+  { id: 'mapa', label: 'Mapa', href: '/mapa/', icon: 'map' },
+  { id: 'gasolina-95', label: 'Ranking', href: '/gasolina-95/', icon: 'trophy' },
+] as const;
+---
+
+<nav
+  class="md:hidden fixed bottom-0 inset-x-0 z-[1000] bg-white/90 backdrop-blur-xl border-t border-ink-100 pb-[env(safe-area-inset-bottom)]"
+  aria-label="Navegación rápida"
+>
+  <ul class="grid grid-cols-4">
+    {items.map((it) => (
+      <li>
+        <a
+          href={it.href}
+          class={`flex flex-col items-center gap-0.5 pt-2 pb-2 text-[11px] font-medium ${active === it.id ? 'text-ink' : 'text-ink-400'}`}
+          aria-current={active === it.id ? 'page' : undefined}
+        >
+          <span class={`w-12 h-7 rounded-full flex items-center justify-center ${active === it.id ? 'bg-volt' : ''}`}>
+            <Icon name={it.icon} class="w-5 h-5" />
+          </span>
+          {it.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

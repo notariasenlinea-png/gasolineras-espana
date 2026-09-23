@@ -1,0 +1,324 @@
+---
+// Interactive price map (Leaflet, lazy-loaded when scrolled into view).
+// Points are coloured by how cheap they are relative to the stations shown.
+import Icon from './Icon.astro';
+import type { MapPoint } from '../lib/stations';
+
+interface Props {
+  id: string;
+  /** 'all' = every station in Spain, 'province:<slug>' = one province, or inline points */
+  source: 'all' | `province:${string}`;
+  points?: MapPoint[];
+  focus?: [number, number];
+  class?: string;
+  /** Show "cheapest in this area" side panel and filters (full map page) */
+  panel?: boolean;
+  zoom?: number;
+}
+
+const { id, source, points, focus, class: className = 'h-[420px]', panel = false, zoom } = Astro.props;
+const config = JSON.stringify({ source, points: points ?? null, focus: focus ?? null, panel, zoom: zoom ?? null });
+---
+
+<div class={`price-map relative overflow-hidden ${className}`} id={id} data-config={config}>
+  <div class="pm-canvas absolute inset-0 bg-ink-100">
+    <div class="pm-loading absolute inset-0 flex items-center justify-center text-sm text-ink-400 gap-2">
+      <Icon name="map" class="w-5 h-5 animate-pulse" /> Cargando mapa…
+    </div>
+  </div>
+
+  <!-- Floating controls -->
+  <div class="absolute top-3 left-3 right-3 z-[500] flex items-start justify-between gap-2 pointer-events-none">
+    <div class="seg bg-white/95 shadow-card pointer-events-auto" role="group" aria-label="Combustible del mapa">
+      <button type="button" data-fuel="g95" aria-pressed="true" class="pm-fuel">SP95</button>
+      <button type="button" data-fuel="diesel" aria-pressed="false" class="pm-fuel">Diésel</button>
+    </div>
+    <button type="button" class="pm-locate pointer-events-auto w-11 h-11 rounded-2xl bg-white shadow-card flex items-center justify-center hover:bg-ink-50" aria-label="Centrar en mi ubicación">
+      <Icon name="locate" class="w-5 h-5" />
+    </button>
+  </div>
+
+  <div class="absolute bottom-3 left-3 z-[500] flex items-center gap-3 px-3 py-2 rounded-xl bg-white/95 shadow-card text-[11px] font-medium text-ink-600 pointer-events-none">
+    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full dot-low"></span>Barata</span>
+    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full dot-mid"></span>Media</span>
+    <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full dot-high"></span>Cara</span>
+  </div>
+
+  {panel && (
+    <aside class="pm-panel absolute z-[500] bottom-14 left-3 right-3 sm:bottom-auto sm:top-20 sm:left-auto sm:right-3 sm:w-80 max-h-[38%] sm:max-h-[calc(100%-10rem)] flex flex-col rounded-3xl bg-white shadow-lift overflow-hidden">
+      <div class="p-4 pb-3 border-b border-ink-100">
+        <h2 class="text-base font-bold">Más baratas en esta zona</h2>
+        <p class="pm-count text-[12px] text-ink-400">Mueve el mapa para actualizar</p>
+        <div class="flex gap-1.5 mt-3 overflow-x-auto no-scrollbar">
+          <button type="button" class="pm-filter chip h-8 text-[12px]" data-filter="all" aria-pressed="true">Todas</button>
+          <button type="button" class="pm-filter chip h-8 text-[12px]" data-filter="24h" aria-pressed="false">24h</button>
+          <button type="button" class="pm-filter chip h-8 text-[12px]" data-filter="lowcost" aria-pressed="false">Low-cost</button>
+        </div>
+      </div>
+      <ol class="pm-list overflow-y-auto divide-y divide-ink-100"></ol>
+    </aside>
+  )}
+</div>
+
+<script>
+  import { isLowCost, lightStationUrl, type StationLight } from '../lib/stations';
+
+  type Point = [number, number, number | null, number | null, string, string, string, 0 | 1];
+  type Fuel = 'g95' | 'diesel';
+  type Config = { source: string; points: Point[] | null; focus: [number, number] | null; panel: boolean; zoom: number | null };
+
+  let lightPromise: Promise<StationLight[]> | null = null;
+  const loadLight = () => (lightPromise ??= fetch('/data/stations_light.json').then((r) => r.json()));
+
+  const fmt = (p: number | null) => (p === null ? '–' : p.toFixed(3).replace('.', ','));
+  const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+  const COLORS = { low: '#12A150', mid: '#E09B12', high: '#E5484D', none: '#A7AFA9' };
+
+  function readFuel(): Fuel {
+    try {
+      return localStorage.getItem('gel:fuel') === 'diesel' ? 'diesel' : 'g95';
+    } catch {
+      return 'g95';
+    }
+  }
+  function saveFuel(f: Fuel) {
+    try {
+      localStorage.setItem('gel:fuel', f);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function quantile(sorted: number[], q: number) {
+    if (!sorted.length) return 0;
+    return sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))];
+  }
+
+  async function init(root: HTMLElement) {
+    const cfg: Config = JSON.parse(root.dataset.config || '{}');
+    const [{ default: L }] = await Promise.all([import('leaflet'), import('leaflet/dist/leaflet.css')]);
+
+    let pts: Point[];
+    if (cfg.points) {
+      pts = cfg.points;
+    } else {
+      const all = await loadLight();
+      const prov = cfg.source.startsWith('province:') ? cfg.source.slice(9) : null;
+      pts = all
+        .filter((s) => !prov || s.ps === prov)
+        .map((s) => [s.lt, s.ln, s.p95, s.d, lightStationUrl(s), s.b, `${s.a}, ${s.t}`, s.h24 ? 1 : 0] as Point);
+    }
+
+    const canvasEl = root.querySelector<HTMLElement>('.pm-canvas')!;
+    root.querySelector('.pm-loading')?.remove();
+    const map = L.map(canvasEl, { zoomControl: false, preferCanvas: true, attributionControl: true, scrollWheelZoom: cfg.panel });
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19,
+    }).addTo(map);
+
+    const renderer = L.canvas({ padding: 0.3 });
+    let fuel: Fuel = readFuel();
+    let filter = 'all';
+    const priceOf = (p: Point) => (fuel === 'g95' ? p[2] : p[3]);
+
+    let cuts = { lo: 0, hi: 0 };
+    const computeCuts = () => {
+      const prices = pts.map(priceOf).filter((v): v is number => v !== null).sort((a, b) => a - b);
+      cuts = { lo: quantile(prices, 0.33), hi: quantile(prices, 0.67) };
+    };
+    const levelOf = (p: number | null) => (p === null ? 'none' : p <= cuts.lo ? 'low' : p >= cuts.hi ? 'high' : 'mid');
+
+    const passes = (p: Point) =>
+      filter === 'all' || (filter === '24h' ? p[7] === 1 : isLowCost(p[5]));
+
+    const popupHtml = (p: Point) => `
+      <div style="min-width:190px">
+        <div style="font-weight:700;font-size:14px">${esc(p[5])}</div>
+        <div style="color:#5A645D;font-size:12px;margin-bottom:8px">${esc(p[6])}</div>
+        <div style="display:flex;gap:14px;margin-bottom:10px">
+          <div><div style="font-size:10px;color:#7A847D;font-weight:600">SP95</div><div style="font-size:18px;font-weight:700">${fmt(p[2])}</div></div>
+          <div><div style="font-size:10px;color:#7A847D;font-weight:600">DIÉSEL</div><div style="font-size:18px;font-weight:700">${fmt(p[3])}</div></div>
+        </div>
+        <a href="${p[4]}" style="display:block;text-align:center;background:#0F1411;color:#fff;border-radius:12px;padding:8px 10px;font-weight:600;text-decoration:none">Ver ficha y precios →</a>
+      </div>`;
+
+    const markers = pts.map((p) =>
+      L.circleMarker([p[0], p[1]], { renderer, radius: 6, weight: 1.5, color: '#fff', fillOpacity: 0.95, fillColor: COLORS.none })
+        .bindPopup(() => popupHtml(p))
+        .bindTooltip(() => `${esc(p[5])} · <b>${fmt(priceOf(p))} €</b>`, { direction: 'top', offset: [0, -6] }),
+    );
+    const layer = L.layerGroup().addTo(map);
+
+    const radiusFor = (z: number) => (z <= 6 ? 2.6 : z <= 7 ? 3.4 : z <= 9 ? 4.8 : 6.5);
+    function paint() {
+      computeCuts();
+      const r = radiusFor(map.getZoom());
+      layer.clearLayers();
+      markers.forEach((m, i) => {
+        const p = pts[i];
+        if (!passes(p) || priceOf(p) === null) return;
+        m.setStyle({ fillColor: COLORS[levelOf(priceOf(p))], weight: r < 4 ? 0.6 : 1.5 });
+        m.setRadius(r);
+        layer.addLayer(m);
+      });
+      updatePills();
+      updatePanel();
+    }
+
+    // Price pills when zoomed in
+    const pillLayer = L.layerGroup().addTo(map);
+    function updatePills() {
+      pillLayer.clearLayers();
+      if (map.getZoom() < 14) return;
+      const b = map.getBounds();
+      const inView = pts.filter((p) => passes(p) && priceOf(p) !== null && b.contains([p[0], p[1]])).slice(0, 150);
+      for (const p of inView) {
+        const lvl = levelOf(priceOf(p));
+        const icon = L.divIcon({
+          className: '',
+          html: `<div class="pm-pill pm-${lvl}">${fmt(priceOf(p))}</div>`,
+          iconSize: [0, 0],
+        });
+        L.marker([p[0], p[1]], { icon, keyboard: false }).bindPopup(() => popupHtml(p)).addTo(pillLayer);
+      }
+    }
+
+    // Side panel: cheapest in view
+    const list = root.querySelector<HTMLElement>('.pm-list');
+    const count = root.querySelector<HTMLElement>('.pm-count');
+    function updatePanel() {
+      if (!list) return;
+      const b = map.getBounds();
+      const inView = pts.filter((p) => passes(p) && priceOf(p) !== null && b.contains([p[0], p[1]]));
+      inView.sort((a, c) => (priceOf(a) as number) - (priceOf(c) as number));
+      if (count) count.textContent = `${inView.length.toLocaleString('es-ES')} gasolineras en el mapa`;
+      list.replaceChildren();
+      for (const p of inView.slice(0, 8)) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = p[4];
+        a.className = 'flex items-center gap-3 px-4 py-2.5 hover:bg-ink-50';
+        const dot = document.createElement('span');
+        dot.className = 'w-2.5 h-2.5 rounded-full shrink-0';
+        dot.style.background = COLORS[levelOf(priceOf(p))];
+        const txt = document.createElement('div');
+        txt.className = 'min-w-0 flex-1';
+        const t1 = document.createElement('div');
+        t1.className = 'text-[13px] font-semibold truncate';
+        t1.textContent = p[5];
+        const t2 = document.createElement('div');
+        t2.className = 'text-[12px] text-ink-400 truncate';
+        t2.textContent = p[6];
+        txt.append(t1, t2);
+        const pr = document.createElement('span');
+        pr.className = 'price text-base';
+        pr.textContent = fmt(priceOf(p));
+        a.append(dot, txt, pr);
+        a.addEventListener('mouseenter', () => map.panTo([p[0], p[1]], { animate: true }));
+        li.appendChild(a);
+        list.appendChild(li);
+      }
+    }
+
+    let lastR = 0;
+    map.on('zoomend', () => {
+      const r = radiusFor(map.getZoom());
+      if (r !== lastR) {
+        lastR = r;
+        markers.forEach((m) => {
+          m.setRadius(r);
+          m.setStyle({ weight: r < 4 ? 0.6 : 1.5 });
+        });
+      }
+    });
+    map.on('moveend', () => {
+      updatePills();
+      updatePanel();
+    });
+
+    // Initial view
+    if (cfg.focus) {
+      map.setView(cfg.focus, cfg.zoom ?? 15);
+      L.circleMarker(cfg.focus, { radius: 13, color: '#0F1411', weight: 3, fillColor: '#D6FF3D', fillOpacity: 1 }).addTo(map);
+    } else if (cfg.source === 'all' && !cfg.points) {
+      map.fitBounds([[36.0, -9.4], [43.8, 3.3]]);
+    } else if (pts.length) {
+      map.fitBounds(L.latLngBounds(pts.map((p) => [p[0], p[1]] as [number, number])).pad(0.08), { maxZoom: 15 });
+    } else {
+      map.setView([40.2, -3.7], 6);
+    }
+
+    const setFuel = (f: Fuel) => {
+      fuel = f;
+      root.querySelectorAll('.pm-fuel').forEach((b) => b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.fuel === f)));
+      paint();
+    };
+    root.querySelectorAll<HTMLButtonElement>('.pm-fuel').forEach((b) =>
+      b.addEventListener('click', () => {
+        const f = b.dataset.fuel === 'diesel' ? 'diesel' : 'g95';
+        saveFuel(f);
+        setFuel(f);
+      }),
+    );
+    root.querySelectorAll<HTMLButtonElement>('.pm-filter').forEach((b) =>
+      b.addEventListener('click', () => {
+        filter = b.dataset.filter || 'all';
+        root.querySelectorAll('.pm-filter').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        paint();
+      }),
+    );
+
+    let me: ReturnType<typeof L.circleMarker> | null = null;
+    root.querySelector('.pm-locate')?.addEventListener('click', () => {
+      navigator.geolocation?.getCurrentPosition(
+        (pos) => {
+          const ll: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+          me?.remove();
+          me = L.circleMarker(ll, { radius: 9, color: '#fff', weight: 3, fillColor: '#2563EB', fillOpacity: 1 }).addTo(map);
+          map.setView(ll, 14);
+        },
+        () => alert('No pudimos acceder a tu ubicación.'),
+        { enableHighAccuracy: true, timeout: 12000 },
+      );
+    });
+
+    // Allow other components to fly the map (e.g. after a search)
+    root.addEventListener('pm:flyto', ((e: CustomEvent<[number, number]>) => map.setView(e.detail, 14)) as EventListener);
+
+    setFuel(fuel);
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        io.unobserve(e.target);
+        init(e.target as HTMLElement).catch((err) => console.warn('Mapa no disponible', err));
+      }
+    },
+    { rootMargin: '300px' },
+  );
+  document.querySelectorAll<HTMLElement>('.price-map').forEach((el) => io.observe(el));
+</script>
+
+<style is:global>
+  .pm-pill {
+    transform: translate(-50%, -130%);
+    display: inline-block;
+    white-space: nowrap;
+    padding: 3px 7px;
+    border-radius: 999px;
+    font: 700 12px/1.2 'Bricolage Grotesque Variable', system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(15, 20, 17, 0.25);
+    border: 2px solid #fff;
+  }
+  .pm-low { background: #12A150; }
+  .pm-mid { background: #E09B12; }
+  .pm-high { background: #E5484D; }
+  .pm-none { background: #7A847D; }
+</style>

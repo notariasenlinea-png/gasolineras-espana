@@ -1,0 +1,18 @@
+---
+interface Props {
+  dark?: boolean;
+}
+const { dark = false } = Astro.props;
+---
+
+<span class="inline-flex items-center gap-2.5">
+  <span class="w-9 h-9 rounded-xl bg-ink flex items-center justify-center ring-1 ring-white/10">
+    <svg viewBox="0 0 24 24" class="w-5 h-5" aria-hidden="true">
+      <path d="M12 2.5c3.6 4.3 6 7.7 6 10.9A6 6 0 0 1 6 13.4c0-3.2 2.4-6.6 6-10.9Z" fill="#D6FF3D" />
+      <path d="M9.5 14.2h5" stroke="#0F1411" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  </span>
+  <span class={`font-display text-[17px] font-bold tracking-tight leading-none ${dark ? 'text-white' : 'text-ink'}`}>
+    gasolineras<span class={dark ? 'text-volt' : 'text-ink-400'}>enlínea</span>
+  </span>
+</span>

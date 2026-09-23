@@ -1,485 +1,177 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import GasolineraCard from '../../components/GasolineraCard.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PriceTotem from '../../components/PriceTotem.astro';
+import PriceMap from '../../components/PriceMap.astro';
+import Leaderboard from '../../components/Leaderboard.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import AmazonV16 from '../../components/AmazonV16.astro';
-import provincesMeta from '../../data/provinces.json';
-import { stationUrl } from '../../lib/stations';
+import Faq from '../../components/Faq.astro';
+import Icon from '../../components/Icon.astro';
+import summary from '../../data/summary.json';
+import { loadAllProvinces, provincesMeta, type ProvinceDetail } from '../../lib/data';
+import { fmtPrice, type GasStation } from '../../lib/stations';
 
 export async function getStaticPaths() {
-  const paths = [];
-
-  for (const prov of provincesMeta) {
-    // Dynamically import province detail json
-    const provModule = await import(`../../data/provincias/${prov.slug}.json`);
-    const provData = provModule.default;
-
-    paths.push({
-      params: { provincia: prov.slug },
-      props: {
-        province: prov,
-        detail: provData
-      }
-    });
-  }
-
-  return paths;
+  const all = await loadAllProvinces();
+  return provincesMeta.map((p) => ({ params: { provincia: p.slug }, props: { province: p, detail: all.get(p.slug)! } }));
 }
 
 interface Props {
-  province: typeof provincesMeta[0];
-  detail: {
-    metadata: typeof provincesMeta[0];
-    updated_at: string;
-    cheapest_gasolina95: any[];
-    cheapest_diesel: any[];
-    all_stations: any[];
-    municipalities: Array<{ name: string; slug: string; count: number; min_p95: number | null; min_diesel: number | null }>;
-  };
+  province: (typeof provincesMeta)[number];
+  detail: ProvinceDetail;
 }
 
 const { province, detail } = Astro.props;
 const { name, ccaa, total_stations, avg_gasolina95, avg_diesel, min_gasolina95, min_diesel, top_municipalities } = province;
-const { cheapest_gasolina95, cheapest_diesel, all_stations, updated_at } = detail;
+const nat = summary.national_averages;
+const top95 = detail.cheapest_gasolina95 as GasStation[];
+const topD = detail.cheapest_diesel as GasStation[];
+const munis = [...detail.municipalities].sort((a, b) => b.count - a.count);
+const open24 = detail.all_stations.filter((s) => s.is_24h).length;
 
-const title = `Gasolineras Más Baratas en ${name} Hoy | Precios Gasolina y Diésel`;
-const description = `Consulta los precios en tiempo real de las ${total_stations} gasolineras de ${name} (${ccaa}). Gasolina 95 desde ${min_gasolina95 ? min_gasolina95.toFixed(3) : '-'} €/L y Diésel desde ${min_diesel ? min_diesel.toFixed(3) : '-'} €/L. Datos oficiales MITECO.`;
+const vsNat = (v: number | null, n: number) => {
+  if (v === null) return undefined;
+  const d = (v - n) * 100;
+  return Math.abs(d) < 0.5 ? 'En la media de España' : `${d < 0 ? '−' : '+'}${Math.abs(d).toFixed(1).replace('.', ',')} cts vs media de España`;
+};
+
+const title = `Gasolineras más baratas en ${name} hoy | Precio gasolina y diésel`;
+const description = `Precios de hoy en las ${total_stations} gasolineras de ${name}. Gasolina 95 desde ${fmtPrice(min_gasolina95)} €/L y diésel desde ${fmtPrice(min_diesel)} €/L. Mapa, ranking y precios por municipio con datos oficiales.`;
 
 const faqs = [
   {
     question: `¿Cuál es la gasolinera más barata de ${name} hoy?`,
-    answer: cheapest_gasolina95.length > 0
-      ? `Actualmente, la estación con la gasolina 95 más barata en la provincia de ${name} es ${cheapest_gasolina95[0].brand} en ${cheapest_gasolina95[0].town} (${cheapest_gasolina95[0].address}) a un precio de ${cheapest_gasolina95[0].prices.gasolina95?.toFixed(3)} €/L.`
-      : `Los precios se actualizan diariamente según los datos oficiales comunicados por las estaciones de ${name} al MITECO.`
+    answer: top95.length
+      ? `Para gasolina 95, ${top95[0].brand} en ${top95[0].town} (${top95[0].address}) a ${fmtPrice(top95[0].prices.gasolina95)} €/L. Para diésel, ${topD[0]?.brand} en ${topD[0]?.town} a ${fmtPrice(topD[0]?.prices.diesel)} €/L.`
+      : `Los precios se actualizan cada 2 horas con los datos oficiales del MITECO.`,
   },
   {
-    question: `¿Cuánto cuesta de media la gasolina y el diésel en ${name}?`,
-    answer: `El precio medio registrado hoy en las gasolineras de ${name} es de ${avg_gasolina95.toFixed(3)} €/L para la Gasolina 95 y de ${avg_diesel.toFixed(3)} €/L para el Diésel (Gasóleo A).`
+    question: `¿Cuánto cuesta de media la gasolina en ${name}?`,
+    answer: `Hoy la gasolina 95 cuesta de media ${fmtPrice(avg_gasolina95)} €/L y el diésel ${fmtPrice(avg_diesel)} €/L en ${name}, frente a ${fmtPrice(nat.gasolina95)} € y ${fmtPrice(nat.diesel)} € de media en España.`,
   },
   {
-    question: `¿En qué municipios de ${name} hay más estaciones de servicio?`,
-    answer: `Los municipios con mayor concentración de gasolineras en ${name} son ${top_municipalities.slice(0, 4).map(m => `${m.name} (${m.count} estaciones)`).join(', ')}.`
-  }
+    question: `¿Qué municipios de ${name} tienen más gasolineras?`,
+    answer: `${top_municipalities.slice(0, 4).map((m) => `${m.name} (${m.count})`).join(', ')}.`,
+  },
 ];
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  'mainEntity': faqs.map((f) => ({
-    '@type': 'Question',
-    'name': f.question,
-    'acceptedAnswer': {
-      '@type': 'Answer',
-      'text': f.answer
-    }
-  }))
-};
-
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  'itemListElement': [
-    {
-      '@type': 'ListItem',
-      'position': 1,
-      'name': 'Inicio',
-      'item': 'https://gasolinerasenlinea.es/'
-    },
-    {
-      '@type': 'ListItem',
-      'position': 2,
-      'name': `Gasolineras ${name}`,
-      'item': `https://gasolinerasenlinea.es/${province.slug}/`
-    }
-  ]
-};
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: f.answer } })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://gasolinerasenlinea.es/' },
+      { '@type': 'ListItem', position: 2, name: `Gasolineras ${name}`, item: `https://gasolinerasenlinea.es/${province.slug}/` },
+    ],
+  },
+];
 ---
 
-<Layout title={title} description={description} schema={[faqSchema, breadcrumbSchema]}>
-  <!-- Accessible Breadcrumb -->
-  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 text-xs text-slate-600 flex items-center gap-2" aria-label="Ruta de navegación">
-    <a href="/" class="hover:text-emerald-700 transition-colors font-medium">Inicio</a>
-    <span class="text-slate-400">/</span>
-    <a href="/#provincias" class="hover:text-emerald-700 transition-colors font-medium">Provincias</a>
-    <span class="text-slate-400">/</span>
-    <span class="font-bold text-slate-900" aria-current="page">{name}</span>
-  </nav>
-
-  <!-- Province header -->
-  <section class="bg-white border-y border-slate-200 py-8 sm:py-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <p class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-emerald-800 mb-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-        {ccaa} · {total_stations} gasolineras · Actualizado {updated_at}
-      </p>
-      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-slate-950">
-        Gasolineras más baratas en {name} hoy
-      </h1>
-      <p class="text-sm sm:text-base text-slate-600 max-w-2xl mt-2">
-        Dónde repostar gasolina 95 y diésel al mejor precio en la provincia de {name}, con datos oficiales del MITECO.
-      </p>
-      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-          <dt class="text-[11px] font-bold uppercase text-slate-500">Mín. Gasolina 95</dt>
-          <dd class="text-2xl font-black text-emerald-700 tabular-nums">{min_gasolina95 ? `${min_gasolina95.toFixed(3)} €` : 'N/D'}</dd>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-          <dt class="text-[11px] font-bold uppercase text-slate-500">Mín. Diésel A</dt>
-          <dd class="text-2xl font-black text-sky-700 tabular-nums">{min_diesel ? `${min_diesel.toFixed(3)} €` : 'N/D'}</dd>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-          <dt class="text-[11px] font-bold uppercase text-slate-500">Media Gasolina 95</dt>
-          <dd class="text-2xl font-black text-slate-950 tabular-nums">{avg_gasolina95 ? `${avg_gasolina95.toFixed(3)} €` : 'N/D'}</dd>
-        </div>
-        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-          <dt class="text-[11px] font-bold uppercase text-slate-500">Media Diésel A</dt>
-          <dd class="text-2xl font-black text-slate-950 tabular-nums">{avg_diesel ? `${avg_diesel.toFixed(3)} €` : 'N/D'}</dd>
-        </div>
-      </dl>
-    </div>
-  </section>
-
-  <!-- Top Municipalities Pills -->
-  {top_municipalities && top_municipalities.length > 0 && (
-    <section class="bg-white border-b border-slate-200/90 py-4 shadow-2xs">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none" aria-label="Municipios con más gasolineras">
-          <span class="text-xs font-bold text-slate-600 uppercase tracking-wider shrink-0 mr-1">
-            Municipios:
-          </span>
-          {top_municipalities.map((m) => (
-            <button
-              type="button"
-              data-muni-filter={m.name.toLowerCase()}
-              class="muni-chip px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200/90 shrink-0 transition-colors cursor-pointer"
-            >
-              {m.name} ({m.count})
-            </button>
-          ))}
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- Ad Slot Top -->
-  <AdSlot format="horizontal" slotId={`provincia-${province.slug}-top`} />
-
-  <!-- Top 10 Cheapest in Province -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14" aria-labelledby="top-prov-title">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+<Layout title={title} description={description} schema={schema} active="provincias">
+  <section class="wrap pt-6 pb-10 sm:pb-14">
+    <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Provincias', href: '/#provincias' }, { label: name }]} />
+    <div class="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 lg:gap-12 items-end mt-6">
       <div>
-        <h2 id="top-prov-title" class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
-          Top 10 Gasolineras Más Baratas en {name}
-        </h2>
-        <p class="text-xs sm:text-sm text-slate-600 mt-1">
-          Estaciones ordenadas por precio más bajo verificado en la provincia hoy.
+        <p class="eyebrow mb-3"><span class="live-dot"></span>{ccaa} · actualizado {detail.updated_at.slice(0, 16)}</p>
+        <h1 class="text-4xl sm:text-6xl font-extrabold leading-[1.02] tracking-[-0.035em]">Gasolineras en {name}</h1>
+        <p class="text-[16px] sm:text-lg text-ink-500 mt-4 max-w-xl">
+          Precios de hoy en las {total_stations} gasolineras de la provincia. Encuentra la más barata en el mapa o en tu municipio.
         </p>
+        <div class="flex flex-wrap gap-2 mt-6">
+          <a href="#ranking" class="tag-muted h-8 px-3 text-[12px]"><span class="w-2 h-2 rounded-full bg-fuel-g95"></span>SP95 desde <b class="text-ink">{fmtPrice(min_gasolina95)} €</b></a>
+          <a href="#ranking" class="tag-muted h-8 px-3 text-[12px]"><span class="w-2 h-2 rounded-full bg-fuel-diesel"></span>Diésel desde <b class="text-ink">{fmtPrice(min_diesel)} €</b></a>
+          <span class="tag-muted h-8 px-3 text-[12px]"><Icon name="clock" class="w-3.5 h-3.5" />{open24} abiertas 24 h</span>
+        </div>
       </div>
-
-      <!-- Fuel Switch Tabs with ARIA -->
-      <div class="inline-flex p-1 bg-slate-200/90 rounded-2xl self-start sm:self-auto" role="tablist" aria-label="Combustible a mostrar">
-        <button
-          id="prov-tab-g95"
-          type="button"
-          role="tab"
-          aria-selected="true"
-          aria-controls="prov-content-g95"
-          class="px-4 py-2 text-xs font-black rounded-xl transition-all bg-white text-slate-950 shadow-2xs cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-600"
-        >
-          Gasolina 95
-        </button>
-        <button
-          id="prov-tab-diesel"
-          type="button"
-          role="tab"
-          aria-selected="false"
-          aria-controls="prov-content-diesel"
-          class="px-4 py-2 text-xs font-bold rounded-xl transition-all text-slate-700 hover:text-slate-950 cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-600"
-        >
-          Diésel A
-        </button>
-      </div>
-    </div>
-
-    <!-- Gasolina 95 Province List -->
-    <div id="prov-content-g95" role="tabpanel" aria-labelledby="prov-tab-g95" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      {cheapest_gasolina95.map((st, i) => (
-        <GasolineraCard
-          station={st}
-          rank={i + 1}
-          avgGasolina95={avg_gasolina95}
-          avgDiesel={avg_diesel}
-          highlightFuel="gasolina95"
-        />
-      ))}
-    </div>
-
-    <!-- Diésel Province List (hidden by default) -->
-    <div id="prov-content-diesel" role="tabpanel" aria-labelledby="prov-tab-diesel" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      {cheapest_diesel.map((st, i) => (
-        <GasolineraCard
-          station={st}
-          rank={i + 1}
-          avgGasolina95={avg_gasolina95}
-          avgDiesel={avg_diesel}
-          highlightFuel="diesel"
-        />
-      ))}
+      <PriceTotem
+        title={`Precio medio en ${name}`}
+        rows={[
+          { label: 'Gasolina 95', price: avg_gasolina95, dot: '#16A34A', note: vsNat(avg_gasolina95, nat.gasolina95) },
+          { label: 'Diésel', price: avg_diesel, dot: '#E5E7EB', note: vsNat(avg_diesel, nat.diesel) },
+        ]}
+      />
     </div>
   </section>
 
-  <!-- Amazon Affiliate V16 Recommendation -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <AmazonV16 />
-  </div>
-
-  <!-- Complete Table / Directory for the Province -->
-  <section class="bg-white border-y border-slate-200/90 py-10 sm:py-16" aria-labelledby="table-title">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h2 id="table-title" class="text-xl sm:text-2xl font-black text-slate-950 tracking-tight">
-            Todas las Gasolineras en {name} (<span id="total-visible-count">{all_stations.length}</span> de {all_stations.length})
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
-            Listado completo con dirección, horarios y precio por litro.
-          </p>
-        </div>
-
-        <div class="relative w-full sm:w-72">
-          <input
-            id="table-search"
-            type="text"
-            placeholder="Buscar por municipio, calle o marca..."
-            aria-label="Buscar gasolineras por municipio o calle"
-            class="px-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-emerald-500 w-full pl-9 pr-8"
-          />
-          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <button id="table-search-clear" type="button" class="hidden absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 text-xs" aria-label="Limpiar búsqueda">✕</button>
-        </div>
+  <!-- Map + ranking -->
+  <section id="ranking" class="wrap scroll-mt-24" aria-labelledby="rank-title">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-4 sm:gap-5">
+      <div class="card overflow-hidden">
+        <PriceMap id="prov-map" source={`province:${province.slug}`} class="h-[380px] sm:h-[560px] lg:h-full lg:min-h-[640px]" />
       </div>
-
-      <div class="overflow-x-auto rounded-2xl border border-slate-200/90 shadow-2xs">
-        <table class="w-full text-left text-xs border-collapse">
-          <thead>
-            <tr class="bg-slate-100/90 text-slate-700 font-black border-b border-slate-200">
-              <th scope="col" class="py-3.5 px-4">Estación / Marca</th>
-              <th scope="col" class="py-3.5 px-4">Municipio</th>
-              <th scope="col" class="py-3.5 px-4">Dirección</th>
-              <th scope="col" class="py-3.5 px-4 text-right">Gasolina 95</th>
-              <th scope="col" class="py-3.5 px-4 text-right">Diésel A</th>
-              <th scope="col" class="py-3.5 px-4 text-center">Horario</th>
-              <th scope="col" class="py-3.5 px-4 text-center">Detalles</th>
-            </tr>
-          </thead>
-          <tbody id="stations-table-body" class="divide-y divide-slate-100 bg-white">
-            {all_stations.slice(0, 150).map((st) => (
-              <tr class="station-row hover:bg-emerald-50/30 transition-colors" data-search={`${st.town.toLowerCase()} ${st.address.toLowerCase()} ${st.brand.toLowerCase()}`}>
-                <td class="py-3.5 px-4 font-bold text-slate-950 whitespace-nowrap">
-                  <span class="inline-block px-2 py-0.5 rounded text-[11px] bg-slate-100 border border-slate-200 text-slate-800">
-                    {st.brand}
-                  </span>
-                </td>
-                <td class="py-3.5 px-4 font-bold text-slate-800 whitespace-nowrap">
-                  {st.town}
-                </td>
-                <td class="py-3.5 px-4 text-slate-600 max-w-xs truncate" title={st.address}>
-                  {st.address}
-                </td>
-                <td class="py-3.5 px-4 text-right font-black text-slate-950 whitespace-nowrap tabular-nums">
-                  {st.prices.gasolina95 ? (
-                    <span class={st.prices.gasolina95 <= min_gasolina95 + 0.03 ? 'text-emerald-700 font-extrabold' : ''}>
-                      {st.prices.gasolina95.toFixed(3)} €
-                    </span>
-                  ) : (
-                    <span class="text-slate-400 font-normal">-</span>
-                  )}
-                </td>
-                <td class="py-3.5 px-4 text-right font-black text-slate-950 whitespace-nowrap tabular-nums">
-                  {st.prices.diesel ? (
-                    <span class={st.prices.diesel <= min_diesel + 0.03 ? 'text-sky-700 font-extrabold' : ''}>
-                      {st.prices.diesel.toFixed(3)} €
-                    </span>
-                  ) : (
-                    <span class="text-slate-400 font-normal">-</span>
-                  )}
-                </td>
-                <td class="py-3.5 px-4 text-center whitespace-nowrap">
-                  {st.is_24h ? (
-                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-[10px] border border-emerald-300">
-                      24h
-                    </span>
-                  ) : (
-                    <span class="text-slate-600 text-[11px] truncate max-w-[120px] inline-block">{st.schedule}</span>
-                  )}
-                </td>
-                <td class="py-3.5 px-4 text-center whitespace-nowrap">
-                  <a
-                    href={stationUrl(st)}
-                    class="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-900 font-bold hover:underline py-1 px-2 rounded-lg hover:bg-emerald-50"
-                  >
-                    Ver ficha →
-                  </a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- Municipalities Grid Section for Comprehensive Crawling & pSEO -->
-  {detail.municipalities && detail.municipalities.length > 0 && (
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14" aria-labelledby="munis-prov-title">
-      <div class="border-t border-slate-200/80 pt-10">
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
-          <div>
-            <h2 id="munis-prov-title" class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
-              Gasolineras por Municipios en {name}
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-600 mt-1">
-              Explora las {total_stations} gasolineras repartidas en los {detail.municipalities.length} municipios con servicio de la provincia.
-            </p>
+      <div>
+        <div class="flex items-center justify-between gap-3 mb-3">
+          <h2 id="rank-title" class="text-2xl font-bold">Top 10 más baratas</h2>
+          <div class="seg" role="group" aria-label="Combustible del ranking">
+            <button type="button" class="rank-tab" data-tab="g95" aria-pressed="true">SP95</button>
+            <button type="button" class="rank-tab" data-tab="diesel" aria-pressed="false">Diésel</button>
           </div>
-          <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 shrink-0">
-            {detail.municipalities.length} municipios con gasolinera
-          </span>
         </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          {detail.municipalities.map((m) => (
-            <a
-              href={`/${province.slug}/${m.slug}/`}
-              class="group block p-3 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-500 hover:shadow-soft-card transition-all"
-            >
-              <div class="font-black text-xs text-slate-900 group-hover:text-emerald-700 truncate">
-                {m.name}
-              </div>
-              <div class="text-[11px] text-slate-500 mt-1 flex items-center justify-between">
-                <span>{m.count} {m.count === 1 ? 'estación' : 'estaciones'}</span>
-                {m.min_p95 && (
-                  <span class="font-bold text-emerald-600 tabular-nums">
-                    {m.min_p95.toFixed(3)} €
-                  </span>
-                )}
-              </div>
-            </a>
-          ))}
-        </div>
+        <div data-panel="g95"><Leaderboard title={`Gasolina 95 en ${name}`} fuel="gasolina95" stations={top95} avg={avg_gasolina95} /></div>
+        <div data-panel="diesel" class="hidden"><Leaderboard title={`Diésel en ${name}`} fuel="diesel" stations={topD} avg={avg_diesel} /></div>
       </div>
-    </section>
-  )}
-
-  <!-- Ad Slot Bottom -->
-  <AdSlot format="horizontal" slotId={`provincia-${province.slug}-bottom`} />
-
-  <!-- Province FAQs -->
-  <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16" aria-labelledby="prov-faq-title">
-    <div class="text-center mb-8">
-      <h2 id="prov-faq-title" class="text-2xl font-black text-slate-950 tracking-tight">
-        Preguntas Frecuentes sobre Repostar en {name}
-      </h2>
     </div>
+  </section>
 
-    <div class="space-y-4">
-      {faqs.map((faq) => (
-        <details class="group bg-white rounded-2xl border border-slate-200/90 p-5 open:shadow-soft-card transition-all">
-          <summary class="flex items-center justify-between cursor-pointer list-none font-bold text-slate-900 group-open:text-emerald-800 text-sm sm:text-base select-none focus:outline-none">
-            <span>{faq.question}</span>
-            <span class="ml-4 shrink-0 transition-transform duration-200 group-open:rotate-180 text-slate-500">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
+  <div class="wrap pt-10"><AdSlot slotId={`provincia-${province.slug}-top`} /></div>
+
+  <!-- Municipalities -->
+  <section class="wrap pt-12 sm:pt-16" aria-labelledby="munis-title">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-5">
+      <div>
+        <p class="eyebrow mb-2">{munis.length} municipios</p>
+        <h2 id="munis-title" class="text-3xl sm:text-4xl font-bold">Elige tu municipio</h2>
+      </div>
+      <div class="relative">
+        <Icon name="search" class="w-4 h-4 text-ink-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+        <input id="muni-filter" type="search" placeholder={`Buscar en ${name}`} aria-label="Buscar municipio" class="h-11 w-full sm:w-64 pl-10 pr-3 rounded-2xl bg-white border border-ink-200 text-[14px] focus:outline-none focus:border-ink" />
+      </div>
+    </div>
+    <ul id="muni-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+      {munis.map((m) => (
+        <li class="muni-item" data-name={m.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()}>
+          <a href={`/${province.slug}/${m.slug}/`} class="group flex items-center justify-between gap-2 h-full p-3.5 rounded-2xl bg-white border border-ink-100 hover:border-ink-300 hover:shadow-card transition-all">
+            <span class="min-w-0">
+              <span class="block text-[14px] font-semibold truncate">{m.name}</span>
+              <span class="block text-[12px] text-ink-400">{m.count} {m.count === 1 ? 'gasolinera' : 'gasolineras'}</span>
             </span>
-          </summary>
-          <div class="mt-3 text-xs sm:text-sm text-slate-700 leading-relaxed pt-3 border-t border-slate-100">
-            {faq.answer}
-          </div>
-        </details>
+            {m.min_p95 && <span class="price text-[15px] shrink-0">{fmtPrice(m.min_p95)}</span>}
+          </a>
+        </li>
       ))}
-    </div>
+    </ul>
+    <p id="muni-empty" class="hidden py-8 text-center text-ink-500 text-sm">No hay municipios con ese nombre.</p>
   </section>
+
+  <section class="wrap pt-12"><AmazonV16 /></section>
+
+  <Faq title={`Repostar en ${name}`} faqs={faqs} />
 </Layout>
 
 <script>
-  // Tab switch
-  const pBtnG95 = document.getElementById('prov-tab-g95');
-  const pBtnDiesel = document.getElementById('prov-tab-diesel');
-  const pContentG95 = document.getElementById('prov-content-g95');
-  const pContentDiesel = document.getElementById('prov-content-diesel');
+  document.querySelectorAll<HTMLButtonElement>('.rank-tab').forEach((b) =>
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.rank-tab').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      document.querySelectorAll<HTMLElement>('[data-panel]').forEach((p) => p.classList.toggle('hidden', p.dataset.panel !== b.dataset.tab));
+    }),
+  );
 
-  if (pBtnG95 && pBtnDiesel && pContentG95 && pContentDiesel) {
-    pBtnG95.addEventListener('click', () => {
-      pBtnG95.className = 'px-4 py-2 text-xs font-black rounded-xl transition-all bg-white text-slate-950 shadow-2xs cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-600';
-      pBtnG95.setAttribute('aria-selected', 'true');
-      pBtnDiesel.className = 'px-4 py-2 text-xs font-bold rounded-xl transition-all text-slate-700 hover:text-slate-950 cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-600';
-      pBtnDiesel.setAttribute('aria-selected', 'false');
-      pContentG95.classList.remove('hidden');
-      pContentDiesel.classList.add('hidden');
+  const input = document.getElementById('muni-filter') as HTMLInputElement | null;
+  const items = document.querySelectorAll<HTMLElement>('.muni-item');
+  input?.addEventListener('input', () => {
+    const q = input.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    let shown = 0;
+    items.forEach((it) => {
+      const ok = !q || (it.dataset.name || '').includes(q);
+      it.classList.toggle('hidden', !ok);
+      if (ok) shown++;
     });
-
-    pBtnDiesel.addEventListener('click', () => {
-      pBtnDiesel.className = 'px-4 py-2 text-xs font-black rounded-xl transition-all bg-white text-slate-950 shadow-2xs cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-600';
-      pBtnDiesel.setAttribute('aria-selected', 'true');
-      pBtnG95.className = 'px-4 py-2 text-xs font-bold rounded-xl transition-all text-slate-700 hover:text-slate-950 cursor-pointer focus-visible:ring-2 focus-visible:ring-emerald-600';
-      pBtnG95.setAttribute('aria-selected', 'false');
-      pContentDiesel.classList.remove('hidden');
-      pContentG95.classList.add('hidden');
-    });
-  }
-
-  // Live filter in table
-  const tableSearch = document.getElementById('table-search') as HTMLInputElement | null;
-  const searchClear = document.getElementById('table-search-clear');
-  const visibleCountLabel = document.getElementById('total-visible-count');
-  const rows = document.querySelectorAll<HTMLElement>('.station-row');
-  const muniChips = document.querySelectorAll<HTMLElement>('.muni-chip');
-
-  function filterTable(q: string) {
-    let count = 0;
-    rows.forEach((row) => {
-      const text = row.getAttribute('data-search') || '';
-      if (text.includes(q)) {
-        row.style.display = '';
-        count++;
-      } else {
-        row.style.display = 'none';
-      }
-    });
-    if (visibleCountLabel) visibleCountLabel.textContent = String(count);
-    if (searchClear) {
-      if (q) searchClear.classList.remove('hidden');
-      else searchClear.classList.add('hidden');
-    }
-  }
-
-  if (tableSearch && rows.length > 0) {
-    tableSearch.addEventListener('input', (e) => {
-      const q = (e.target as HTMLInputElement).value.toLowerCase().trim();
-      filterTable(q);
-    });
-
-    if (searchClear) {
-      searchClear.addEventListener('click', () => {
-        tableSearch.value = '';
-        filterTable('');
-        tableSearch.focus();
-      });
-    }
-  }
-
-  // Quick click on municipality chip filters table
-  muniChips.forEach((chip) => {
-    chip.addEventListener('click', () => {
-      const muniName = chip.getAttribute('data-muni-filter') || '';
-      if (tableSearch) {
-        tableSearch.value = muniName;
-        filterTable(muniName);
-        tableSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    });
+    document.getElementById('muni-empty')?.classList.toggle('hidden', shown > 0);
   });
 </script>

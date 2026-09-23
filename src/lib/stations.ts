@@ -51,18 +51,18 @@ export interface StationLight {
 }
 
 export const FUELS: Array<{ key: keyof StationPrices; label: string; short: string; dot: string }> = [
-  { key: 'gasolina95', label: 'Gasolina 95 E5', short: 'G95', dot: 'bg-emerald-600' },
-  { key: 'diesel', label: 'Diésel A (Gasóleo A)', short: 'Diésel', dot: 'bg-sky-600' },
-  { key: 'gasolina98', label: 'Gasolina 98 E5', short: 'G98', dot: 'bg-violet-600' },
-  { key: 'diesel_plus', label: 'Diésel Premium (A+)', short: 'Diésel+', dot: 'bg-sky-800' },
-  { key: 'gasolina95_e10', label: 'Gasolina 95 E10', short: 'G95 E10', dot: 'bg-emerald-400' },
-  { key: 'gasolina98_e10', label: 'Gasolina 98 E10', short: 'G98 E10', dot: 'bg-violet-400' },
-  { key: 'gasoleo_b', label: 'Gasóleo B (agrícola)', short: 'Gasóleo B', dot: 'bg-rose-500' },
-  { key: 'glp', label: 'GLP / Autogas', short: 'GLP', dot: 'bg-amber-500' },
-  { key: 'gnc', label: 'Gas Natural Comprimido (GNC)', short: 'GNC', dot: 'bg-cyan-600' },
-  { key: 'gnl', label: 'Gas Natural Licuado (GNL)', short: 'GNL', dot: 'bg-cyan-800' },
-  { key: 'hvo', label: 'HVO100 (diésel renovable)', short: 'HVO100', dot: 'bg-teal-600' },
-  { key: 'adblue', label: 'AdBlue', short: 'AdBlue', dot: 'bg-blue-500' },
+  { key: 'gasolina95', label: 'Gasolina 95', short: 'SP95', dot: '#16A34A' },
+  { key: 'diesel', label: 'Diésel A', short: 'Diésel', dot: '#111827' },
+  { key: 'gasolina98', label: 'Gasolina 98', short: 'SP98', dot: '#166534' },
+  { key: 'diesel_plus', label: 'Diésel Premium', short: 'Diésel+', dot: '#374151' },
+  { key: 'gasolina95_e10', label: 'Gasolina 95 E10', short: 'E10', dot: '#4ADE80' },
+  { key: 'gasolina98_e10', label: 'Gasolina 98 E10', short: 'SP98 E10', dot: '#22C55E' },
+  { key: 'gasoleo_b', label: 'Gasóleo B', short: 'Gasóleo B', dot: '#DC2626' },
+  { key: 'glp', label: 'GLP / Autogas', short: 'GLP', dot: '#F59E0B' },
+  { key: 'gnc', label: 'GNC', short: 'GNC', dot: '#0EA5E9' },
+  { key: 'gnl', label: 'GNL', short: 'GNL', dot: '#0369A1' },
+  { key: 'hvo', label: 'HVO100 renovable', short: 'HVO', dot: '#0D9488' },
+  { key: 'adblue', label: 'AdBlue', short: 'AdBlue', dot: '#2563EB' },
 ];
 
 export function slugify(text: string): string {
@@ -93,17 +93,6 @@ export function mapsUrl(lat: number, lng: number): string {
 
 export function wazeUrl(lat: number, lng: number): string {
   return `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
-}
-
-export function brandBadgeClass(brand: string): string {
-  const b = (brand || '').toLowerCase();
-  if (b.includes('repsol')) return 'badge-repsol';
-  if (b.includes('cepsa') || b.includes('moeve')) return 'badge-cepsa';
-  if (b === 'bp') return 'badge-bp';
-  if (b.includes('shell')) return 'badge-shell';
-  if (b.includes('galp')) return 'badge-galp';
-  if (isLowCost(brand)) return 'badge-plenoil';
-  return 'badge-default';
 }
 
 const LOW_COST_BRANDS = [
@@ -231,4 +220,94 @@ export function isOpenAt(week: WeekSchedule, date: Date): boolean {
   // Overnight intervals from the previous day (e.g. 22:00-02:00)
   const prev = (day + 6) % 7;
   return week[prev].some(([o, c]) => c < o && now < c);
+}
+
+/* ------------------------------------------------------------------ */
+/* Visual helpers                                                      */
+/* ------------------------------------------------------------------ */
+
+const BRAND_COLORS: Array<[string, string, string]> = [
+  // [match, background, foreground]
+  ['repsol', '#FF7A00', '#FFFFFF'],
+  ['moeve', '#E30613', '#FFFFFF'],
+  ['cepsa', '#E30613', '#FFFFFF'],
+  ['bp', '#00874A', '#FFFFFF'],
+  ['shell', '#FFD500', '#D52B1E'],
+  ['galp', '#F26B21', '#FFFFFF'],
+  ['ballenoil', '#0A64B4', '#FFFFFF'],
+  ['plenergy', '#00A0E0', '#FFFFFF'],
+  ['plenoil', '#00A0E0', '#FFFFFF'],
+  ['petroprix', '#6D28D9', '#FFFFFF'],
+  ['petronor', '#FF7A00', '#FFFFFF'],
+  ['carrefour', '#1E4FA0', '#FFFFFF'],
+  ['alcampo', '#E2001A', '#FFFFFF'],
+  ['disa', '#003A8C', '#FFFFFF'],
+  ['avia', '#D71920', '#FFFFFF'],
+  ['q8', '#0055A4', '#FFD200'],
+  ['campsa', '#E30613', '#FFD200'],
+  ['bonàrea', '#D6001C', '#FFFFFF'],
+  ['eroski', '#E30613', '#FFFFFF'],
+];
+
+export function brandStyle(brand: string): { bg: string; fg: string; initials: string } {
+  const b = (brand || '').toLowerCase();
+  const hit = BRAND_COLORS.find(([m]) => (m === 'bp' ? b === 'bp' : b.includes(m)));
+  const words = (brand || '?').replace(/[^\p{L}\p{N}\s]/gu, ' ').trim().split(/\s+/).filter(Boolean);
+  const initials = (words.length > 1 ? words[0][0] + words[1][0] : (words[0] || '?').slice(0, 2)).toUpperCase();
+  return { bg: hit ? hit[1] : '#1C221E', fg: hit ? hit[2] : '#D6FF3D', initials };
+}
+
+export type PriceLevel = 'low' | 'mid' | 'high';
+
+/** Classifies a price against a local reference average (±2 cts band). */
+export function priceLevel(price: number | null | undefined, avg: number | null | undefined): PriceLevel | null {
+  if (typeof price !== 'number' || typeof avg !== 'number') return null;
+  const d = price - avg;
+  if (d <= -0.02) return 'low';
+  if (d >= 0.02) return 'high';
+  return 'mid';
+}
+
+export const LEVEL_LABEL: Record<PriceLevel, string> = { low: 'Barata', mid: 'En la media', high: 'Cara' };
+
+export function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+export function fmtKm(km: number): string {
+  return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1).replace('.', ',')} km`;
+}
+
+/** Share (0-100) of prices in the sorted array that are strictly higher than `price`. */
+export function cheaperThanPct(sortedAsc: number[], price: number): number {
+  if (sortedAsc.length <= 1) return 0;
+  let lo = 0;
+  let hi = sortedAsc.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (sortedAsc[mid] <= price) lo = mid + 1;
+    else hi = mid;
+  }
+  return Math.round(((sortedAsc.length - lo) / (sortedAsc.length - 1)) * 100);
+}
+
+export const DAY_NAMES = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+export function fmtInterval([o, c]: [number, number]): string {
+  if (o === 0 && c >= 1440) return '24 horas';
+  const f = (m: number) => (m >= 1440 ? '24:00' : `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+  return `${f(o)} – ${f(c)}`;
+}
+
+/** Compact map point: [lat, lng, sp95, diesel, url, brand, address, is24h] */
+export type MapPoint = [number, number, number | null, number | null, string, string, string, 0 | 1];
+
+export function toMapPoint(s: GasStation): MapPoint {
+  return [s.lat, s.lng, s.prices?.gasolina95 ?? null, s.prices?.diesel ?? null, stationUrl(s), s.brand, s.address, s.is_24h ? 1 : 0];
 }

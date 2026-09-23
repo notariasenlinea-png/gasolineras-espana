@@ -1,52 +1,52 @@
 ---
-// Paginated, sortable and filterable list of station cards. Every card is in the
-// HTML (crawlable); the client script only reorders and hides them.
-import GasolineraCard from './GasolineraCard.astro';
+// Sortable, filterable and paginated station list. Every card is in the HTML
+// (crawlable); the client script only reorders and hides them.
+import StationCard from './StationCard.astro';
 import type { GasStation } from '../lib/stations';
 
 interface Props {
   id: string;
   stations: GasStation[];
-  avgGasolina95?: number | null;
+  avgG95?: number | null;
   avgDiesel?: number | null;
   perPage?: number;
+  showTown?: boolean;
 }
 
-const { id, stations, avgGasolina95, avgDiesel, perPage = 12 } = Astro.props;
+const { id, stations, avgG95, avgDiesel, perPage = 12, showTown = false } = Astro.props;
 
 const sorted = [...stations].sort(
   (a, b) => (a.prices?.gasolina95 ?? 99) - (b.prices?.gasolina95 ?? 99) || (a.prices?.diesel ?? 99) - (b.prices?.diesel ?? 99),
 );
 const has24h = stations.some((s) => s.is_24h);
+const hasLowCost = sorted.length > 1;
 ---
 
-<div class="station-list" id={id} data-per-page={perPage}>
-  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-    <div class="inline-flex p-1 bg-slate-200/80 rounded-xl self-start" role="group" aria-label="Ordenar por precio de">
-      <button type="button" data-sort="p95" aria-pressed="true" class="sl-sort px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-600 aria-pressed:bg-white aria-pressed:text-slate-950 aria-pressed:shadow-sm">Gasolina 95</button>
-      <button type="button" data-sort="diesel" aria-pressed="false" class="sl-sort px-3.5 py-1.5 text-xs font-bold rounded-lg text-slate-600 aria-pressed:bg-white aria-pressed:text-slate-950 aria-pressed:shadow-sm">Diésel A</button>
+<div class="station-list group/list" id={id} data-per-page={perPage} data-fuel="g95">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+    <div class="seg self-start" role="group" aria-label="Ordenar por precio de">
+      <button type="button" data-sort="g95" aria-pressed="true" class="sl-sort">Gasolina 95</button>
+      <button type="button" data-sort="diesel" aria-pressed="false" class="sl-sort">Diésel</button>
     </div>
-    <div class="flex gap-2 overflow-x-auto" role="group" aria-label="Filtrar gasolineras">
-      <button type="button" data-filter="all" aria-pressed="true" class="sl-filter shrink-0 px-3 py-1.5 rounded-full text-xs font-bold border bg-white text-slate-700 border-slate-300 aria-pressed:bg-slate-900 aria-pressed:text-white aria-pressed:border-slate-900">Todas</button>
-      {has24h && (
-        <button type="button" data-filter="24h" aria-pressed="false" class="sl-filter shrink-0 px-3 py-1.5 rounded-full text-xs font-bold border bg-white text-slate-700 border-slate-300 aria-pressed:bg-slate-900 aria-pressed:text-white aria-pressed:border-slate-900">24 horas</button>
-      )}
-      <button type="button" data-filter="lowcost" aria-pressed="false" class="sl-filter shrink-0 px-3 py-1.5 rounded-full text-xs font-bold border bg-white text-slate-700 border-slate-300 aria-pressed:bg-slate-900 aria-pressed:text-white aria-pressed:border-slate-900">Low-cost</button>
+    <div class="flex gap-2 overflow-x-auto no-scrollbar" role="group" aria-label="Filtrar">
+      <button type="button" data-filter="all" aria-pressed="true" class="sl-filter chip">Todas <span class="text-[11px] opacity-60">{stations.length}</span></button>
+      {has24h && <button type="button" data-filter="24h" aria-pressed="false" class="sl-filter chip">Abiertas 24h</button>}
+      {hasLowCost && <button type="button" data-filter="lowcost" aria-pressed="false" class="sl-filter chip">Low-cost</button>}
     </div>
   </div>
 
-  <div class="sl-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    {sorted.map((st) => (
-      <GasolineraCard station={st} avgGasolina95={avgGasolina95} avgDiesel={avgDiesel} />
+  <div class="sl-grid grid grid-cols-1 gap-2">
+    {sorted.map((st, i) => (
+      <StationCard station={st} avgG95={avgG95} avgDiesel={avgDiesel} showTown={showTown} />
     ))}
   </div>
 
-  <p class="sl-empty hidden py-10 text-center text-sm text-slate-500">No hay gasolineras que cumplan este filtro.</p>
+  <p class="sl-empty hidden py-12 text-center text-sm text-ink-500">Ninguna gasolinera cumple este filtro.</p>
 
-  <nav class="sl-pager hidden mt-6 flex items-center justify-between gap-3" aria-label="Paginación de gasolineras">
-    <button type="button" class="sl-prev px-4 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-700 disabled:opacity-40">← Anterior</button>
-    <span class="sl-info text-xs font-semibold text-slate-600 tabular-nums"></span>
-    <button type="button" class="sl-next px-4 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-700 disabled:opacity-40">Siguiente →</button>
+  <nav class="sl-pager hidden mt-5 flex items-center justify-between gap-3" aria-label="Paginación">
+    <button type="button" class="sl-prev btn-ghost h-10 text-[13px]">← Anteriores</button>
+    <span class="sl-info text-[13px] font-medium text-ink-500 tabular-nums"></span>
+    <button type="button" class="sl-next btn-ghost h-10 text-[13px]">Siguientes →</button>
   </nav>
 </div>
 
@@ -61,19 +61,19 @@ const has24h = stations.some((s) => s.is_24h);
     const cards = Array.from(grid.querySelectorAll<HTMLElement>('.station-card'));
     const perPage = Number(root.dataset.perPage) || 12;
 
-    let sortKey: 'p95' | 'diesel' = 'p95';
+    let sortKey: 'g95' | 'diesel' = 'g95';
     let filter = 'all';
     let page = 0;
 
-    const priceOf = (el: HTMLElement, key: string) => {
-      const v = el.dataset[key];
+    const priceOf = (el: HTMLElement) => {
+      const v = sortKey === 'g95' ? el.dataset.p95 : el.dataset.diesel;
       return v ? Number(v) : 99;
     };
 
     function render(scroll = false) {
       const visible = cards
         .filter((c) => filter === 'all' || (filter === '24h' ? c.dataset['24h'] === '1' : c.dataset.lowcost === '1'))
-        .sort((a, b) => priceOf(a, sortKey) - priceOf(b, sortKey));
+        .sort((a, b) => priceOf(a) - priceOf(b));
       const pages = Math.max(1, Math.ceil(visible.length / perPage));
       page = Math.min(page, pages - 1);
 
@@ -85,9 +85,7 @@ const has24h = stations.some((s) => s.is_24h);
 
       empty.classList.toggle('hidden', visible.length > 0);
       pager.classList.toggle('hidden', pages <= 1);
-      const from = page * perPage + 1;
-      const to = Math.min(visible.length, (page + 1) * perPage);
-      info.textContent = `${from}–${to} de ${visible.length}`;
+      info.textContent = `${page * perPage + 1}–${Math.min(visible.length, (page + 1) * perPage)} de ${visible.length}`;
       prev.disabled = page === 0;
       next.disabled = page >= pages - 1;
       if (scroll) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -95,7 +93,8 @@ const has24h = stations.some((s) => s.is_24h);
 
     root.querySelectorAll<HTMLButtonElement>('.sl-sort').forEach((btn) =>
       btn.addEventListener('click', () => {
-        sortKey = btn.dataset.sort === 'diesel' ? 'diesel' : 'p95';
+        sortKey = btn.dataset.sort === 'diesel' ? 'diesel' : 'g95';
+        root.dataset.fuel = sortKey;
         root.querySelectorAll('.sl-sort').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
         page = 0;
         render();

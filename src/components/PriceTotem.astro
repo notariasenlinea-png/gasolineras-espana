@@ -1,0 +1,41 @@
+---
+// Price board styled like the illuminated pylon sign at a Spanish petrol station.
+import { fmtPrice } from '../lib/stations';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  rows: Array<{ label: string; price: number | null; dot: string; note?: string }>;
+  footer?: string;
+  class?: string;
+}
+
+const { title, subtitle, rows, footer, class: className = '' } = Astro.props;
+---
+
+<div class={`relative rounded-[28px] bg-ink text-white p-2 shadow-lift ring-1 ring-white/10 ${className}`}>
+  <div class="rounded-[22px] bg-gradient-to-b from-white/[0.07] to-transparent px-5 pt-4 pb-3">
+    <div class="flex items-center justify-between gap-3">
+      <p class="font-display font-bold text-[15px] truncate">{title}</p>
+      <span class="inline-flex items-center gap-1.5 text-[11px] text-white/50 shrink-0"><span class="live-dot"></span>En directo</span>
+    </div>
+    {subtitle && <p class="text-[12px] text-white/45 truncate">{subtitle}</p>}
+  </div>
+  <ul class="px-2 pb-2 space-y-1.5">
+    {rows.map((r) => (
+      <li class="flex items-center justify-between gap-3 rounded-2xl bg-black/40 ring-1 ring-white/[0.06] px-4 py-3">
+        <span class="flex items-center gap-2.5 min-w-0">
+          <span class="w-1.5 h-7 rounded-full shrink-0" style={`background:${r.dot}`}></span>
+          <span class="min-w-0">
+            <span class="block text-[13px] font-semibold text-white/85 truncate">{r.label}</span>
+            {r.note && <span class="block text-[11px] text-white/40 truncate">{r.note}</span>}
+          </span>
+        </span>
+        <span class="led text-[30px] sm:text-[34px] leading-none">
+          {fmtPrice(r.price)}<span class="text-[13px] text-white/40 font-medium ml-1">€/L</span>
+        </span>
+      </li>
+    ))}
+  </ul>
+  {footer && <p class="px-5 pb-3 pt-1 text-[11px] text-white/40">{footer}</p>}
+</div>

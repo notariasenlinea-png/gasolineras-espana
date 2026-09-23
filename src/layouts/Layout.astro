@@ -1,7 +1,10 @@
 ---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/bricolage-grotesque';
+import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import '../styles/global.css';
+import MobileNav from '../components/MobileNav.astro';
 
 interface Props {
   title: string;
@@ -9,8 +12,9 @@ interface Props {
   canonical?: string;
   ogType?: string;
   schema?: object | object[];
-  activeFuel?: 'gasolina-95' | 'diesel' | 'home';
+  active?: 'home' | 'mapa' | 'gasolina-95' | 'diesel' | 'provincias' | '';
   robots?: string;
+  footer?: boolean;
 }
 
 const {
@@ -19,47 +23,42 @@ const {
   canonical = Astro.url.href,
   ogType = 'website',
   schema,
-  activeFuel = 'home',
+  active = '',
   robots = 'index, follow',
+  footer = true,
 } = Astro.props;
 
 const siteName = 'Gasolineras en Línea';
 const siteUrl = 'https://gasolinerasenlinea.es';
 
-// Base WebSite Schema
-const baseWebSiteSchema = {
+const webSite = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  'name': siteName,
-  'url': siteUrl,
-  'description': 'Monitor en tiempo real de precios de carburantes en las más de 11.400 estaciones de España con datos del MITECO.',
-  'inLanguage': 'es-ES',
-  'potentialAction': {
+  name: siteName,
+  url: siteUrl,
+  inLanguage: 'es-ES',
+  potentialAction: {
     '@type': 'SearchAction',
-    'target': `${siteUrl}/?q={search_term_string}`,
-    'query-input': 'required name=search_term_string'
-  }
+    target: `${siteUrl}/?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
 };
 
-const schemasToRender = schema
-  ? Array.isArray(schema)
-    ? [baseWebSiteSchema, ...schema]
-    : [baseWebSiteSchema, schema]
-  : [baseWebSiteSchema];
+const schemas = [webSite, ...(schema ? (Array.isArray(schema) ? schema : [schema]) : [])];
 ---
 
 <!doctype html>
-<html lang="es" class="h-full scroll-smooth">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={robots} />
-    <meta name="theme-color" content="#047857" />
+    <meta name="theme-color" content="#F5F4EF" />
+    <meta name="format-detection" content="telephone=no" />
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
@@ -67,44 +66,20 @@ const schemasToRender = schema
     <meta property="og:site_name" content={siteName} />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:image" content={`${siteUrl}/og-image.png`} />
-
-    <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`${siteUrl}/og-image.png`} />
 
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://a.basemaps.cartocdn.com" crossorigin />
 
-    <!-- Performance Preconnect & Typography Fonts (Plus Jakarta Sans + Inter) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Schema.org JSON-LD -->
-    {schemasToRender.map((s) => (
-      <script type="application/ld+json" set:html={JSON.stringify(s)} />
-    ))}
+    {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>
-  <body class="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-emerald-600 selection:text-white">
-    <!-- Accessible Skip Link -->
-    <a
-      href="#main-content"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-slate-950 focus:text-white focus:rounded-xl focus:shadow-2xl focus:ring-2 focus:ring-emerald-400 font-bold text-xs"
-    >
-      Saltar al contenido principal
-    </a>
-
-    <Header activeFuel={activeFuel} />
-
-    <main id="main-content" class="flex-1 focus:outline-none" tabindex="-1">
+  <body>
+    <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[2000] btn-ink h-10">Saltar al contenido</a>
+    <Header active={active} />
+    <main id="contenido" class="flex-1">
       <slot />
     </main>
-
-    <Footer />
+    {footer && <Footer />}
+    <MobileNav active={active} />
   </body>
 </html>

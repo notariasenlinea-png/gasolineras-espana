@@ -1,13 +1,21 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import BrandMark from '../../components/BrandMark.astro';
+import PriceTotem from '../../components/PriceTotem.astro';
+import PriceMap from '../../components/PriceMap.astro';
+import StationCard from '../../components/StationCard.astro';
 import AdSlot from '../../components/AdSlot.astro';
-import GasolineraCard from '../../components/GasolineraCard.astro';
+import Icon from '../../components/Icon.astro';
 import { loadAllProvinces, provincesMeta, townStats } from '../../lib/data';
 import {
+  DAY_NAMES,
   FUELS,
-  brandBadgeClass,
+  cheaperThanPct,
   fmtEuros,
+  fmtInterval,
   fmtPrice,
+  haversineKm,
   isLowCost,
   mapsUrl,
   openingHoursSpecification,
@@ -15,8 +23,10 @@ import {
   slugify,
   stationSlug,
   stationUrl,
+  toMapPoint,
   wazeUrl,
   type GasStation,
+  type MapPoint,
 } from '../../lib/stations';
 
 export async function getStaticPaths() {
@@ -28,6 +38,10 @@ export async function getStaticPaths() {
     if (!detail) continue;
     const all = detail.all_stations || [];
     const muniNames = new Map((detail.municipalities || []).map((m) => [m.slug, m.name]));
+    const sortedPrices = (list: GasStation[], k: 'gasolina95' | 'diesel') =>
+      list.map((s) => s.prices?.[k]).filter((v): v is number => typeof v === 'number').sort((a, b) => a - b);
+    const prov95 = sortedPrices(all, 'gasolina95');
+    const provD = sortedPrices(all, 'diesel');
 
     const byTown = new Map<string, GasStation[]>();
     for (const s of all) {
@@ -36,47 +50,51 @@ export async function getStaticPaths() {
       byTown.get(key)!.push(s);
     }
 
-    const byG95 = (a: GasStation, b: GasStation) =>
-      (a.prices?.gasolina95 ?? a.prices?.diesel ?? 99) - (b.prices?.gasolina95 ?? b.prices?.diesel ?? 99);
-    const provinceCheapest = [...all].sort(byG95).slice(0, 8);
-
     for (const [townSlug, townStations] of byTown) {
       const stats = townStats(townStations);
-      const sortedTown = [...townStations].sort(byG95);
-      const town = {
-        name: muniNames.get(townSlug) || townStations[0].town,
-        slug: townSlug,
-        hasPage: muniNames.has(townSlug),
-        ...stats,
-      };
+      const town95 = sortedPrices(townStations, 'gasolina95');
+      const townD = sortedPrices(townStations, 'diesel');
+      const town = { name: muniNames.get(townSlug) || townStations[0].town, slug: townSlug, hasPage: muniNames.has(townSlug), ...stats };
 
       for (const station of townStations) {
-        const related = sortedTown.filter((s) => s.id !== station.id).slice(0, 3);
-        for (const s of provinceCheapest) {
-          if (related.length >= 3) break;
-          if (s.id !== station.id && !related.some((r) => r.id === s.id)) related.push(s);
-        }
+        // Nearby stations (same province) with distance
+        const near = all
+          .filter((s) => s.id !== station.id)
+          .map((s) => ({ s, km: haversineKm(station.lat, station.lng, s.lat, s.lng) }))
+          .filter((x) => x.km <= 15)
+          .sort((a, b) => a.km - b.km);
+        const fuelKey = station.prices?.gasolina95 != null ? 'gasolina95' : 'diesel';
+        const cheaperNear = near
+          .filter((x) => typeof x.s.prices?.[fuelKey] === 'number')
+          .slice(0, 25)
+          .sort((a, b) => (a.s.prices[fuelKey] as number) - (b.s.prices[fuelKey] as number))
+          .slice(0, 3);
+        const mapPoints = [station, ...near.slice(0, 40).map((x) => x.s)].map(toMapPoint);
+
+        const useTown = townStations.length >= 5;
+        const p95 = station.prices?.gasolina95;
+        const pD = station.prices?.diesel;
+        const rank = {
+          scope: useTown ? town.name : meta.name,
+          g95: typeof p95 === 'number' ? cheaperThanPct(useTown ? town95 : prov95, p95) : null,
+          diesel: typeof pD === 'number' ? cheaperThanPct(useTown ? townD : provD, pD) : null,
+        };
 
         paths.push({
           params: { slug: stationSlug(station.brand, station.town, station.id) },
           props: {
             station,
-            province: {
-              name: meta.name,
-              slug: meta.slug,
-              ccaa: meta.ccaa,
-              avgG95: meta.avg_gasolina95 as number | null,
-              avgDiesel: meta.avg_diesel as number | null,
-            },
+            province: { name: meta.name, slug: meta.slug, ccaa: meta.ccaa, avgG95: meta.avg_gasolina95 as number | null, avgDiesel: meta.avg_diesel as number | null },
             town,
-            related,
+            related: cheaperNear.map((x) => ({ station: x.s, km: x.km })),
+            mapPoints,
+            rank,
             updatedAt: detail.updated_at,
           },
         });
       }
     }
   }
-
   return paths;
 }
 
@@ -84,296 +102,311 @@ interface Props {
   station: GasStation;
   province: { name: string; slug: string; ccaa: string; avgG95: number | null; avgDiesel: number | null };
   town: { name: string; slug: string; hasPage: boolean; avgG95: number | null; avgDiesel: number | null; count: number };
-  related: GasStation[];
+  related: Array<{ station: GasStation; km: number }>;
+  mapPoints: MapPoint[];
+  rank: { scope: string; g95: number | null; diesel: number | null };
   updatedAt: string;
 }
 
-const { station, province, town, related, updatedAt } = Astro.props;
+const { station, province, town, related, mapPoints, rank, updatedAt } = Astro.props;
 const site = 'https://gasolinerasenlinea.es';
 const url = `${site}${stationUrl(station)}`;
 const p95 = station.prices?.gasolina95 ?? null;
-const pDiesel = station.prices?.diesel ?? null;
+const pD = station.prices?.diesel ?? null;
 const lowCost = isLowCost(station.brand);
 const week = parseSchedule(station.schedule);
 const townUrl = town.hasPage ? `/${province.slug}/${town.slug}/` : `/${province.slug}/`;
 
-const availableFuels = FUELS.filter((f) => typeof station.prices?.[f.key] === 'number');
-const priceValues = availableFuels
-  .filter((f) => f.key !== 'adblue')
-  .map((f) => station.prices[f.key] as number);
-const priceRange = priceValues.length
-  ? `${fmtPrice(Math.min(...priceValues))} € - ${fmtPrice(Math.max(...priceValues))} € /L`
-  : undefined;
+const fuels = FUELS.filter((f) => typeof station.prices?.[f.key] === 'number');
+const nonAdblue = fuels.filter((f) => f.key !== 'adblue').map((f) => station.prices[f.key] as number);
+const priceRange = nonAdblue.length ? `${fmtPrice(Math.min(...nonAdblue))} € - ${fmtPrice(Math.max(...nonAdblue))} € /L` : undefined;
 
-// Savings on a 50 L tank vs. provincial and municipal averages
+// Verdict: primary fuel percentile
+const primary = rank.g95 !== null ? { label: 'gasolina 95', pct: rank.g95 } : rank.diesel !== null ? { label: 'diésel', pct: rank.diesel } : null;
+const verdict = primary
+  ? primary.pct >= 67
+    ? { tone: 'low', head: 'Buen precio', text: `Más barata que el ${primary.pct} % de las gasolineras de ${rank.scope} en ${primary.label}.` }
+    : primary.pct >= 34
+      ? { tone: 'mid', head: 'Precio normal', text: `Más barata que el ${primary.pct} % de las gasolineras de ${rank.scope} en ${primary.label}.` }
+      : { tone: 'high', head: 'Precio alto', text: `El ${100 - primary.pct} % de las gasolineras de ${rank.scope} son más baratas en ${primary.label}.` }
+  : null;
+
 const TANK = 50;
 const comparisons = [
-  { key: 'gasolina95', label: 'Gasolina 95', price: p95, prov: province.avgG95, muni: town.avgG95, tone: 'emerald' },
-  { key: 'diesel', label: 'Diésel A', price: pDiesel, prov: province.avgDiesel, muni: town.avgDiesel, tone: 'sky' },
-].filter((c) => c.price !== null) as Array<{
-  key: string; label: string; price: number; prov: number | null; muni: number | null; tone: 'emerald' | 'sky';
-}>;
-const primary = comparisons[0];
-const primarySaving = primary && primary.prov ? (primary.prov - primary.price) * TANK : null;
+  { label: 'Gasolina 95', price: p95, muni: town.avgG95, prov: province.avgG95 },
+  { label: 'Diésel', price: pD, muni: town.avgDiesel, prov: province.avgDiesel },
+].filter((c) => c.price !== null) as Array<{ label: string; price: number; muni: number | null; prov: number | null }>;
+const main = comparisons[0];
+const mainSaving = main && main.prov !== null ? (main.prov - main.price) * TANK : null;
 
-const cheapestLabel = p95 !== null ? `Gasolina 95 a ${fmtPrice(p95)} €/L` : pDiesel !== null ? `Diésel a ${fmtPrice(pDiesel)} €/L` : 'precios actualizados';
-const title = `${station.brand} ${station.address}, ${town.name} | Precio Gasolina y Diésel Hoy`;
-const description = `Precios de hoy en la gasolinera ${station.brand} de ${station.address} (${town.name}, ${province.name}): ${cheapestLabel}. Horario ${station.is_24h ? '24 horas' : station.schedule}, cómo llegar y ahorro frente a la media provincial.`;
+const cheapestLabel = p95 !== null ? `gasolina 95 a ${fmtPrice(p95)} €/L` : pD !== null ? `diésel a ${fmtPrice(pD)} €/L` : 'precios actualizados';
+const title = `${station.brand} ${station.address}, ${town.name} | Precio gasolina y diésel hoy`;
+const description = `Precios de hoy en ${station.brand} (${station.address}, ${town.name}): ${cheapestLabel}. Horario ${station.is_24h ? '24 horas' : station.schedule}, comparativa con la zona y cómo llegar.`;
 
-const gasStationSchema: Record<string, unknown> = {
-  '@context': 'https://schema.org',
-  '@type': 'GasStation',
-  '@id': url,
-  name: `${station.brand} ${town.name} - ${station.address}`,
-  brand: { '@type': 'Brand', name: station.brand },
-  url,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: station.address,
-    addressLocality: station.town,
-    addressRegion: province.name,
-    ...(station.postal_code ? { postalCode: station.postal_code } : {}),
-    addressCountry: 'ES',
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'GasStation',
+    '@id': url,
+    name: `${station.brand} ${town.name} - ${station.address}`,
+    brand: { '@type': 'Brand', name: station.brand },
+    url,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: station.address,
+      addressLocality: station.town,
+      addressRegion: province.name,
+      ...(station.postal_code ? { postalCode: station.postal_code } : {}),
+      addressCountry: 'ES',
+    },
+    geo: { '@type': 'GeoCoordinates', latitude: station.lat, longitude: station.lng },
+    hasMap: mapsUrl(station.lat, station.lng),
+    ...(priceRange ? { priceRange } : {}),
+    ...(week ? { openingHoursSpecification: openingHoursSpecification(week) } : {}),
   },
-  geo: { '@type': 'GeoCoordinates', latitude: station.lat, longitude: station.lng },
-  hasMap: mapsUrl(station.lat, station.lng),
-  ...(priceRange ? { priceRange } : {}),
-  ...(week ? { openingHoursSpecification: openingHoursSpecification(week) } : {}),
-};
-
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${site}/` },
-    { '@type': 'ListItem', position: 2, name: province.name, item: `${site}/${province.slug}/` },
-    { '@type': 'ListItem', position: 3, name: town.name, item: `${site}${townUrl}` },
-    { '@type': 'ListItem', position: 4, name: `${station.brand} - ${station.address}`, item: url },
-  ],
-};
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: `${site}/` },
+      { '@type': 'ListItem', position: 2, name: province.name, item: `${site}/${province.slug}/` },
+      { '@type': 'ListItem', position: 3, name: town.name, item: `${site}${townUrl}` },
+      { '@type': 'ListItem', position: 4, name: `${station.brand} - ${station.address}`, item: url },
+    ],
+  },
+];
 ---
 
-<Layout title={title} description={description} canonical={url} schema={[gasStationSchema, breadcrumbSchema]}>
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    <nav class="py-3.5 text-xs text-slate-600 flex items-center gap-1.5 flex-wrap" aria-label="Ruta de navegación">
-      <a href="/" class="hover:text-emerald-700 font-medium">Inicio</a>
-      <span class="text-slate-400">›</span>
-      <a href={`/${province.slug}/`} class="hover:text-emerald-700 font-medium">{province.name}</a>
-      <span class="text-slate-400">›</span>
-      <a href={townUrl} class="hover:text-emerald-700 font-medium">{town.name}</a>
-      <span class="text-slate-400">›</span>
-      <span class="text-slate-900 font-bold truncate max-w-[16rem]" aria-current="page">{station.brand} - {station.address}</span>
-    </nav>
+<Layout title={title} description={description} canonical={url} schema={schema} active="">
+  <div class="wrap pt-6">
+    <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: province.name, href: `/${province.slug}/` }, { label: town.name, href: townUrl }, { label: `${station.brand} · ${station.address}` }]} />
   </div>
 
-  <AdSlot format="horizontal" slotId="ficha-top" />
+  <!-- Header -->
+  <section class="wrap pt-6 pb-8 grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-6 lg:gap-10 items-start">
+    <div class="min-w-0">
+      <div class="flex items-start gap-4">
+        <BrandMark brand={station.brand} size="lg" />
+        <div class="min-w-0">
+          <h1 class="text-3xl sm:text-5xl font-extrabold leading-[1.04] tracking-[-0.03em]">{station.brand} <span class="text-ink-400">{town.name}</span></h1>
+          <p class="mt-2 text-[15px] text-ink-500">{station.address}, {station.postal_code ? `${station.postal_code} ` : ''}{station.town} ({province.name})</p>
+        </div>
+      </div>
 
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 space-y-6">
-    <!-- Header -->
-    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7">
-      <div class="flex items-center gap-2 flex-wrap mb-3">
-        <span class={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold border uppercase tracking-wide ${brandBadgeClass(station.brand)}`}>
-          {station.brand}
-        </span>
-        {lowCost && <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-sky-50 text-sky-800 border border-sky-200">Low-cost</span>}
+      <div class="flex flex-wrap items-center gap-2 mt-5">
         {station.is_24h ? (
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
-            </span>
-            Abierta 24 horas
-          </span>
+          <span class="tag-24 h-8 px-3 text-[12px]"><span class="live-dot"></span>Abierta 24 horas</span>
         ) : week ? (
-          <span
-            id="open-status"
-            data-week={JSON.stringify(week)}
-            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-200"
-          >
-            <span class="status-dot w-2 h-2 rounded-full bg-slate-400"></span>
-            <span class="status-text">Horario: {station.schedule}</span>
-          </span>
-        ) : null}
+          <span id="open-status" data-week={JSON.stringify(week)} class="tag-muted h-8 px-3 text-[12px]"><Icon name="clock" class="w-3.5 h-3.5" /><span class="status-text">Ver horario</span></span>
+        ) : (
+          <span class="tag-muted h-8 px-3 text-[12px]"><Icon name="clock" class="w-3.5 h-3.5" />{station.schedule}</span>
+        )}
+        {lowCost && <span class="tag-lc h-8 px-3 text-[12px]"><Icon name="zap" class="w-3.5 h-3.5" />Low-cost</span>}
+        <span class="tag-muted h-8 px-3 text-[12px]">{fuels.length} {fuels.length === 1 ? 'combustible' : 'combustibles'}</span>
       </div>
 
-      <h1 class="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
-        Gasolinera {station.brand} en {town.name}
-      </h1>
-      <p class="mt-2 text-sm text-slate-600 flex items-start gap-1.5">
-        <svg class="w-4 h-4 text-slate-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-        <span>{station.address}, {station.postal_code ? `${station.postal_code} ` : ''}{station.town} ({province.name}) · {province.ccaa}</span>
-      </p>
-      <p class="mt-1 text-sm text-slate-600">
-        <span class="font-semibold text-slate-800">Horario:</span> {station.is_24h ? 'Abierta las 24 horas, todos los días' : station.schedule}
-      </p>
-    </section>
-
-    <!-- Live prices -->
-    <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden" aria-labelledby="precios-title">
-      <div class="px-5 sm:px-7 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <h2 id="precios-title" class="text-lg font-black text-slate-950">Precios de hoy</h2>
-        <p class="text-[11px] font-semibold text-slate-500 inline-flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          Última actualización oficial MITECO: <time>{updatedAt}</time>
-        </p>
-      </div>
-      {availableFuels.length > 0 ? (
-        <ul class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 divide-slate-100">
-          {availableFuels.map((f) => {
-            const price = station.prices[f.key] as number;
-            const featured = f.key === 'gasolina95' || f.key === 'diesel';
-            return (
-              <li class={`flex items-center justify-between gap-3 px-5 sm:px-7 py-3.5 sm:border-b sm:border-slate-100 ${featured ? 'bg-slate-50/60' : ''}`}>
-                <span class="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                  <span class={`w-2.5 h-2.5 rounded-full ${f.dot}`}></span>
-                  {f.label}
-                </span>
-                <span class="tabular-nums">
-                  <span class={`${featured ? 'text-2xl' : 'text-lg'} font-black text-slate-950`}>{fmtPrice(price)}</span>
-                  <span class="text-xs font-bold text-slate-500"> €/L</span>
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
-        <p class="px-5 sm:px-7 py-6 text-sm text-slate-500">Esta estación no tiene precios publicados en este momento.</p>
-      )}
-    </section>
-
-    <!-- Savings comparator -->
-    {comparisons.length > 0 && (
-      <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7" aria-labelledby="ahorro-title">
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
-          <div>
-            <h2 id="ahorro-title" class="text-lg font-black text-slate-950">Comparador de ahorro</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Frente a la media de {town.name} ({town.count} {town.count === 1 ? 'gasolinera' : 'gasolineras'}) y de la provincia de {province.name}.</p>
+      {verdict && (
+        <div class={`mt-6 rounded-3xl p-5 sm:p-6 lvl-${verdict.tone}`}>
+          <p class="font-display text-xl font-bold">{verdict.head}</p>
+          <p class="text-[15px] mt-1 opacity-90">{verdict.text}</p>
+          <div class="relative mt-5 h-2.5 rounded-full bg-gradient-to-r from-pricey via-fair to-cheap" aria-hidden="true">
+            <span class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white ring-4 ring-ink shadow" style={`left:${Math.max(3, Math.min(97, primary!.pct))}%`}></span>
           </div>
-          <label class="text-xs font-semibold text-slate-600 flex items-center gap-2">
-            Depósito:
-            <input id="tank-liters" type="range" min="20" max="90" step="5" value={TANK} class="accent-emerald-600 w-28" />
-            <span id="tank-liters-label" class="font-black text-slate-900 tabular-nums w-10">{TANK} L</span>
+          <div class="flex justify-between text-[11px] font-semibold mt-2 opacity-70"><span>Más cara</span><span>Más barata</span></div>
+        </div>
+      )}
+
+      <div class="flex flex-wrap gap-2 mt-5">
+        <a href="#como-llegar" class="btn-ink"><Icon name="navigation" class="w-4 h-4" /> Cómo llegar</a>
+        <button type="button" id="share-btn" class="btn-ghost"><Icon name="share" class="w-4 h-4" /> <span>Compartir</span></button>
+      </div>
+    </div>
+
+    <PriceTotem
+      title={`Precios en ${station.brand}`}
+      subtitle={`Actualizado el ${updatedAt.slice(0, 16)}`}
+      rows={fuels.map((f) => ({ label: f.label, price: station.prices[f.key] as number, dot: f.key === 'diesel' ? '#E5E7EB' : f.dot }))}
+      footer="Precio oficial comunicado al MITECO. Puede variar en el surtidor."
+    />
+  </section>
+
+  <div class="wrap"><AdSlot slotId="ficha-top" /></div>
+
+  <!-- Savings + schedule -->
+  <section class="wrap pt-8 grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-4 sm:gap-5 items-start">
+    {comparisons.length > 0 && (
+      <div class="card p-5 sm:p-7" aria-labelledby="ahorro-title">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+          <h2 id="ahorro-title" class="text-xl font-bold">¿Compensa repostar aquí?</h2>
+          <label class="flex items-center gap-3 text-[13px] font-medium text-ink-500">
+            Depósito
+            <input id="tank-liters" type="range" min="20" max="90" step="5" value={TANK} class="accent-ink w-28" />
+            <output id="tank-liters-label" class="font-display font-bold text-ink w-10">{TANK} L</output>
           </label>
         </div>
 
-        {primarySaving !== null && (
-          <div class={`rounded-xl p-4 mb-4 border ${primarySaving >= 0 ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'}`}>
-            <p class="text-sm font-semibold">
-              {primarySaving >= 0 ? 'Ahorro estimado de ' : 'Pagarías '}
-              <strong class="text-lg font-black tabular-nums savings-amount" data-diff={(primary.prov! - primary.price).toFixed(4)}>{fmtEuros(Math.abs(primarySaving))}</strong>
-              {primarySaving >= 0 ? ' ' : ' más '}en un depósito de <span class="tank-label">{TANK}</span> L de {primary.label} frente a la media provincial.
-            </p>
-          </div>
+        {mainSaving !== null && (
+          <p class="text-[15px] mb-5">
+            {mainSaving >= 0 ? 'Te ahorras ' : 'Pagas '}
+            <strong class={`font-display text-2xl font-bold tabular-nums savings ${mainSaving >= 0 ? 'text-cheap-ink' : 'text-pricey-ink'}`} data-diff={(main.prov! - main.price).toFixed(4)}>{fmtEuros(Math.abs(mainSaving))}</strong>
+            {mainSaving >= 0 ? '' : ' más'} por depósito de {main.label.toLowerCase()} respecto a la media de {province.name}.
+          </p>
         )}
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="grid sm:grid-cols-2 gap-3">
           {comparisons.map((c) => (
-            <div class="rounded-xl border border-slate-200 p-4">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold uppercase tracking-wide text-slate-600">{c.label}</span>
-                <span class="text-base font-black tabular-nums text-slate-950">{fmtPrice(c.price)} €/L</span>
+            <div class="rounded-2xl bg-ink-50/70 p-4">
+              <div class="flex items-baseline justify-between mb-3">
+                <span class="text-[13px] font-semibold">{c.label}</span>
+                <span class="price text-lg">{fmtPrice(c.price)} €</span>
               </div>
-              <dl class="space-y-1.5 text-xs">
-                {[{ label: `Media ${town.name}`, avg: c.muni }, { label: `Media ${province.name}`, avg: c.prov }].map((row) =>
-                  row.avg !== null ? (
-                    <div class="flex items-center justify-between gap-2">
-                      <dt class="text-slate-500 truncate">{row.label} ({fmtPrice(row.avg)} €)</dt>
-                      <dd
-                        class={`font-bold tabular-nums savings-amount ${row.avg - c.price >= 0 ? 'text-emerald-700' : 'text-rose-600'}`}
-                        data-diff={(row.avg - c.price).toFixed(4)}
-                        data-signed="1"
-                      >
-                        {row.avg - c.price >= 0 ? '−' : '+'}{fmtEuros(Math.abs((row.avg - c.price) * TANK))}
-                      </dd>
-                    </div>
-                  ) : null
-                )}
-              </dl>
+              {[{ label: `Media ${town.name}`, avg: c.muni }, { label: `Media ${province.name}`, avg: c.prov }].map((r) =>
+                r.avg !== null && (
+                  <div class="flex items-center justify-between gap-2 text-[13px] py-1">
+                    <span class="text-ink-500 truncate">{r.label} <span class="tabular-nums">({fmtPrice(r.avg)})</span></span>
+                    <span class={`font-semibold tabular-nums savings ${r.avg - c.price >= 0 ? 'text-cheap-ink' : 'text-pricey-ink'}`} data-diff={(r.avg - c.price).toFixed(4)} data-signed="1">
+                      {r.avg - c.price >= 0 ? '−' : '+'}{fmtEuros(Math.abs((r.avg - c.price) * TANK))}
+                    </span>
+                  </div>
+                )
+              )}
             </div>
           ))}
         </div>
-      </section>
+      </div>
     )}
 
-    <AdSlot format="horizontal" slotId="ficha-mid" />
+    <div class="card p-5 sm:p-7">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><Icon name="calendar" class="w-5 h-5" /> Horario</h2>
+      {week ? (
+        <table class="w-full text-[14px]">
+          <tbody class="divide-y divide-ink-100">
+            {week.map((intervals, i) => (
+              <tr data-day={i} class="schedule-row">
+                <th scope="row" class="py-2 text-left font-medium text-ink-600">{DAY_NAMES[i]}</th>
+                <td class="py-2 text-right tabular-nums">{intervals.length ? intervals.map(fmtInterval).join(' · ') : <span class="text-pricey-ink">Cerrado</span>}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p class="text-[15px]">{station.is_24h ? 'Abierta las 24 horas, todos los días.' : station.schedule}</p>
+      )}
+      <p class="text-[12px] text-ink-400 mt-4">Horario comunicado por la estación: «{station.schedule}».</p>
+    </div>
+  </section>
 
-    <!-- Related stations -->
-    {related.length > 0 && (
-      <section aria-labelledby="relacionadas-title">
-        <div class="flex items-end justify-between gap-3 mb-3">
-          <h2 id="relacionadas-title" class="text-lg font-black text-slate-950">Otras gasolineras baratas en {town.name}</h2>
-          <a href={townUrl} class="text-xs font-bold text-emerald-700 hover:underline shrink-0">Ver todas →</a>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {related.map((s) => (
-            <GasolineraCard station={s} avgGasolina95={town.avgG95} avgDiesel={town.avgDiesel} />
-          ))}
-        </div>
-      </section>
-    )}
+  <!-- Map -->
+  <section id="mapa" class="wrap pt-8 scroll-mt-20">
+    <div class="card overflow-hidden">
+      <PriceMap id="ficha-map" source="all" points={mapPoints} focus={[station.lat, station.lng]} zoom={14} class="h-[340px] sm:h-[420px]" />
+    </div>
+  </section>
 
-    <!-- Final CTA -->
-    <section class="bg-slate-900 rounded-2xl p-5 sm:p-7 text-white">
-      <h2 class="text-lg font-black">¿Vas a repostar aquí?</h2>
-      <p class="text-sm text-slate-300 mt-1 mb-4">{station.address}, {station.town}. Abre la ruta en tu navegador GPS favorito.</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <a
-          href={mapsUrl(station.lat, station.lng)}
-          target="_blank"
-          rel="noopener noreferrer nofollow"
-          class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-sm font-black transition-colors"
-        >
-          📍 Cómo llegar con Google Maps
-        </a>
-        <a
-          href={wazeUrl(station.lat, station.lng)}
-          target="_blank"
-          rel="noopener noreferrer nofollow"
-          class="flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-bold transition-colors"
-        >
-          🚗 Abrir en Waze
-        </a>
+  <!-- Nearby cheaper -->
+  {related.length > 0 && (
+    <section class="wrap pt-12" aria-labelledby="near-title">
+      <div class="flex items-end justify-between gap-4 mb-4">
+        <div>
+          <p class="eyebrow mb-2">Alternativas</p>
+          <h2 id="near-title" class="text-2xl sm:text-3xl font-bold">Las más baratas cerca de aquí</h2>
+        </div>
+        <a href={townUrl} class="text-[13px] font-semibold text-ink-500 hover:text-ink inline-flex items-center gap-1 shrink-0">Todas en {town.name} <Icon name="arrow-right" class="w-3.5 h-3.5" /></a>
+      </div>
+      <div class="grid gap-2">
+        {related.map((r) => (
+          <StationCard station={r.station} km={r.km} avgG95={town.avgG95} avgDiesel={town.avgDiesel} />
+        ))}
       </div>
     </section>
+  )}
+
+  <div class="wrap pt-10"><AdSlot slotId="ficha-mid" /></div>
+
+  <!-- Directions CTA -->
+  <section id="como-llegar" class="wrap pt-10 pb-16 scroll-mt-20">
+    <div class="relative overflow-hidden rounded-[32px] bg-ink text-white p-6 sm:p-10">
+      <div class="absolute inset-0 texture pointer-events-none"></div>
+      <div class="relative grid md:grid-cols-[1.2fr_1fr] gap-6 items-center">
+        <div>
+          <h2 class="text-white text-3xl sm:text-4xl font-bold">¿Vas a repostar aquí?</h2>
+          <p class="text-white/60 mt-2">{station.brand} · {station.address}, {station.town}</p>
+        </div>
+        <div class="grid gap-2.5">
+          <a href={mapsUrl(station.lat, station.lng)} target="_blank" rel="noopener nofollow" class="btn-volt h-14 text-[15px]"><Icon name="navigation" class="w-5 h-5" /> Abrir en Google Maps</a>
+          <a href={wazeUrl(station.lat, station.lng)} target="_blank" rel="noopener nofollow" class="btn-ghost-dark h-14 text-[15px]">Abrir en Waze</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky mobile action bar -->
+  <div id="sticky-bar" class="md:hidden fixed inset-x-3 bottom-[4.6rem] z-[900] translate-y-24 opacity-0 transition-all duration-300">
+    <div class="flex items-center gap-3 rounded-2xl bg-ink text-white p-2 pl-4 shadow-lift">
+      <div class="min-w-0 flex-1">
+        <p class="text-[12px] text-white/50 truncate">{station.brand} · {town.name}</p>
+        <p class="led text-lg leading-tight">{fmtPrice(p95 ?? pD)} <span class="text-[11px] text-white/50 font-medium">{p95 !== null ? 'SP95' : 'Diésel'}</span></p>
+      </div>
+      <a href={mapsUrl(station.lat, station.lng)} target="_blank" rel="noopener nofollow" class="btn-volt h-11 px-4"><Icon name="navigation" class="w-4 h-4" /> Ir</a>
+    </div>
   </div>
 </Layout>
 
 <script>
   import { isOpenAt, type WeekSchedule } from '../../lib/stations';
 
+  // Live open/closed status + highlight today
   const status = document.getElementById('open-status');
   if (status?.dataset.week) {
     try {
       const week = JSON.parse(status.dataset.week) as WeekSchedule;
       const open = isOpenAt(week, new Date());
-      const dot = status.querySelector('.status-dot');
-      const text = status.querySelector('.status-text');
-      status.className = `inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border ${
-        open ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-rose-50 text-rose-800 border-rose-200'
-      }`;
-      dot?.classList.replace('bg-slate-400', open ? 'bg-emerald-600' : 'bg-rose-500');
-      if (open) dot?.classList.add('animate-pulse');
-      if (text) text.textContent = open ? 'Abierta ahora' : 'Cerrada ahora';
-    } catch {
-      /* keep the static schedule text */
-    }
+      status.className = `${open ? 'tag-24' : 'tag bg-pricey-soft text-pricey-ink'} h-8 px-3 text-[12px]`;
+      const txt = status.querySelector('.status-text');
+      if (txt) txt.textContent = open ? 'Abierta ahora' : 'Cerrada ahora';
+    } catch {}
   }
+  const today = (new Date().getDay() + 6) % 7;
+  document.querySelector(`.schedule-row[data-day="${today}"]`)?.classList.add('font-semibold', 'bg-volt-soft');
 
+  // Tank slider
   const slider = document.getElementById('tank-liters') as HTMLInputElement | null;
-  const sliderLabel = document.getElementById('tank-liters-label');
-  const fmt = (v: number) => `${v.toFixed(2).replace('.', ',')} €`;
-
+  const label = document.getElementById('tank-liters-label');
+  const eur = (v: number) => `${v.toFixed(2).replace('.', ',')} €`;
   slider?.addEventListener('input', () => {
-    const liters = Number(slider.value);
-    if (sliderLabel) sliderLabel.textContent = `${liters} L`;
-    document.querySelectorAll<HTMLElement>('.tank-label').forEach((el) => (el.textContent = String(liters)));
-    document.querySelectorAll<HTMLElement>('.savings-amount').forEach((el) => {
-      const diff = Number(el.dataset.diff);
-      const amount = fmt(Math.abs(diff * liters));
-      el.textContent = el.dataset.signed ? `${diff >= 0 ? '−' : '+'}${amount}` : amount;
+    const l = Number(slider.value);
+    if (label) label.textContent = `${l} L`;
+    document.querySelectorAll<HTMLElement>('.savings').forEach((el) => {
+      const d = Number(el.dataset.diff);
+      el.textContent = el.dataset.signed ? `${d >= 0 ? '−' : '+'}${eur(Math.abs(d * l))}` : eur(Math.abs(d * l));
     });
   });
+
+  // Share
+  document.getElementById('share-btn')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const data = { title: document.title, url: location.href };
+    try {
+      if (navigator.share) await navigator.share(data);
+      else {
+        await navigator.clipboard.writeText(location.href);
+        const span = btn.querySelector('span');
+        if (span) span.textContent = 'Enlace copiado';
+      }
+    } catch {}
+  });
+
+  // Sticky bar after scrolling past the header
+  const bar = document.getElementById('sticky-bar');
+  const cta = document.getElementById('como-llegar');
+  if (bar) {
+    const onScroll = () => {
+      const past = window.scrollY > 520;
+      const atCta = cta ? cta.getBoundingClientRect().top < window.innerHeight : false;
+      const show = past && !atCta;
+      bar.classList.toggle('translate-y-24', !show);
+      bar.classList.toggle('opacity-0', !show);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
 </script>
