@@ -1,8 +1,9 @@
 name: Actualización Diaria Precios Gasolineras España
 
 on:
-  # Desactivado cron automático para evitar spam de correos mientras no haya token en GitHub Secrets.
-  # Se puede ejecutar manualmente con el botón 'Run workflow' desde GitHub Actions.
+  schedule:
+    # Se ejecuta cada 2 horas en punto durante todo el día en la nube de GitHub
+    - cron: '0 */2 * * *'
   workflow_dispatch:
 
 jobs:
@@ -39,10 +40,8 @@ jobs:
           npm run build
 
       - name: 7. Desplegar en vivo a Cloudflare Pages
-        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
-        continue-on-error: true
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          accountId: '0196c6b387079594f963fef1b9706e16'
           command: pages deploy dist --project-name=gasolineras-espana --branch=main --commit-dirty=true
