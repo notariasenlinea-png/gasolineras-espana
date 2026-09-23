@@ -29,12 +29,12 @@ jobs:
       - name: 4. Configurar entorno Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
 
       - name: 5. Instalar dependencias del proyecto
         run: |
-          npm ci
+          npm ci --legacy-peer-deps
 
       - name: 6. Compilar portal estático (Astro Build)
         run: |

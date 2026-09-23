@@ -10,6 +10,7 @@ interface Props {
   ogType?: string;
   schema?: object | object[];
   activeFuel?: 'gasolina-95' | 'diesel' | 'home';
+  robots?: string;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   ogType = 'website',
   schema,
   activeFuel = 'home',
+  robots = 'index, follow',
 } = Astro.props;
 
 const siteName = 'Gasolineras en Línea';
@@ -54,7 +56,7 @@ const schemasToRender = schema
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={robots} />
     <meta name="theme-color" content="#047857" />
 
     <!-- Open Graph / Facebook -->
