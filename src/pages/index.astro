@@ -11,7 +11,6 @@ import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
 
 import summary from '../data/summary.json';
-import provinces from '../data/provinces.json';
 import { fmtEuros, fmtPrice, type GasStation } from '../lib/stations';
 
 const { national_averages: nat, cheapest_gasolina95, cheapest_diesel, updated_at, total_stations } = summary;
@@ -20,20 +19,6 @@ const topD = cheapest_diesel as GasStation[];
 const [date, time] = updated_at.split(' ');
 const updatedShort = `${date.slice(0, 5)} a las ${time.slice(0, 5)}`;
 const tankSaving = (nat.gasolina95 - nat.min_gasolina95) * 50;
-
-// Province price bars (width = position between the cheapest and the dearest province)
-const provRows = provinces
-  .filter((p) => p.avg_gasolina95 && p.avg_diesel)
-  .map((p) => ({ name: p.name, slug: p.slug, n: p.total_stations, g95: p.avg_gasolina95 as number, d: p.avg_diesel as number }))
-  .sort((a, b) => a.g95 - b.g95);
-const stats = (k: 'g95' | 'd') => {
-  const v = provRows.map((r) => r[k]).sort((a, b) => a - b);
-  return { lo: v[0], hi: v[v.length - 1], t1: v[Math.floor(v.length / 3)], t2: v[Math.floor((2 * v.length) / 3)] };
-};
-const s95 = stats('g95');
-const sD = stats('d');
-const width = (v: number, s: ReturnType<typeof stats>) => Math.round(20 + ((v - s.lo) / (s.hi - s.lo || 1)) * 80);
-const lvl = (v: number, s: ReturnType<typeof stats>) => (v < s.t1 ? 'low' : v >= s.t2 ? 'high' : 'mid');
 
 const title = 'Gasolineras más baratas hoy en España | Precio gasolina y diésel en directo';
 const description = `Encuentra la gasolinera más barata cerca de ti. Precios oficiales de gasolina 95 (media ${fmtPrice(nat.gasolina95)} €/L) y diésel (${fmtPrice(nat.diesel)} €/L) en ${total_stations.toLocaleString('es-ES')} gasolineras de España, actualizados cada 2 horas.`;
@@ -135,53 +120,6 @@ const faqSchema = {
 
   <div class="wrap pt-12"><AdSlot slotId="home-top-banner" /></div>
 
-  <!-- PROVINCES -->
-  <section id="provincias" class="wrap pt-14 sm:pt-20 scroll-mt-24" aria-labelledby="prov-title">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
-      <div>
-        <p class="eyebrow mb-2"><Icon name="layers" class="w-4 h-4" /> 52 provincias</p>
-        <h2 id="prov-title" class="text-3xl sm:text-4xl font-bold">Precio medio por provincia</h2>
-        <p class="text-[15px] text-ink-500 mt-2">De la más barata a la más cara. Entra en la tuya para ver cada gasolinera.</p>
-      </div>
-      <div class="flex flex-col sm:flex-row gap-2">
-        <div class="relative">
-          <Icon name="search" class="w-4 h-4 text-ink-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input id="prov-filter" type="search" placeholder="Filtrar provincia" aria-label="Filtrar provincias" class="h-11 w-full sm:w-56 pl-10 pr-3 rounded-2xl bg-white border border-ink-200 text-[14px] focus:outline-none focus:border-ink" />
-        </div>
-        <div class="seg self-start" role="group" aria-label="Combustible">
-          <button type="button" class="prov-fuel" data-fuel="g95" aria-pressed="true">Gasolina 95</button>
-          <button type="button" class="prov-fuel" data-fuel="d" aria-pressed="false">Diésel</button>
-        </div>
-      </div>
-    </div>
-
-    <ol id="prov-list" class="card p-2 sm:p-3 grid md:grid-cols-2 gap-x-6">
-      {provRows.map((r) => (
-        <li
-          class="prov-row"
-          data-name={r.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()}
-          data-g95={r.g95}
-          data-d={r.d}
-          data-w-g95={width(r.g95, s95)}
-          data-w-d={width(r.d, sD)}
-          data-l-g95={lvl(r.g95, s95)}
-          data-l-d={lvl(r.d, sD)}
-        >
-          <a href={`/${r.slug}/`} class="group flex items-center gap-3 px-3 py-2.5 rounded-2xl hover:bg-ink-50">
-            <span class="w-32 sm:w-40 shrink-0 min-w-0">
-              <span class="block text-[14px] font-semibold truncate group-hover:underline underline-offset-4">{r.name}</span>
-              <span class="block text-[11px] text-ink-400">{r.n} gasolineras</span>
-            </span>
-            <span class="flex-1 h-2 rounded-full bg-ink-50 overflow-hidden">
-              <span class={`prov-bar block h-full rounded-full transition-all duration-500 dot-${lvl(r.g95, s95)}`} style={`width:${width(r.g95, s95)}%`}></span>
-            </span>
-            <span class="prov-price price text-[15px] w-14 text-right">{fmtPrice(r.g95)}</span>
-          </a>
-        </li>
-      ))}
-    </ol>
-  </section>
-
   <!-- CALCULATOR -->
   <section class="wrap pt-14 sm:pt-20">
     <SavingsCalculator avgGasolina95={nat.gasolina95} minGasolina95={nat.min_gasolina95} avgDiesel={nat.diesel} minDiesel={nat.min_diesel} />
@@ -193,38 +131,3 @@ const faqSchema = {
 
   <Faq title="Todo lo que necesitas saber para ahorrar" faqs={faqs} />
 </Layout>
-
-<script>
-  const list = document.getElementById('prov-list');
-  const rows = Array.from(document.querySelectorAll<HTMLElement>('.prov-row'));
-  const filter = document.getElementById('prov-filter') as HTMLInputElement | null;
-  let fuel: 'g95' | 'd' = 'g95';
-
-  function render() {
-    const q = (filter?.value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
-    const key = fuel === 'g95' ? 'G95' : 'D';
-    rows
-      .sort((a, b) => Number(a.dataset[fuel]) - Number(b.dataset[fuel]))
-      .forEach((r) => {
-        r.classList.toggle('hidden', !!q && !(r.dataset.name || '').includes(q));
-        const bar = r.querySelector<HTMLElement>('.prov-bar');
-        const price = r.querySelector<HTMLElement>('.prov-price');
-        if (bar) {
-          bar.style.width = `${r.dataset[`w${key}`]}%`;
-          bar.classList.remove('dot-low', 'dot-mid', 'dot-high');
-          bar.classList.add(`dot-${r.dataset[`l${key}`]}`);
-        }
-        if (price) price.textContent = Number(r.dataset[fuel]).toFixed(3).replace('.', ',');
-        list?.appendChild(r);
-      });
-  }
-
-  document.querySelectorAll<HTMLButtonElement>('.prov-fuel').forEach((b) =>
-    b.addEventListener('click', () => {
-      fuel = b.dataset.fuel === 'd' ? 'd' : 'g95';
-      document.querySelectorAll('.prov-fuel').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-      render();
-    }),
-  );
-  filter?.addEventListener('input', render);
-</script>
