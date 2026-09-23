@@ -40,6 +40,7 @@ jobs:
           npm run build
 
       - name: 7. Desplegar en vivo a Cloudflare Pages
+        continue-on-error: true
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
