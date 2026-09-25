@@ -8,7 +8,7 @@ const { active = '' } = Astro.props;
 
 const items = [
   { id: 'home', label: 'Inicio', href: '/', icon: 'home' },
-  { id: 'cerca', label: 'Cerca', href: '/#buscar', icon: 'locate' },
+  { id: 'cerca', label: 'Cerca', href: '/?cerca=1#buscar', icon: 'locate' },
   { id: 'mapa', label: 'Mapa', href: '/mapa/', icon: 'map' },
   { id: 'gasolina-95', label: 'Ranking', href: '/gasolina-95/', icon: 'trophy' },
 ] as const;
@@ -23,6 +23,7 @@ const items = [
       <li>
         <a
           href={it.href}
+          data-nav={it.id}
           class={`flex flex-col items-center gap-0.5 pt-2 pb-2 text-[11px] font-medium ${active === it.id ? 'text-ink' : 'text-ink-400'}`}
           aria-current={active === it.id ? 'page' : undefined}
         >
@@ -35,3 +36,17 @@ const items = [
     ))}
   </ul>
 </nav>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('a[data-nav="cerca"]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const finder = document.getElementById('buscar');
+      const gpsBtn = document.getElementById('btn-gps-locate');
+      if (finder && gpsBtn) {
+        e.preventDefault();
+        finder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        gpsBtn.click();
+      }
+    });
+  });
+</script>

@@ -377,4 +377,13 @@ import Icon from './Icon.astro';
     input.dispatchEvent(new Event('input'));
     input.focus();
   }
+
+  // Si llega con ?cerca=1 o hash #cerca, activar GPS automáticamente
+  const isCerca = new URLSearchParams(location.search).get('cerca') === '1' || location.hash === '#cerca';
+  if (isCerca && btnGps) {
+    window.setTimeout(() => {
+      document.getElementById('buscar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      btnGps.click();
+    }, 250);
+  }
 </script>

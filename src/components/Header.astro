@@ -35,10 +35,24 @@ const nav = [
       ))}
     </nav>
 
-    <a href="/#buscar" class="btn-volt h-10 px-4 text-[14px]">
+    <a href="/?cerca=1#buscar" data-nav="cerca" class="btn-volt h-10 px-4 text-[14px]">
       <Icon name="locate" class="w-4 h-4" />
       <span class="hidden sm:inline">Cerca de mí</span>
       <span class="sm:hidden">Cerca</span>
     </a>
   </div>
 </header>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('header a[data-nav="cerca"]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const finder = document.getElementById('buscar');
+      const gpsBtn = document.getElementById('btn-gps-locate');
+      if (finder && gpsBtn) {
+        e.preventDefault();
+        finder.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        gpsBtn.click();
+      }
+    });
+  });
+</script>

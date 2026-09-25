@@ -137,7 +137,7 @@ def test_internal_links_resolution():
     hrefs = set(re.findall(r'href="(/[^"#]+)"', content))
     print(f"[INFO] Found {len(hrefs)} unique root-relative internal links in homepage")
     for href in hrefs:
-        slug = href.lstrip('/')
+        slug = href.split('?')[0].lstrip('/')
         if not slug:
             continue
         if '.' in slug.split('/')[-1]:  # Asset file like .css or .svg
