@@ -1,0 +1,17 @@
+---
+// Banda oscura de cabecera para las páginas interiores: cielo nocturno azul,
+// grano de asfalto y la línea de borde de calzada abajo.
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<section class={`relative overflow-hidden bg-ink text-white isolate ${className}`}>
+  <div class="absolute inset-0 -z-10" aria-hidden="true">
+    <div class="absolute inset-0 bg-[radial-gradient(80%_70%_at_85%_0%,rgba(27,79,168,.75)_0%,rgba(12,38,87,.55)_40%,rgba(20,24,31,0)_75%),linear-gradient(180deg,#101a2e_0%,#14181f_80%)]"></div>
+    <div class="absolute inset-0 texture"></div>
+    <div class="absolute inset-x-0 bottom-0 h-1.5 bg-[repeating-linear-gradient(90deg,#FFC21A_0_56px,transparent_56px_88px)] opacity-90"></div>
+  </div>
+  <slot />
+</section>

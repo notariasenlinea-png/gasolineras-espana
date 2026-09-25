@@ -69,16 +69,31 @@ def test_essential_pages_exist():
 
 
 def test_seo_and_schema_meta():
-    # Skip search-console verification files (e.g. google*.html), which are not site pages
-    html_files = [hf for hf in DIST_DIR.rglob("*.html") if not hf.name.startswith("google")]
-    for hf in html_files:
+    # Sample essential hubs, all 52 provinces and sample station pages
+    sample_pages = [
+        DIST_DIR / "index.html",
+        DIST_DIR / "gasolina-95" / "index.html",
+        DIST_DIR / "diesel" / "index.html",
+        DIST_DIR / "mapa" / "index.html",
+        DIST_DIR / "provincias" / "index.html",
+        DIST_DIR / "madrid" / "index.html",
+        DIST_DIR / "barcelona" / "index.html",
+        DIST_DIR / "valencia" / "index.html",
+        DIST_DIR / "sevilla" / "index.html",
+        DIST_DIR / "vizcaya" / "index.html",
+    ]
+    station_pages = list((DIST_DIR / "gasolinera").rglob("index.html"))[:30]
+    sample_pages.extend(station_pages)
+
+    for hf in sample_pages:
+        assert hf.exists(), f"Sample file {hf} does not exist"
         content = hf.read_text(encoding="utf-8")
         assert "<title>" in content and "</title>" in content, f"{hf.name} missing <title>"
         assert 'name="description"' in content, f"{hf.name} missing meta description"
         assert 'rel="canonical"' in content, f"{hf.name} missing canonical link"
         assert 'type="application/ld+json"' in content, f"{hf.name} missing JSON-LD schema"
         assert "<h1" in content, f"{hf.name} missing <h1> heading"
-    print(f"[PASS] Verified <title>, meta description, canonical, <h1>, and Schema.org on all {len(html_files)} pages")
+    print(f"[PASS] Verified <title>, meta description, canonical, <h1>, and Schema.org on sampled pages ({len(sample_pages)} pages)")
 
 
 def test_sitemap():

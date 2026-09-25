@@ -2,21 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dígitos de 7 segmentos para el monolito de precios (DSEG, OFL 1.1) */
+@font-face {
+  font-family: 'DSEG7 Classic';
+  src: url('/fonts/DSEG7Classic-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   html {
     @apply font-sans text-ink antialiased;
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
   }
 
   body {
     @apply bg-paper text-ink min-h-screen flex flex-col;
-    font-feature-settings: 'cv11', 'ss01';
+    font-size: 15.5px;
   }
 
   h1, h2, h3, h4 {
     @apply font-display text-ink;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   ::selection {
@@ -29,21 +44,43 @@
   select:focus-visible,
   summary:focus-visible,
   [tabindex]:focus-visible {
-    @apply outline-none ring-2 ring-ink ring-offset-2 ring-offset-paper;
+    @apply outline-none ring-[3px] ring-volt ring-offset-2 ring-offset-paper;
   }
 }
 
 @layer components {
   .wrap {
-    @apply max-w-6xl mx-auto px-4 sm:px-6;
+    @apply max-w-[76rem] mx-auto px-4 sm:px-6 lg:px-8;
   }
 
   .card {
-    @apply bg-white rounded-3xl border border-ink-100 shadow-card;
+    @apply bg-white rounded-2xl border border-ink-100 shadow-card;
   }
 
+  /* Antetítulo con flecha de señal de carretera */
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-500;
+    @apply inline-flex items-center gap-2 font-display text-[12px] font-extrabold uppercase tracking-[0.12em] text-road;
+  }
+
+  /* Cartel azul de autovía con filete blanco interior */
+  .sign {
+    @apply inline-flex items-center gap-1.5 h-7 px-2.5 rounded-[7px] bg-road text-white font-display text-[12px] font-extrabold uppercase tracking-[0.08em] shadow-sign;
+  }
+  .sign-yellow {
+    @apply inline-flex items-center gap-1.5 h-7 px-2.5 rounded-[7px] bg-volt text-ink font-display text-[12px] font-extrabold uppercase tracking-[0.08em];
+    box-shadow: inset 0 0 0 2px #14181f;
+  }
+
+  /* Hito kilométrico: posición en los rankings */
+  .hito {
+    @apply relative inline-flex flex-col items-center justify-end w-8 h-10 rounded-t-[10px] rounded-b-[3px] bg-white border border-ink-200 font-display font-extrabold tabular-nums text-[15px] text-ink pb-1 shrink-0 overflow-hidden;
+  }
+  .hito::before {
+    content: '';
+    @apply absolute inset-x-0 top-0 h-3 bg-pricey;
+  }
+  .hito-top::before {
+    @apply bg-volt;
   }
 
   .live-dot {
@@ -55,10 +92,15 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 h-12 px-5 rounded-2xl text-sm font-semibold transition-all active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+    @apply inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl font-display text-[15px] font-bold transition-all active:translate-y-px disabled:opacity-50 disabled:pointer-events-none;
   }
   .btn-volt {
     @apply btn bg-volt text-ink hover:bg-volt-deep;
+    box-shadow: inset 0 -3px 0 rgba(20, 24, 31, 0.18);
+  }
+  .btn-road {
+    @apply btn bg-road text-white hover:bg-road-deep;
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.22);
   }
   .btn-ink {
     @apply btn bg-ink text-white hover:bg-ink-700;
@@ -67,41 +109,41 @@
     @apply btn bg-white text-ink border border-ink-200 hover:border-ink-400;
   }
   .btn-ghost-dark {
-    @apply btn bg-white/5 text-white border border-white/15 hover:bg-white/10;
+    @apply btn bg-white/5 text-white border border-white/20 hover:bg-white/10;
   }
 
   .chip {
-    @apply shrink-0 inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-medium border border-ink-200 bg-white text-ink-600 transition-colors hover:border-ink-400;
+    @apply shrink-0 inline-flex items-center gap-1.5 h-9 px-3.5 rounded-lg text-[13px] font-semibold border border-ink-200 bg-white text-ink-600 transition-colors hover:border-ink-400 hover:text-ink;
   }
   .chip[aria-pressed='true'] {
     @apply bg-ink text-white border-ink;
   }
 
   .seg {
-    @apply inline-flex p-1 rounded-2xl bg-ink-100/80;
+    @apply inline-flex p-1 rounded-xl bg-ink-100;
   }
   .seg > button {
-    @apply h-9 px-4 rounded-xl text-[13px] font-semibold text-ink-500 transition-all;
+    @apply h-9 px-4 rounded-lg font-display text-[13px] font-bold text-ink-500 transition-all;
   }
   .seg > button[aria-pressed='true'] {
     @apply bg-white text-ink shadow-sm;
   }
   .seg-dark {
-    @apply inline-flex p-1 rounded-2xl bg-white/10;
+    @apply inline-flex p-1 rounded-xl bg-white/10 ring-1 ring-white/10;
   }
   .seg-dark > button {
-    @apply h-9 px-4 rounded-xl text-[13px] font-semibold text-white/60 transition-all;
+    @apply h-10 px-4 rounded-lg font-display text-[13px] font-bold text-white/65 transition-all;
   }
   .seg-dark > button[aria-pressed='true'] {
-    @apply bg-volt text-ink;
+    @apply bg-white text-ink;
   }
 
   .price {
-    @apply font-display font-bold tabular-nums tracking-tight;
+    @apply font-display font-extrabold tabular-nums tracking-tight;
   }
 
   .tag {
-    @apply inline-flex items-center gap-1 h-6 px-2 rounded-lg text-[11px] font-semibold;
+    @apply inline-flex items-center gap-1 h-6 px-2 rounded-md text-[11px] font-bold;
   }
   .tag-24 {
     @apply tag bg-cheap-soft text-cheap-ink;
@@ -110,24 +152,38 @@
     @apply tag bg-volt-soft text-ink-700;
   }
   .tag-muted {
-    @apply tag bg-ink-50 text-ink-500;
+    @apply tag bg-white text-ink-600 border border-ink-100;
   }
 
-
-  /* Dotted "street grid" texture for dark hero surfaces */
+  /* Superficie de asfalto: grano fino */
   .texture {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-    background-size: 22px 22px;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* LED price-sign look */
+  /* Línea discontinua de carril */
+  .lane {
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.55) 0 48px, transparent 48px 96px);
+    background-size: 100% 96px;
+  }
+
+  /* Dígitos LED del monolito */
   .led {
-    @apply font-display font-bold tabular-nums text-volt;
-    text-shadow: 0 0 18px rgba(214, 255, 61, 0.35);
+    @apply font-led font-bold tabular-nums text-led-green;
+    text-shadow: 0 0 14px rgba(92, 255, 138, 0.45);
+    letter-spacing: 0.02em;
+  }
+  .led-amber {
+    @apply text-led-amber;
+    text-shadow: 0 0 14px rgba(255, 178, 26, 0.45);
+  }
+  .led-ghost {
+    @apply font-led font-bold absolute inset-0 text-white/[0.06] select-none pointer-events-none;
+    letter-spacing: 0.02em;
   }
 }
 
-/* Price-level classes are built dynamically (lvl-${x}), so keep them outside @layer */
+/* Clases de nivel de precio (se generan dinámicamente) */
 .lvl-low { @apply text-cheap-ink bg-cheap-soft; }
 .lvl-mid { @apply text-fair-ink bg-fair-soft; }
 .lvl-high { @apply text-pricey-ink bg-pricey-soft; }
@@ -135,14 +191,14 @@
 .dot-mid { @apply bg-fair; }
 .dot-high { @apply bg-pricey; }
 
-/* Leaflet popups restyled to match the UI */
+/* Leaflet con la misma piel */
 .leaflet-container {
   font-family: inherit;
-  background: #e9ece8;
+  background: #dfe4ea;
 }
 .leaflet-popup-content-wrapper {
-  border-radius: 18px !important;
-  box-shadow: 0 16px 40px -12px rgba(15, 20, 17, 0.35) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 40px -14px rgba(20, 24, 31, 0.45) !important;
 }
 .leaflet-popup-content {
   margin: 14px 16px !important;
@@ -158,6 +214,10 @@
 }
 .no-scrollbar {
   scrollbar-width: none;
+}
+
+input[type='range'] {
+  accent-color: #1b4fa8;
 }
 
 @media (prefers-reduced-motion: reduce) {

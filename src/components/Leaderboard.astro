@@ -1,5 +1,6 @@
 ---
-// Ranked list of the cheapest stations for one fuel.
+// Ranking de las gasolineras más baratas para un carburante.
+// La posición se marca con un «hito kilométrico».
 import BrandMark from './BrandMark.astro';
 import Icon from './Icon.astro';
 import { fmtPrice, stationUrl, type GasStation } from '../lib/stations';
@@ -16,38 +17,38 @@ interface Props {
 }
 
 const { title, fuel, stations, avg, moreHref, moreLabel = 'Ver ranking', id, where = 'province' } = Astro.props;
-const color = fuel === 'gasolina95' ? '#16A34A' : '#111827';
+const isG = fuel === 'gasolina95';
 ---
 
 <section id={id} class="card overflow-hidden">
-  <header class="flex items-center justify-between gap-3 px-5 sm:px-6 pt-5 pb-4">
-    <h3 class="flex items-center gap-2.5 text-lg font-bold">
-      <span class="w-1.5 h-6 rounded-full" style={`background:${color}`}></span>
-      {title}
-    </h3>
+  <header class="flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 border-b border-ink-100">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <span class={`inline-flex items-center h-6 px-2 rounded-md font-display text-[11px] font-extrabold uppercase tracking-wide shrink-0 text-white ${isG ? 'bg-fuel-g95' : 'bg-fuel-diesel'}`} aria-hidden="true">{isG ? 'SP95' : 'Gasóleo A'}</span>
+      <h3 class="text-[17px] font-extrabold truncate">{title}</h3>
+    </div>
     {moreHref && (
-      <a href={moreHref} class="text-[13px] font-semibold text-ink-500 hover:text-ink inline-flex items-center gap-1">
+      <a href={moreHref} class="shrink-0 font-display text-[13px] font-bold text-road hover:text-road-deep inline-flex items-center gap-1">
         {moreLabel}<Icon name="arrow-right" class="w-3.5 h-3.5" />
       </a>
     )}
   </header>
-  <ol class="border-t border-ink-100 divide-y divide-ink-100">
+  <ol class="divide-y divide-ink-100">
     {stations.map((st, i) => {
       const p = st.prices?.[fuel] ?? null;
       const diff = p !== null && typeof avg === 'number' ? (avg - p) * 50 : null;
       return (
         <li>
-          <a href={stationUrl(st)} class="group flex items-center gap-3 sm:gap-4 px-5 sm:px-6 py-3.5 hover:bg-ink-50/70 transition-colors">
-            <span class={`w-6 text-center font-display text-lg font-bold tabular-nums ${i === 0 ? 'text-ink' : 'text-ink-300'}`}>{i + 1}</span>
+          <a href={stationUrl(st)} class="group flex items-center gap-3 sm:gap-3.5 px-4 sm:px-5 py-3 hover:bg-road-soft/60 transition-colors">
+            <span class={`hito ${i === 0 ? 'hito-top' : ''}`}>{i + 1}</span>
             <BrandMark brand={st.brand} size="sm" />
             <span class="min-w-0 flex-1">
-              <span class="block text-[15px] font-semibold truncate">{st.brand} <span class="font-normal text-ink-500">· {st.town}</span></span>
-              <span class="block text-[12px] text-ink-400 truncate">{st.address}{where === 'province' ? `, ${st.province}` : ''}</span>
+              <span class="block text-[15px] font-bold truncate">{st.brand} <span class="font-medium text-ink-500">· {st.town}</span></span>
+              <span class="block text-[12.5px] text-ink-400 truncate">{st.address}{where === 'province' ? `, ${st.province}` : ''}</span>
             </span>
             <span class="text-right shrink-0">
-              <span class="price block text-xl leading-none">{fmtPrice(p)}</span>
+              <span class="price block text-[22px] leading-none">{fmtPrice(p)}</span>
               {diff !== null && diff > 0.5 && (
-                <span class="block text-[11px] font-semibold text-cheap-ink mt-1 tabular-nums">−{diff.toFixed(2).replace('.', ',')} € / 50 L</span>
+                <span class="inline-block text-[11px] font-bold text-cheap-ink bg-cheap-soft rounded px-1.5 py-0.5 mt-1 tabular-nums">−{diff.toFixed(2).replace('.', ',')} € / 50 L</span>
               )}
             </span>
           </a>

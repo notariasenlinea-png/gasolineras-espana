@@ -15,7 +15,7 @@ const items = [
 ---
 
 <nav
-  class="md:hidden fixed bottom-0 inset-x-0 z-[1000] bg-white/90 backdrop-blur-xl border-t border-ink-100 pb-[env(safe-area-inset-bottom)]"
+  class="md:hidden fixed bottom-0 inset-x-0 z-[1000] bg-ink text-white border-t border-white/10 pb-[env(safe-area-inset-bottom)]"
   aria-label="Navegación rápida"
 >
   <ul class="grid grid-cols-4">
@@ -24,10 +24,10 @@ const items = [
         <a
           href={it.href}
           data-nav={it.id}
-          class={`flex flex-col items-center gap-0.5 pt-2 pb-2 text-[11px] font-medium ${active === it.id ? 'text-ink' : 'text-ink-400'}`}
+          class={`flex flex-col items-center gap-1 pt-2 pb-2 font-display text-[11px] font-bold ${active === it.id ? 'text-white' : 'text-white/55'}`}
           aria-current={active === it.id ? 'page' : undefined}
         >
-          <span class={`w-12 h-7 rounded-full flex items-center justify-center ${active === it.id ? 'bg-volt' : ''}`}>
+          <span class={`w-12 h-7 rounded-lg flex items-center justify-center ${active === it.id ? 'bg-volt text-ink' : ''}`}>
             <Icon name={it.icon} class="w-5 h-5" />
           </span>
           {it.label}

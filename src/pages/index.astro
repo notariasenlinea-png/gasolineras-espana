@@ -9,6 +9,7 @@ import AdSlot from '../components/AdSlot.astro';
 import AmazonV16 from '../components/AmazonV16.astro';
 import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
+import RoadScene from '../components/RoadScene.astro';
 
 import summary from '../data/summary.json';
 import { fmtEuros, fmtPrice, type GasStation } from '../lib/stations';
@@ -50,34 +51,33 @@ const faqSchema = {
 ---
 
 <Layout title={title} description={description} schema={faqSchema} active="home">
-  <!-- HERO -->
-  <section class="relative bg-ink text-white">
-    <div class="absolute inset-0 texture pointer-events-none"></div>
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-40 -right-40 w-[36rem] h-[36rem] rounded-full bg-volt/10 blur-3xl"></div>
-    </div>
-    <div class="wrap relative grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-14 items-center py-10 sm:py-16 lg:py-20">
-      <div class="min-w-0">
-        <p class="inline-flex items-center gap-2 text-[12px] font-medium text-white/60 mb-5">
+  <!-- HERO: carretera de noche y el monolito de precios -->
+  <section class="relative overflow-hidden bg-ink text-white isolate">
+    <RoadScene />
+    <div class="wrap relative z-10 [transform:translateZ(0)] grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-10 lg:gap-16 items-end pt-10 sm:pt-16 lg:pt-20 pb-10 sm:pb-14 lg:pb-0">
+      <div class="min-w-0 lg:pb-20">
+        <p class="inline-flex items-center gap-2 h-8 px-3 rounded-lg bg-white/[0.07] ring-1 ring-white/10 text-[12.5px] font-semibold text-white/75 mb-6">
           <span class="live-dot"></span> Precios oficiales · actualizado el {updatedShort}
         </p>
-        <h1 class="text-white text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-[4.2rem] font-extrabold tracking-[-0.035em]">
+        <h1 class="text-white text-[2.75rem] leading-[0.98] sm:text-[4.1rem] lg:text-[4.9rem] font-black tracking-[-0.045em]">
           Reposta más barato.<br />
           <span class="text-volt">Hoy, cerca de ti.</span>
         </h1>
-        <p class="mt-5 mb-8 text-[16px] sm:text-lg text-white/60 max-w-xl">
+        <p class="mt-6 mb-8 text-[16.5px] sm:text-[19px] leading-relaxed text-white/70 max-w-xl">
           Compara al momento el precio de la gasolina y el diésel en las {total_stations.toLocaleString('es-ES')} gasolineras de España.
         </p>
         <Finder />
       </div>
 
-      <div class="hidden sm:block">
+      <div class="hidden sm:block lg:self-end w-full max-w-[26rem] lg:max-w-none mx-auto">
         <PriceTotem
+          pole
+          class="animate-rise"
           title="Precio medio en España"
           subtitle={`${total_stations.toLocaleString('es-ES')} gasolineras · datos MITECO`}
           rows={[
-            { label: 'Gasolina 95', price: nat.gasolina95, dot: '#16A34A', note: `La más barata: ${fmtPrice(nat.min_gasolina95)} €` },
-            { label: 'Diésel', price: nat.diesel, dot: '#E5E7EB', note: `La más barata: ${fmtPrice(nat.min_diesel)} €` },
+            { label: 'Gasolina 95', price: nat.gasolina95, dot: '#149447', note: `La más barata: ${fmtPrice(nat.min_gasolina95)} €` },
+            { label: 'Diésel', price: nat.diesel, dot: '#14181F', note: `La más barata: ${fmtPrice(nat.min_diesel)} €` },
           ]}
           footer={`Eligiendo bien ahorras hasta ${fmtEuros(tankSaving)} por depósito.`}
         />
@@ -88,15 +88,20 @@ const faqSchema = {
   <!-- Mobile KPIs -->
   <div class="sm:hidden wrap pt-5">
     <div class="grid grid-cols-2 gap-2.5">
-      <div class="card p-4"><p class="text-[12px] text-ink-500">Media gasolina 95</p><p class="price text-2xl">{fmtPrice(nat.gasolina95)} <span class="text-sm text-ink-400">€</span></p></div>
-      <div class="card p-4"><p class="text-[12px] text-ink-500">Media diésel</p><p class="price text-2xl">{fmtPrice(nat.diesel)} <span class="text-sm text-ink-400">€</span></p></div>
+      <div class="card p-4 border-l-4 border-l-fuel-g95"><p class="text-[12px] font-semibold text-ink-500">Media gasolina 95</p><p class="price text-[26px]">{fmtPrice(nat.gasolina95)} <span class="text-sm text-ink-400">€</span></p></div>
+      <div class="card p-4 border-l-4 border-l-fuel-diesel"><p class="text-[12px] font-semibold text-ink-500">Media diésel</p><p class="price text-[26px]">{fmtPrice(nat.diesel)} <span class="text-sm text-ink-400">€</span></p></div>
     </div>
   </div>
 
   <!-- CHEAPEST TODAY -->
-  <section class="wrap pt-12 sm:pt-20" aria-labelledby="top-title">
-    <p class="eyebrow mb-2"><Icon name="trophy" class="w-4 h-4" /> Ranking nacional</p>
-    <h2 id="top-title" class="text-3xl sm:text-4xl font-bold mb-6">Las más baratas de España hoy</h2>
+  <section class="wrap pt-14 sm:pt-24" aria-labelledby="top-title">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
+      <div>
+        <p class="sign mb-4"><Icon name="trophy" class="w-4 h-4" /> Ranking nacional</p>
+        <h2 id="top-title" class="text-[2rem] sm:text-5xl font-black tracking-[-0.035em] leading-[1.02]">Las más baratas de España hoy</h2>
+      </div>
+      <p class="text-[14.5px] text-ink-500 max-w-xs sm:text-right">Ahorro calculado sobre un depósito de 50 litros frente al precio medio nacional.</p>
+    </div>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
       <Leaderboard id="top5-g95" title="Gasolina 95" fuel="gasolina95" stations={top95.slice(0, 5)} avg={nat.gasolina95} moreHref="/gasolina-95/" moreLabel="Top 15" />
       <Leaderboard id="top5-diesel" title="Diésel" fuel="diesel" stations={topD.slice(0, 5)} avg={nat.diesel} moreHref="/diesel/" moreLabel="Top 15" />
@@ -104,24 +109,26 @@ const faqSchema = {
   </section>
 
   <!-- MAP -->
-  <section class="wrap pt-14 sm:pt-20" aria-labelledby="map-title">
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
-      <div>
-        <p class="eyebrow mb-2"><Icon name="map" class="w-4 h-4" /> Mapa en directo</p>
-        <h2 id="map-title" class="text-3xl sm:text-4xl font-bold">Todas las gasolineras, de un vistazo</h2>
-        <p class="text-[15px] text-ink-500 mt-2 max-w-xl">Verde es barata, rojo es cara. Acerca el mapa para ver el precio de cada una.</p>
+  <section class="mt-16 sm:mt-24 bg-white border-y border-ink-100 py-14 sm:py-20" aria-labelledby="map-title">
+    <div class="wrap">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
+        <div>
+          <p class="sign mb-4"><Icon name="map" class="w-4 h-4" /> Mapa en directo</p>
+          <h2 id="map-title" class="text-[2rem] sm:text-5xl font-black tracking-[-0.035em] leading-[1.02]">Todas las gasolineras, de un vistazo</h2>
+          <p class="text-[15.5px] text-ink-500 mt-3 max-w-xl">Verde es barata, rojo es cara. Acerca el mapa para ver el precio de cada una.</p>
+        </div>
+        <a href="/mapa/" class="btn-road shrink-0 self-start sm:self-auto">Abrir mapa completo <Icon name="arrow-right" class="w-4 h-4" /></a>
       </div>
-      <a href="/mapa/" class="btn-ink shrink-0 self-start sm:self-auto">Abrir mapa completo <Icon name="arrow-right" class="w-4 h-4" /></a>
-    </div>
-    <div class="card overflow-hidden">
-      <PriceMap id="home-map" source="all" class="h-[420px] sm:h-[520px]" />
+      <div class="rounded-2xl overflow-hidden ring-1 ring-ink-200 shadow-card">
+        <PriceMap id="home-map" source="all" class="h-[440px] sm:h-[560px]" />
+      </div>
     </div>
   </section>
 
   <div class="wrap pt-12"><AdSlot slotId="home-top-banner" /></div>
 
   <!-- CALCULATOR -->
-  <section class="wrap pt-14 sm:pt-20">
+  <section class="wrap pt-12 sm:pt-16">
     <SavingsCalculator avgGasolina95={nat.gasolina95} minGasolina95={nat.min_gasolina95} avgDiesel={nat.diesel} minDiesel={nat.min_diesel} />
   </section>
 

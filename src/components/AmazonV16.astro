@@ -3,13 +3,14 @@
 const amazonUrl = 'https://www.amazon.es/s?k=baliza+v16+homologada+dgt+conectada&tag=bricopiso-21';
 ---
 
-<aside class="card p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-5" aria-label="Recomendación patrocinada">
-  <div class="w-14 h-14 shrink-0 rounded-2xl bg-[#FFB020] flex items-center justify-center" aria-hidden="true">
-    <svg viewBox="0 0 24 24" class="w-8 h-8"><rect x="7" y="9" width="10" height="11" rx="2" fill="#0F1411"/><path d="M9 9V6a3 3 0 0 1 6 0v3" fill="#FF7A00"/><circle cx="12" cy="6" r="1.5" fill="#fff"/></svg>
+<aside class="relative overflow-hidden card p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-5" aria-label="Recomendación patrocinada">
+  <div class="absolute inset-y-0 left-0 w-1.5 bg-[repeating-linear-gradient(135deg,#FFC21A_0_10px,#14181F_10px_20px)]" aria-hidden="true"></div>
+  <div class="w-14 h-14 shrink-0 rounded-xl bg-ink flex items-center justify-center ml-1" aria-hidden="true">
+    <svg viewBox="0 0 24 24" class="w-9 h-9"><path d="M12 3.5 21 19H3z" fill="#FFC21A" stroke="#14181F" stroke-width="1.2" stroke-linejoin="round"/><rect x="9.2" y="10" width="5.6" height="6.4" rx="1.2" fill="#14181F"/><circle cx="12" cy="12.4" r="1.5" fill="#FF8A00"/></svg>
   </div>
   <div class="flex-1 min-w-0">
-    <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-400 mb-1">Patrocinado · Obligatoria DGT</p>
-    <p class="font-display text-lg font-bold leading-snug">Baliza V16 conectada homologada DGT 3.0</p>
+    <p class="font-display text-[11px] font-extrabold uppercase tracking-[0.14em] text-ink-400 mb-1">Patrocinado · Obligatoria DGT</p>
+    <p class="font-display text-lg font-extrabold leading-snug">Baliza V16 conectada homologada DGT 3.0</p>
     <p class="text-[14px] text-ink-500">Sustituye a los triángulos de emergencia y es obligatoria desde 2026. Se coloca en el techo sin bajar del coche.</p>
   </div>
   <a href={amazonUrl} target="_blank" rel="nofollow sponsored noopener" class="btn-ink shrink-0">

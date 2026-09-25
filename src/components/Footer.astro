@@ -6,51 +6,54 @@ const year = new Date().getFullYear();
 const top = [...provinces].sort((a, b) => b.total_stations - a.total_stations).slice(0, 12);
 ---
 
-<footer class="mt-auto bg-ink text-white/70 pb-20 md:pb-0">
-  <div class="wrap py-14 grid gap-10 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
+<footer class="relative mt-auto bg-ink text-white/70 pb-20 md:pb-0">
+  <div class="absolute inset-0 texture pointer-events-none" aria-hidden="true"></div>
+  <!-- Línea de borde de calzada -->
+  <div class="relative h-2 bg-[repeating-linear-gradient(90deg,#FFC21A_0_56px,transparent_56px_88px)]" aria-hidden="true"></div>
+  <div class="wrap relative py-14 grid gap-10 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
     <div class="space-y-4">
       <Logo dark />
       <p class="text-sm leading-relaxed max-w-xs">
         Comparador independiente de precios de carburantes en las más de 11.000 gasolineras de España.
       </p>
-      <p class="inline-flex items-center gap-2 text-[12px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+      <p class="inline-flex items-center gap-2 text-[12px] font-semibold px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
         <span class="live-dot"></span> Datos oficiales del MITECO
       </p>
     </div>
 
     <div>
-      <h2 class="text-white text-sm font-semibold mb-4">Provincias</h2>
-      <ul class="grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+      <h2 class="sign mb-5">Provincias</h2>
+      <ul class="grid grid-cols-2 gap-x-4 gap-y-2 text-[13.5px]">
         {top.map((p) => (
-          <li><a href={`/${p.slug}/`} class="hover:text-white">{p.name}</a></li>
+          <li><a href={`/${p.slug}/`} class="hover:text-white hover:underline underline-offset-4">{p.name}</a></li>
         ))}
       </ul>
     </div>
 
     <div>
-      <h2 class="text-white text-sm font-semibold mb-4">Herramientas</h2>
-      <ul class="space-y-2 text-[13px]">
-        <li><a href="/mapa/" class="hover:text-white">Mapa de precios</a></li>
-        <li><a href="/#buscar" class="hover:text-white">Gasolineras cerca de mí</a></li>
-        <li><a href="/gasolina-95/" class="hover:text-white">Gasolina 95 más barata</a></li>
-        <li><a href="/diesel/" class="hover:text-white">Diésel más barato</a></li>
-        <li><a href="/provincias/" class="hover:text-white">Precios por provincia</a></li>
+      <h2 class="sign mb-5">Herramientas</h2>
+      <ul class="space-y-2 text-[13.5px]">
+        <li><a href="/mapa/" class="hover:text-white hover:underline underline-offset-4">Mapa de precios</a></li>
+        <li><a href="/#buscar" class="hover:text-white hover:underline underline-offset-4">Gasolineras cerca de mí</a></li>
+        <li><a href="/gasolina-95/" class="hover:text-white hover:underline underline-offset-4">Gasolina 95 más barata</a></li>
+        <li><a href="/diesel/" class="hover:text-white hover:underline underline-offset-4">Diésel más barato</a></li>
+        <li><a href="/provincias/" class="hover:text-white hover:underline underline-offset-4">Precios por provincia</a></li>
       </ul>
     </div>
 
     <div>
-      <h2 class="text-white text-sm font-semibold mb-4">Legal</h2>
-      <ul class="space-y-2 text-[13px]">
-        <li><a href="/aviso-legal/" class="hover:text-white">Aviso legal</a></li>
-        <li><a href="/politica-de-privacidad/" class="hover:text-white">Privacidad</a></li>
-        <li><a href="/cookies/" class="hover:text-white">Cookies</a></li>
+      <h2 class="sign mb-5">Legal</h2>
+      <ul class="space-y-2 text-[13.5px]">
+        <li><a href="/aviso-legal/" class="hover:text-white hover:underline underline-offset-4">Aviso legal</a></li>
+        <li><a href="/politica-de-privacidad/" class="hover:text-white hover:underline underline-offset-4">Privacidad</a></li>
+        <li><a href="/cookies/" class="hover:text-white hover:underline underline-offset-4">Cookies</a></li>
       </ul>
       <p class="mt-6 text-[12px] leading-relaxed text-white/45">
         Precios comunicados por las estaciones al Ministerio (Orden ITC/2308/2007). El precio en surtidor puede variar.
       </p>
     </div>
   </div>
-  <div class="border-t border-white/10">
+  <div class="relative border-t border-white/10">
     <div class="wrap py-5 text-[12px] text-white/40 flex flex-col sm:flex-row justify-between gap-2">
       <span>© {year} gasolinerasenlinea.es</span>
       <span>Hecho en España · Actualizado cada 2 horas</span>

@@ -1,5 +1,5 @@
 ---
-// Search-first finder for the home hero: autocompletado + GPS "cerca de mí".
+// Buscador de la portada: autocompletado + GPS «cerca de mí».
 import Icon from './Icon.astro';
 ---
 
@@ -18,9 +18,9 @@ import Icon from './Icon.astro';
       aria-expanded="false"
       aria-controls="finder-options"
       placeholder="Municipio, código postal o marca"
-      class="w-full h-16 pl-14 pr-5 rounded-3xl bg-white text-ink text-[17px] placeholder:text-ink-300 shadow-lift border-0 focus:outline-none focus:ring-4 focus:ring-volt/60"
+      class="w-full h-[62px] pl-14 pr-5 rounded-2xl bg-white text-ink text-[17px] font-medium placeholder:text-ink-300 shadow-lift border-0 outline-none focus:outline-none focus:ring-4 focus:ring-volt"
     />
-    <ul id="finder-options" role="listbox" class="hidden absolute z-50 mt-2 w-full max-h-[22rem] overflow-y-auto rounded-3xl bg-white shadow-lift p-2 text-ink"></ul>
+    <ul id="finder-options" role="listbox" class="hidden absolute z-50 mt-2 w-full max-h-[22rem] overflow-y-auto rounded-2xl bg-white shadow-lift p-2 text-ink"></ul>
   </div>
 
   <div class="mt-3 flex flex-wrap items-center gap-2">
@@ -33,15 +33,15 @@ import Icon from './Icon.astro';
       <button type="button" class="finder-fuel" data-fuel="diesel" aria-pressed="false">Diésel</button>
     </div>
     <div class="flex gap-1.5" role="group" aria-label="Filtros">
-      <button type="button" class="finder-filter h-9 px-3 rounded-full text-[13px] font-medium border border-white/15 text-white/70 hover:text-white aria-pressed:bg-white aria-pressed:text-ink aria-pressed:border-white" data-filter="24h" aria-pressed="false">24h</button>
-      <button type="button" class="finder-filter h-9 px-3 rounded-full text-[13px] font-medium border border-white/15 text-white/70 hover:text-white aria-pressed:bg-white aria-pressed:text-ink aria-pressed:border-white" data-filter="lowcost" aria-pressed="false">Low-cost</button>
+      <button type="button" class="finder-filter h-10 px-3.5 rounded-lg font-display text-[13px] font-bold border border-white/20 text-white/75 hover:text-white aria-pressed:bg-volt aria-pressed:text-ink aria-pressed:border-volt" data-filter="24h" aria-pressed="false">24h</button>
+      <button type="button" class="finder-filter h-10 px-3.5 rounded-lg font-display text-[13px] font-bold border border-white/20 text-white/75 hover:text-white aria-pressed:bg-volt aria-pressed:text-ink aria-pressed:border-volt" data-filter="lowcost" aria-pressed="false">Low-cost</button>
     </div>
   </div>
 
-  <div id="finder-results" class="hidden mt-5 rounded-3xl bg-white text-ink shadow-lift overflow-hidden animate-rise" aria-live="polite">
+  <div id="finder-results" class="hidden mt-5 rounded-2xl bg-white text-ink shadow-lift overflow-hidden animate-rise" aria-live="polite">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 pt-4 pb-3">
       <div class="min-w-0">
-        <p id="finder-title" class="font-display font-bold text-[17px] truncate"></p>
+        <p id="finder-title" class="font-display font-extrabold text-[17px] truncate"></p>
         <p id="finder-sub" class="text-[13px] text-ink-500 truncate"></p>
       </div>
       <div id="finder-sort" class="seg shrink-0 self-start sm:self-auto hidden" role="group" aria-label="Ordenar">
@@ -50,11 +50,11 @@ import Icon from './Icon.astro';
       </div>
     </div>
     <ol id="finder-list" class="divide-y divide-ink-100 border-t border-ink-100"></ol>
-    <a id="finder-map" href="/mapa/" class="flex items-center justify-center gap-2 py-3.5 text-[14px] font-semibold border-t border-ink-100 hover:bg-ink-50">
+    <a id="finder-map" href="/mapa/" class="flex items-center justify-center gap-2 py-3.5 font-display text-[14px] font-bold text-road border-t border-ink-100 hover:bg-road-soft">
       <Icon name="map" class="w-4 h-4" /> Ver todas en el mapa
     </a>
   </div>
-  <p id="finder-status" class="hidden mt-3 text-[13px] text-white/70"></p>
+  <p id="finder-status" class="hidden mt-3 text-[13px] text-white/75"></p>
 </div>
 
 <script>
@@ -154,10 +154,10 @@ import Icon from './Icon.astro';
       li.id = `finder-opt-${i}`;
       li.setAttribute('role', 'option');
       li.setAttribute('aria-selected', String(i === active));
-      li.className = `flex items-center gap-3 px-3 py-2.5 rounded-2xl cursor-pointer ${i === active ? 'bg-ink-50' : ''}`;
+      li.className = `flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer ${i === active ? 'bg-road-soft' : ''}`;
       const ic = document.createElement('span');
-      ic.className = 'w-9 h-9 rounded-xl bg-ink-50 flex items-center justify-center text-[11px] font-bold text-ink-500 shrink-0';
-      ic.textContent = it.tag === 'Marca' ? '★' : it.tag === 'Provincia' ? 'P' : it.tag === 'CP' ? 'CP' : '📍';
+      ic.className = 'w-9 h-9 rounded-lg bg-road text-white flex items-center justify-center font-display text-[11px] font-extrabold shrink-0';
+      ic.textContent = it.tag === 'Marca' ? 'Ma' : it.tag === 'Provincia' ? 'P' : it.tag === 'CP' ? 'CP' : 'M';
       const txt = document.createElement('div');
       txt.className = 'min-w-0 flex-1';
       const a = document.createElement('div');
@@ -270,7 +270,7 @@ import Icon from './Icon.astro';
 
       const { bg, fg, initials } = brandStyle(s.b);
       const mark = document.createElement('span');
-      mark.className = 'w-10 h-10 rounded-2xl flex items-center justify-center font-display font-extrabold text-xs shrink-0';
+      mark.className = 'w-10 h-10 rounded-lg flex items-center justify-center font-display font-extrabold text-xs shrink-0';
       mark.style.background = bg;
       mark.style.color = fg;
       mark.textContent = initials;

@@ -2,18 +2,23 @@
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
 import provinces from '../data/provinces.json';
+import NightBand from '../components/NightBand.astro';
 ---
 
 <Layout title="Página no encontrada | Gasolineras en Línea" description="La página que buscas no existe. Busca tu municipio o consulta las gasolineras de tu provincia." robots="noindex, follow">
-  <section class="wrap py-16 sm:py-24">
-    <p class="eyebrow mb-4">Error 404</p>
-    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-[-0.035em] max-w-2xl">Esta página se ha quedado sin gasolina.</h1>
-    <p class="text-lg text-ink-500 mt-4 max-w-xl">Puede que la gasolinera haya dejado de comunicar precios o que el enlace haya cambiado.</p>
-    <div class="flex flex-wrap gap-2 mt-8">
-      <a href="/#buscar" class="btn-volt"><Icon name="search" class="w-4 h-4" /> Buscar gasolinera</a>
-      <a href="/mapa/" class="btn-ghost"><Icon name="map" class="w-4 h-4" /> Ver el mapa</a>
+  <NightBand>
+    <div class="wrap py-16 sm:py-24">
+      <p class="sign-yellow mb-6">Error 404</p>
+      <h1 class="text-white text-4xl sm:text-[4.2rem] font-black leading-[0.98] tracking-[-0.045em] max-w-3xl">Esta página se ha quedado sin gasolina.</h1>
+      <p class="text-lg text-white/70 mt-5 max-w-xl">Puede que la gasolinera haya dejado de comunicar precios o que el enlace haya cambiado.</p>
+      <div class="flex flex-wrap gap-2 mt-8">
+        <a href="/#buscar" class="btn-volt"><Icon name="search" class="w-4 h-4" /> Buscar gasolinera</a>
+        <a href="/mapa/" class="btn-ghost-dark"><Icon name="map" class="w-4 h-4" /> Ver el mapa</a>
+      </div>
     </div>
-    <h2 class="text-xl font-bold mt-16 mb-4">O elige tu provincia</h2>
+  </NightBand>
+  <section class="wrap py-12 sm:py-16">
+    <h2 class="text-2xl font-black tracking-[-0.03em] mb-5">O elige tu provincia</h2>
     <ul class="flex flex-wrap gap-2">
       {provinces.map((p) => <li><a href={`/${p.slug}/`} class="chip">{p.name}</a></li>)}
     </ul>

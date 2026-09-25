@@ -11,12 +11,12 @@ const { avgGasolina95, minGasolina95, avgDiesel, minDiesel, scope = 'España' } 
 const data = JSON.stringify({ g95: [avgGasolina95, minGasolina95], diesel: [avgDiesel, minDiesel] });
 ---
 
-<section class="calc card p-6 sm:p-10" data-prices={data} aria-labelledby="calc-title">
-  <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center">
-    <div>
-      <p class="eyebrow mb-3">Calculadora de ahorro</p>
-      <h2 id="calc-title" class="text-3xl sm:text-4xl font-bold leading-tight mb-2">¿Cuánto te ahorras al año?</h2>
-      <p class="text-[15px] text-ink-500 mb-8">Repostando en la más barata en lugar de una gasolinera de precio medio en {scope}.</p>
+<section class="calc card overflow-hidden" data-prices={data} aria-labelledby="calc-title">
+  <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr]">
+    <div class="p-6 sm:p-10">
+      <p class="sign mb-4">Calculadora de ahorro</p>
+      <h2 id="calc-title" class="text-3xl sm:text-[2.6rem] font-extrabold leading-[1.05] mb-3">¿Cuánto te ahorras al año?</h2>
+      <p class="text-[15px] text-ink-500 mb-8 max-w-md">Repostando en la más barata en lugar de una gasolinera de precio medio en {scope}.</p>
 
       <div class="space-y-7">
         <div class="seg" role="group" aria-label="Combustible">
@@ -24,24 +24,34 @@ const data = JSON.stringify({ g95: [avgGasolina95, minGasolina95], diesel: [avgD
           <button type="button" class="calc-fuel" data-fuel="diesel" aria-pressed="false">Diésel</button>
         </div>
         <label class="block">
-          <span class="flex justify-between text-[14px] font-medium mb-3">Depósito <output id="calc-tank-label" class="font-display font-bold">50 L</output></span>
-          <input id="calc-tank-slider" type="range" min="30" max="100" step="5" value="50" class="w-full accent-ink" />
+          <span class="flex justify-between text-[14px] font-semibold mb-3">Depósito <output id="calc-tank-label" class="font-display font-extrabold">50 L</output></span>
+          <input id="calc-tank-slider" type="range" min="30" max="100" step="5" value="50" class="w-full" />
         </label>
         <label class="block">
-          <span class="flex justify-between text-[14px] font-medium mb-3">Depósitos al mes <output id="calc-refills-label" class="font-display font-bold">2</output></span>
-          <input id="calc-refills-slider" type="range" min="1" max="8" step="1" value="2" class="w-full accent-ink" />
+          <span class="flex justify-between text-[14px] font-semibold mb-3">Depósitos al mes <output id="calc-refills-label" class="font-display font-extrabold">2</output></span>
+          <input id="calc-refills-slider" type="range" min="1" max="8" step="1" value="2" class="w-full" />
         </label>
       </div>
     </div>
 
-    <div class="rounded-[28px] bg-volt p-7 sm:p-9">
-      <p class="text-[14px] font-semibold text-ink-700">Ahorro estimado al año</p>
-      <p class="font-display font-extrabold tabular-nums text-6xl sm:text-7xl tracking-tight my-2"><span id="calc-result-annual">0</span> €</p>
-      <div class="grid grid-cols-2 gap-4 pt-5 mt-5 border-t border-ink/10 text-[14px]">
-        <div><span class="block text-ink-600">Por depósito</span><span id="calc-result-tank" class="font-display font-bold text-xl tabular-nums">0 €</span></div>
-        <div><span class="block text-ink-600">Al mes</span><span id="calc-result-monthly" class="font-display font-bold text-xl tabular-nums">0 €</span></div>
+    <!-- Surtidor -->
+    <div class="relative bg-road p-5 sm:p-8 flex items-center">
+      <div class="absolute inset-0 texture opacity-60 pointer-events-none" aria-hidden="true"></div>
+      <div class="relative w-full rounded-2xl bg-ink p-2.5 shadow-totem">
+        <div class="flex items-center justify-between rounded-xl bg-white/[0.04] px-4 py-2.5">
+          <p class="font-display text-[12px] font-extrabold uppercase tracking-[0.14em] text-white/70">Ahorro estimado al año</p>
+          <span class="w-2.5 h-2.5 rounded-full bg-volt shadow-[0_0_12px_#FFC21A]" aria-hidden="true"></span>
+        </div>
+        <div class="mt-2.5 rounded-xl bg-led-panel px-5 py-5 shadow-[inset_0_2px_14px_rgba(0,0,0,.85)] flex items-end justify-end gap-3">
+          <span id="calc-result-annual" class="led led-amber text-[52px] sm:text-[64px] leading-none">0</span>
+          <span class="font-display text-[28px] font-extrabold text-led-amber/80 mb-1">€</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5 mt-2.5">
+          <div class="rounded-xl bg-white/[0.05] px-4 py-3"><span class="block text-[12px] font-semibold text-white/55">Por depósito</span><span id="calc-result-tank" class="font-display font-extrabold text-[22px] text-white tabular-nums">0 €</span></div>
+          <div class="rounded-xl bg-white/[0.05] px-4 py-3"><span class="block text-[12px] font-semibold text-white/55">Al mes</span><span id="calc-result-monthly" class="font-display font-extrabold text-[22px] text-white tabular-nums">0 €</span></div>
+        </div>
+        <p id="calc-note" class="text-[12px] text-white/50 px-2 pt-3 pb-1"></p>
       </div>
-      <p id="calc-note" class="text-[12px] text-ink-600 mt-5"></p>
     </div>
   </div>
 </section>

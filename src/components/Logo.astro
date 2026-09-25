@@ -1,4 +1,6 @@
 ---
+// Logotipo: la señal de «estación de servicio» de las carreteras españolas
+// (cartel azul con recuadro blanco y surtidor) + marca en Overpass.
 interface Props {
   dark?: boolean;
 }
@@ -6,13 +8,16 @@ const { dark = false } = Astro.props;
 ---
 
 <span class="inline-flex items-center gap-2.5">
-  <span class="w-9 h-9 rounded-xl bg-ink flex items-center justify-center ring-1 ring-white/10">
-    <svg viewBox="0 0 24 24" class="w-5 h-5" aria-hidden="true">
-      <path d="M12 2.5c3.6 4.3 6 7.7 6 10.9A6 6 0 0 1 6 13.4c0-3.2 2.4-6.6 6-10.9Z" fill="#D6FF3D" />
-      <path d="M9.5 14.2h5" stroke="#0F1411" stroke-width="2" stroke-linecap="round" />
-    </svg>
-  </span>
-  <span class={`font-display text-[17px] font-bold tracking-tight leading-none ${dark ? 'text-white' : 'text-ink'}`}>
-    gasolineras<span class={dark ? 'text-volt' : 'text-ink-400'}>enlínea</span>
+  <svg viewBox="0 0 40 40" class="w-9 h-9 shrink-0" aria-hidden="true">
+    <rect x="1" y="1" width="38" height="38" rx="8" fill="#1B4FA8" />
+    <rect x="3.5" y="3.5" width="33" height="33" rx="6" fill="none" stroke="#fff" stroke-width="1.6" />
+    <rect x="8" y="8" width="24" height="24" rx="2.5" fill="#fff" />
+    <path d="M13 29V13.2c0-.9.7-1.6 1.6-1.6h6.2c.9 0 1.6.7 1.6 1.6V29z" fill="#14181F" />
+    <rect x="14.8" y="13.6" width="5.8" height="4.6" rx=".8" fill="#FFC21A" />
+    <path d="M22.4 17.5h1.8c.8 0 1.4.6 1.4 1.4v5.6c0 .7.5 1.2 1.2 1.2s1.2-.5 1.2-1.2v-7.4l-2.4-2.6" fill="none" stroke="#14181F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+    <rect x="11.5" y="28.4" width="12.4" height="1.8" rx=".6" fill="#14181F" />
+  </svg>
+  <span class={`font-display text-[18px] font-extrabold tracking-[-0.03em] leading-none ${dark ? 'text-white' : 'text-ink'}`}>
+    gasolineras<span class={dark ? 'text-volt' : 'text-road'}>enlínea</span>
   </span>
 </span>

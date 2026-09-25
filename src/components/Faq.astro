@@ -9,22 +9,22 @@ interface Props {
 const { title, faqs } = Astro.props;
 ---
 
-<section class="wrap py-14 sm:py-20" aria-labelledby="faq-title">
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-8 lg:gap-16">
-    <div>
-      <p class="eyebrow mb-3">Preguntas frecuentes</p>
-      <h2 id="faq-title" class="text-3xl sm:text-4xl font-bold leading-tight">{title}</h2>
+<section class="wrap py-16 sm:py-24" aria-labelledby="faq-title">
+  <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.7fr] gap-8 lg:gap-16">
+    <div class="lg:sticky lg:top-24 self-start">
+      <p class="sign mb-4">Preguntas frecuentes</p>
+      <h2 id="faq-title" class="text-3xl sm:text-[2.6rem] font-extrabold leading-[1.05]">{title}</h2>
     </div>
-    <div class="divide-y divide-ink-100 border-y border-ink-100">
-      {faqs.map((f) => (
-        <details class="group py-5">
-          <summary class="flex items-start justify-between gap-6 cursor-pointer list-none text-[15px] sm:text-base font-semibold">
+    <div class="space-y-2.5">
+      {faqs.map((f, i) => (
+        <details class="group card px-5 sm:px-6 open:shadow-lift transition-shadow" open={i === 0}>
+          <summary class="flex items-start justify-between gap-6 cursor-pointer list-none py-5 font-display text-[16px] sm:text-[17px] font-extrabold">
             <span>{f.question}</span>
-            <span class="mt-0.5 w-7 h-7 shrink-0 rounded-full bg-ink-50 flex items-center justify-center transition-transform group-open:rotate-180">
+            <span class="mt-0.5 w-7 h-7 shrink-0 rounded-lg bg-road-soft text-road flex items-center justify-center transition-transform group-open:rotate-180">
               <Icon name="chevron-down" class="w-4 h-4" />
             </span>
           </summary>
-          <p class="mt-3 pr-10 text-sm sm:text-[15px] text-ink-500 leading-relaxed">{f.answer}</p>
+          <p class="pb-5 -mt-1 pr-8 text-[15px] text-ink-600 leading-relaxed">{f.answer}</p>
         </details>
       ))}
     </div>

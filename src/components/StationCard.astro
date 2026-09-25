@@ -29,20 +29,20 @@ const fuels = [
 
 <a
   href={stationUrl(station)}
-  class="station-card min-w-0 group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-2xl border border-ink-100 hover:border-ink-300 hover:shadow-lift transition-all"
+  class="station-card min-w-0 group flex items-center gap-3 sm:gap-4 p-3 sm:p-3.5 bg-white rounded-xl border border-ink-100 hover:border-road-line hover:shadow-card transition-all"
   data-p95={p95 ?? ''}
   data-diesel={pD ?? ''}
   data-24h={station.is_24h ? '1' : '0'}
   data-lowcost={lowCost ? '1' : '0'}
 >
   {rank !== undefined && (
-    <span class={`w-7 shrink-0 text-center font-display text-lg font-bold tabular-nums ${rank <= 3 ? 'text-ink' : 'text-ink-300'}`}>{rank}</span>
+    <span class={`hito ${rank === 1 ? 'hito-top' : ''}`}>{rank}</span>
   )}
   <BrandMark brand={station.brand} />
 
   <div class="min-w-0 flex-1">
     <div class="flex items-center gap-1.5 min-w-0">
-      <span class="font-semibold text-[15px] truncate">{station.brand}</span>
+      <span class="font-bold text-[15px] truncate">{station.brand}</span>
       {station.is_24h && <span class="tag-24 shrink-0">24h</span>}
       {lowCost && <span class="tag-lc shrink-0 hidden sm:inline-flex">Low-cost</span>}
     </div>
@@ -50,24 +50,24 @@ const fuels = [
       {station.address}{showTown && <span> · {station.town}</span>}
     </p>
     {km !== undefined && (
-      <p class="text-[12px] font-medium text-ink-600 mt-0.5 inline-flex items-center gap-1"><Icon name="navigation" class="w-3 h-3" />{fmtKm(km)}</p>
+      <p class="text-[12px] font-bold text-road mt-0.5 inline-flex items-center gap-1"><Icon name="navigation" class="w-3 h-3" />{fmtKm(km)}</p>
     )}
   </div>
 
   <div class="flex items-stretch gap-1.5 sm:gap-2 shrink-0">
     {fuels.map((f) => (
       <div
-        class={`w-[4.6rem] sm:w-[5.4rem] rounded-xl px-2 py-1.5 text-right transition-opacity ${
+        class={`w-[4.7rem] sm:w-[5.5rem] rounded-lg px-2 py-1.5 text-right transition-opacity border-l-[3px] ${
           f.key === 'g95'
-            ? 'bg-ink-50 group-data-[fuel=diesel]/list:opacity-45'
-            : 'bg-ink-50 opacity-45 group-data-[fuel=diesel]/list:opacity-100'
+            ? 'bg-ink-50 border-fuel-g95 group-data-[fuel=diesel]/list:opacity-45'
+            : 'bg-ink-50 border-fuel-diesel opacity-45 group-data-[fuel=diesel]/list:opacity-100'
         }`}
       >
-        <div class="flex items-center justify-end gap-1 text-[10px] font-semibold uppercase tracking-wide text-ink-400">
+        <div class="flex items-center justify-end gap-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-ink-500">
           {f.lvl && <span class={`w-1.5 h-1.5 rounded-full dot-${f.lvl}`}></span>}
           {f.label}
         </div>
-        <div class="price text-lg sm:text-xl leading-tight">{fmtPrice(f.price)}</div>
+        <div class="price text-[19px] sm:text-[21px] leading-tight">{fmtPrice(f.price)}</div>
         {f.diff !== null && Math.abs(f.diff) >= 0.1 ? (
           <div class={`text-[10px] font-semibold tabular-nums ${f.diff < 0 ? 'text-cheap-ink' : 'text-pricey-ink'}`}>
             {f.diff < 0 ? '−' : '+'}{Math.abs(f.diff).toFixed(1).replace('.', ',')} cts
@@ -78,5 +78,5 @@ const fuels = [
       </div>
     ))}
   </div>
-  <Icon name="chevron-right" class="hidden sm:block w-4 h-4 text-ink-300 group-hover:text-ink group-hover:translate-x-0.5 transition-all shrink-0" />
+  <Icon name="chevron-right" class="hidden sm:block w-4 h-4 text-ink-300 group-hover:text-road group-hover:translate-x-0.5 transition-all shrink-0" />
 </a>

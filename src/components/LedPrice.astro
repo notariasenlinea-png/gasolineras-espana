@@ -1,0 +1,49 @@
+---
+// Precio en dígitos de 7 segmentos, como el monolito de una gasolinera.
+// El texto real (con coma decimal) queda en el DOM para lectores de pantalla
+// y buscadores; los dígitos LED se pintan con CSS (content: attr()).
+import { fmtPrice } from '../lib/stations';
+
+interface Props {
+  price: number | null | undefined;
+  tone?: 'green' | 'amber';
+  class?: string;
+}
+
+const { price, tone = 'green', class: className = '' } = Astro.props;
+const text = fmtPrice(price ?? null);
+const led = typeof price === 'number' ? price.toFixed(3) : '-.---';
+const ghost = led.replace(/[0-9-]/g, '8');
+---
+
+<span class={`led-price ${tone === 'amber' ? 'led-price--amber' : ''} ${className}`} data-led={led} data-ghost={ghost}>
+  <span class="sr-only">{text}</span>
+</span>
+
+<style>
+  .led-price {
+    position: relative;
+    display: inline-block;
+    font-family: 'DSEG7 Classic', ui-monospace, monospace;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: #5cff8a;
+    text-shadow: 0 0 16px rgba(92, 255, 138, 0.5);
+  }
+  .led-price::before {
+    content: attr(data-ghost);
+    position: absolute;
+    inset: 0;
+    color: rgba(255, 255, 255, 0.07);
+    text-shadow: none;
+  }
+  .led-price::after {
+    content: attr(data-led);
+    position: relative;
+  }
+  .led-price--amber {
+    color: #ffb21a;
+    text-shadow: 0 0 16px rgba(255, 178, 26, 0.5);
+  }
+</style>

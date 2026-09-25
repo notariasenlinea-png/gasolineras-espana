@@ -1,6 +1,6 @@
 ---
-import '@fontsource-variable/inter';
-import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/public-sans';
+import '@fontsource-variable/overpass';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -56,7 +56,7 @@ const schemas = [webSite, ...(schema ? (Array.isArray(schema) ? schema : [schema
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={robots} />
-    <meta name="theme-color" content="#F5F4EF" />
+    <meta name="theme-color" content="#14181F" />
     <meta name="format-detection" content="telephone=no" />
 
     <meta property="og:type" content={ogType} />
@@ -70,6 +70,7 @@ const schemas = [webSite, ...(schema ? (Array.isArray(schema) ? schema : [schema
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://a.basemaps.cartocdn.com" crossorigin />
+    <link rel="preload" href="/fonts/DSEG7Classic-Bold.woff2" as="font" type="font/woff2" crossorigin />
 
     {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>

@@ -7,6 +7,7 @@ import PriceMap from '../../components/PriceMap.astro';
 import StationCard from '../../components/StationCard.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import Icon from '../../components/Icon.astro';
+import NightBand from '../../components/NightBand.astro';
 import { loadAllProvinces, provincesMeta, townStats } from '../../lib/data';
 import {
   DAY_NAMES,
@@ -178,69 +179,71 @@ const schema = [
 ---
 
 <Layout title={title} description={description} canonical={url} schema={schema} active="">
-  <div class="wrap pt-6">
-    <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: province.name, href: `/${province.slug}/` }, { label: town.name, href: townUrl }, { label: `${station.brand} · ${station.address}` }]} />
-  </div>
-
-  <!-- Header -->
-  <section class="wrap pt-6 pb-8 grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-6 lg:gap-10 items-start">
-    <div class="min-w-0">
-      <div class="flex items-start gap-4">
-        <BrandMark brand={station.brand} size="lg" />
-        <div class="min-w-0">
-          <h1 class="text-3xl sm:text-5xl font-extrabold leading-[1.04] tracking-[-0.03em]">{station.brand} <span class="text-ink-400">{town.name}</span></h1>
-          <p class="mt-2 text-[15px] text-ink-500">{station.address}, {station.postal_code ? `${station.postal_code} ` : ''}{station.town} ({province.name})</p>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap items-center gap-2 mt-5">
-        {station.is_24h ? (
-          <span class="tag-24 h-8 px-3 text-[12px]"><span class="live-dot"></span>Abierta 24 horas</span>
-        ) : week ? (
-          <span id="open-status" data-week={JSON.stringify(week)} class="tag-muted h-8 px-3 text-[12px]"><Icon name="clock" class="w-3.5 h-3.5" /><span class="status-text">Ver horario</span></span>
-        ) : (
-          <span class="tag-muted h-8 px-3 text-[12px]"><Icon name="clock" class="w-3.5 h-3.5" />{station.schedule}</span>
-        )}
-        {lowCost && <span class="tag-lc h-8 px-3 text-[12px]"><Icon name="zap" class="w-3.5 h-3.5" />Low-cost</span>}
-        <span class="tag-muted h-8 px-3 text-[12px]">{fuels.length} {fuels.length === 1 ? 'combustible' : 'combustibles'}</span>
-      </div>
-
-      {verdict && (
-        <div class={`mt-6 rounded-3xl p-5 sm:p-6 lvl-${verdict.tone}`}>
-          <p class="font-display text-xl font-bold">{verdict.head}</p>
-          <p class="text-[15px] mt-1 opacity-90">{verdict.text}</p>
-          <div class="relative mt-5 h-2.5 rounded-full bg-gradient-to-r from-pricey via-fair to-cheap" aria-hidden="true">
-            <span class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white ring-4 ring-ink shadow" style={`left:${Math.max(3, Math.min(97, primary!.pct))}%`}></span>
-          </div>
-          <div class="flex justify-between text-[11px] font-semibold mt-2 opacity-70"><span>Más cara</span><span>Más barata</span></div>
-        </div>
-      )}
-
-      <div class="flex flex-wrap gap-2 mt-5">
-        <a href="#como-llegar" class="btn-ink"><Icon name="navigation" class="w-4 h-4" /> Cómo llegar</a>
-        <button type="button" id="share-btn" class="btn-ghost"><Icon name="share" class="w-4 h-4" /> <span>Compartir</span></button>
-      </div>
+  <NightBand>
+    <div class="wrap pt-6">
+      <Breadcrumbs dark items={[{ label: 'Inicio', href: '/' }, { label: province.name, href: `/${province.slug}/` }, { label: town.name, href: townUrl }, { label: `${station.brand} · ${station.address}` }]} />
     </div>
 
-    <PriceTotem
-      title={`Precios en ${station.brand}`}
-      subtitle={`Actualizado el ${updatedAt.slice(0, 16)}`}
-      rows={fuels.map((f) => ({ label: f.label, price: station.prices[f.key] as number, dot: f.key === 'diesel' ? '#E5E7EB' : f.dot }))}
-      footer="Precio oficial comunicado al MITECO. Puede variar en el surtidor."
-    />
-  </section>
+    <!-- Header -->
+    <div class="wrap pt-8 pb-12 sm:pb-16 grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-8 lg:gap-12 items-start">
+      <div class="min-w-0">
+        <div class="flex items-start gap-4">
+          <BrandMark brand={station.brand} size="lg" />
+          <div class="min-w-0">
+            <h1 class="text-white text-[2.2rem] sm:text-[3.4rem] font-black leading-[1] tracking-[-0.04em]">{station.brand} <span class="text-white/45">{town.name}</span></h1>
+            <p class="mt-2.5 text-[15.5px] text-white/70">{station.address}, {station.postal_code ? `${station.postal_code} ` : ''}{station.town} ({province.name})</p>
+          </div>
+        </div>
 
-  <div class="wrap"><AdSlot slotId="ficha-top" /></div>
+        <div class="flex flex-wrap items-center gap-2 mt-6">
+          {station.is_24h ? (
+            <span class="tag-24 h-8 px-3 text-[12px]"><span class="live-dot"></span>Abierta 24 horas</span>
+          ) : week ? (
+            <span id="open-status" data-week={JSON.stringify(week)} class="tag-muted h-8 px-3 text-[12px]"><Icon name="clock" class="w-3.5 h-3.5" /><span class="status-text">Ver horario</span></span>
+          ) : (
+            <span class="tag-muted h-8 px-3 text-[12px]"><Icon name="clock" class="w-3.5 h-3.5" />{station.schedule}</span>
+          )}
+          {lowCost && <span class="tag-lc h-8 px-3 text-[12px]"><Icon name="zap" class="w-3.5 h-3.5" />Low-cost</span>}
+          <span class="tag h-8 px-3 text-[12px] bg-white/[0.08] text-white/85 ring-1 ring-white/15">{fuels.length} {fuels.length === 1 ? 'combustible' : 'combustibles'}</span>
+        </div>
+
+        {verdict && (
+          <div class={`mt-7 rounded-2xl p-5 sm:p-6 lvl-${verdict.tone}`}>
+            <p class="font-display text-[22px] font-black tracking-[-0.02em]">{verdict.head}</p>
+            <p class="text-[15px] mt-1 opacity-90">{verdict.text}</p>
+            <div class="relative mt-5 h-3 rounded-sm bg-gradient-to-r from-pricey via-fair to-cheap" aria-hidden="true">
+              <span class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-7 rounded-sm bg-ink ring-2 ring-white shadow" style={`left:${Math.max(3, Math.min(97, primary!.pct))}%`}></span>
+            </div>
+            <div class="flex justify-between font-display text-[11px] font-extrabold uppercase tracking-wide mt-2 opacity-70"><span>Más cara</span><span>Más barata</span></div>
+          </div>
+        )}
+
+        <div class="flex flex-wrap gap-2 mt-6">
+          <a href="#como-llegar" class="btn-volt"><Icon name="navigation" class="w-4 h-4" /> Cómo llegar</a>
+          <button type="button" id="share-btn" class="btn-ghost-dark"><Icon name="share" class="w-4 h-4" /> <span>Compartir</span></button>
+        </div>
+      </div>
+
+      <PriceTotem
+        title={`Precios en ${station.brand}`}
+        subtitle={`Actualizado el ${updatedAt.slice(0, 16)}`}
+        rows={fuels.map((f) => ({ label: f.label, price: station.prices[f.key] as number, dot: f.key === 'diesel' ? '#14181F' : f.dot }))}
+        footer="Precio oficial comunicado al MITECO. Puede variar en el surtidor."
+      />
+    </div>
+  </NightBand>
+
+  <div class="wrap pt-10"><AdSlot slotId="ficha-top" /></div>
 
   <!-- Savings + schedule -->
   <section class="wrap pt-8 grid grid-cols-1 lg:grid-cols-[1.25fr_1fr] gap-4 sm:gap-5 items-start">
     {comparisons.length > 0 && (
       <div class="card p-5 sm:p-7" aria-labelledby="ahorro-title">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
-          <h2 id="ahorro-title" class="text-xl font-bold">¿Compensa repostar aquí?</h2>
+          <h2 id="ahorro-title" class="text-[1.4rem] font-black tracking-[-0.025em]">¿Compensa repostar aquí?</h2>
           <label class="flex items-center gap-3 text-[13px] font-medium text-ink-500">
             Depósito
-            <input id="tank-liters" type="range" min="20" max="90" step="5" value={TANK} class="accent-ink w-28" />
+            <input id="tank-liters" type="range" min="20" max="90" step="5" value={TANK} class="w-28" />
             <output id="tank-liters-label" class="font-display font-bold text-ink w-10">{TANK} L</output>
           </label>
         </div>
@@ -255,7 +258,7 @@ const schema = [
 
         <div class="grid sm:grid-cols-2 gap-3">
           {comparisons.map((c) => (
-            <div class="rounded-2xl bg-ink-50/70 p-4">
+            <div class="rounded-xl bg-ink-50 p-4 border-t-4 border-road">
               <div class="flex items-baseline justify-between mb-3">
                 <span class="text-[13px] font-semibold">{c.label}</span>
                 <span class="price text-lg">{fmtPrice(c.price)} €</span>
@@ -277,7 +280,7 @@ const schema = [
     )}
 
     <div class="card p-5 sm:p-7">
-      <h2 class="text-xl font-bold mb-4 flex items-center gap-2"><Icon name="calendar" class="w-5 h-5" /> Horario</h2>
+      <h2 class="text-[1.4rem] font-black tracking-[-0.025em] mb-4 flex items-center gap-2"><Icon name="calendar" class="w-5 h-5 text-road" /> Horario</h2>
       {week ? (
         <table class="w-full text-[14px]">
           <tbody class="divide-y divide-ink-100">
@@ -298,7 +301,7 @@ const schema = [
 
   <!-- Map -->
   <section id="mapa" class="wrap pt-8 scroll-mt-20">
-    <div class="card overflow-hidden">
+    <div class="rounded-2xl overflow-hidden ring-1 ring-ink-200 shadow-card">
       <PriceMap id="ficha-map" source="all" points={mapPoints} focus={[station.lat, station.lng]} zoom={14} class="h-[340px] sm:h-[420px]" />
     </div>
   </section>
@@ -308,10 +311,10 @@ const schema = [
     <section class="wrap pt-12" aria-labelledby="near-title">
       <div class="flex items-end justify-between gap-4 mb-4">
         <div>
-          <p class="eyebrow mb-2">Alternativas</p>
-          <h2 id="near-title" class="text-2xl sm:text-3xl font-bold">Las más baratas cerca de aquí</h2>
+          <p class="sign mb-4">Alternativas</p>
+          <h2 id="near-title" class="text-[1.8rem] sm:text-[2.4rem] font-black tracking-[-0.035em]">Las más baratas cerca de aquí</h2>
         </div>
-        <a href={townUrl} class="text-[13px] font-semibold text-ink-500 hover:text-ink inline-flex items-center gap-1 shrink-0">Todas en {town.name} <Icon name="arrow-right" class="w-3.5 h-3.5" /></a>
+        <a href={townUrl} class="font-display text-[13px] font-bold text-road hover:text-road-deep inline-flex items-center gap-1 shrink-0">Todas en {town.name} <Icon name="arrow-right" class="w-3.5 h-3.5" /></a>
       </div>
       <div class="grid gap-2">
         {related.map((r) => (
@@ -325,12 +328,13 @@ const schema = [
 
   <!-- Directions CTA -->
   <section id="como-llegar" class="wrap pt-10 pb-16 scroll-mt-20">
-    <div class="relative overflow-hidden rounded-[32px] bg-ink text-white p-6 sm:p-10">
+    <div class="relative overflow-hidden rounded-2xl bg-road text-white p-6 sm:p-10 shadow-sign">
       <div class="absolute inset-0 texture pointer-events-none"></div>
+      <div class="absolute inset-2.5 rounded-xl ring-2 ring-white/80 pointer-events-none" aria-hidden="true"></div>
       <div class="relative grid md:grid-cols-[1.2fr_1fr] gap-6 items-center">
         <div>
-          <h2 class="text-white text-3xl sm:text-4xl font-bold">¿Vas a repostar aquí?</h2>
-          <p class="text-white/60 mt-2">{station.brand} · {station.address}, {station.town}</p>
+          <h2 class="text-white text-3xl sm:text-[2.6rem] font-black tracking-[-0.035em]">¿Vas a repostar aquí?</h2>
+          <p class="text-white/75 mt-2">{station.brand} · {station.address}, {station.town}</p>
         </div>
         <div class="grid gap-2.5">
           <a href={mapsUrl(station.lat, station.lng)} target="_blank" rel="noopener nofollow" class="btn-volt h-14 text-[15px]"><Icon name="navigation" class="w-5 h-5" /> Abrir en Google Maps</a>
@@ -367,7 +371,7 @@ const schema = [
     } catch {}
   }
   const today = (new Date().getDay() + 6) % 7;
-  document.querySelector(`.schedule-row[data-day="${today}"]`)?.classList.add('font-semibold', 'bg-volt-soft');
+  document.querySelector(`.schedule-row[data-day="${today}"]`)?.classList.add('font-bold', 'bg-volt-soft');
 
   // Tank slider
   const slider = document.getElementById('tank-liters') as HTMLInputElement | null;

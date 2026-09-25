@@ -5,6 +5,7 @@ import AdSlot from '../../components/AdSlot.astro';
 import AmazonV16 from '../../components/AmazonV16.astro';
 import Icon from '../../components/Icon.astro';
 import Faq from '../../components/Faq.astro';
+import NightBand from '../../components/NightBand.astro';
 
 import summary from '../../data/summary.json';
 import provinces from '../../data/provinces.json';
@@ -43,32 +44,32 @@ const faqs = [
 ---
 
 <Layout title={title} description={description} active="provincias">
-  <div class="wrap pt-6">
-    <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Provincias' }]} />
-  </div>
-
-  <section class="wrap py-8 sm:py-12">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-      <div>
-        <p class="eyebrow mb-2"><Icon name="layers" class="w-4 h-4" /> 52 provincias</p>
-        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Precio medio por provincia</h1>
-        <p class="text-[15px] sm:text-base text-ink-500 mt-2 max-w-2xl">
+  <NightBand>
+    <div class="wrap pt-6 pb-12 sm:pb-16">
+      <Breadcrumbs dark items={[{ label: 'Inicio', href: '/' }, { label: 'Provincias' }]} />
+      <div class="mt-8 max-w-3xl">
+        <p class="sign mb-5"><Icon name="layers" class="w-4 h-4" /> 52 provincias</p>
+        <h1 class="text-white text-[2.5rem] sm:text-[4.2rem] font-black leading-[0.98] tracking-[-0.045em]">Precio medio por provincia</h1>
+        <p class="text-[16.5px] sm:text-lg text-white/70 mt-5 max-w-2xl leading-relaxed">
           Comparativa en tiempo real de la más barata a la más cara. Selecciona tu provincia para consultar sus municipios y gasolineras.
         </p>
       </div>
-      <div class="flex flex-col sm:flex-row gap-2">
-        <div class="relative">
-          <Icon name="search" class="w-4 h-4 text-ink-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input id="prov-filter" type="search" placeholder="Filtrar provincia" aria-label="Filtrar provincias" class="h-11 w-full sm:w-56 pl-10 pr-3 rounded-2xl bg-white border border-ink-200 text-[14px] focus:outline-none focus:border-ink" />
-        </div>
-        <div class="seg self-start" role="group" aria-label="Combustible">
-          <button type="button" class="prov-fuel" data-fuel="g95" aria-pressed="true">Gasolina 95</button>
-          <button type="button" class="prov-fuel" data-fuel="d" aria-pressed="false">Diésel</button>
-        </div>
+    </div>
+  </NightBand>
+
+  <section class="wrap py-8 sm:py-12">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+      <div class="relative">
+        <Icon name="search" class="w-4 h-4 text-ink-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+        <input id="prov-filter" type="search" placeholder="Filtrar provincia" aria-label="Filtrar provincias" class="h-12 w-full sm:w-72 pl-10 pr-3 rounded-xl bg-white border border-ink-200 text-[14.5px] focus:outline-none focus:border-road focus:ring-4 focus:ring-road/15" />
+      </div>
+      <div class="seg self-start" role="group" aria-label="Combustible">
+        <button type="button" class="prov-fuel" data-fuel="g95" aria-pressed="true">Gasolina 95</button>
+        <button type="button" class="prov-fuel" data-fuel="d" aria-pressed="false">Diésel</button>
       </div>
     </div>
 
-    <ol id="prov-list" class="card p-3 sm:p-4 grid md:grid-cols-2 gap-x-6">
+    <ol id="prov-list" class="card p-2 sm:p-3 grid md:grid-cols-2 gap-x-4">
       {provRows.map((r) => (
         <li
           class="prov-row"
@@ -80,15 +81,15 @@ const faqs = [
           data-l-g95={lvl(r.g95, s95)}
           data-l-d={lvl(r.d, sD)}
         >
-          <a href={`/${r.slug}/`} class="group flex items-center gap-3 px-3 py-2.5 rounded-2xl hover:bg-ink-50">
+          <a href={`/${r.slug}/`} class="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-road-soft/70">
             <span class="w-32 sm:w-40 shrink-0 min-w-0">
-              <span class="block text-[14px] font-semibold truncate group-hover:underline underline-offset-4">{r.name}</span>
+              <span class="block text-[14.5px] font-bold truncate group-hover:text-road">{r.name}</span>
               <span class="block text-[11px] text-ink-400">{r.n} gasolineras</span>
             </span>
-            <span class="flex-1 h-2 rounded-full bg-ink-50 overflow-hidden">
-              <span class={`prov-bar block h-full rounded-full transition-all duration-500 dot-${lvl(r.g95, s95)}`} style={`width:${width(r.g95, s95)}%`}></span>
+            <span class="flex-1 h-2.5 rounded-sm bg-ink-100 overflow-hidden">
+              <span class={`prov-bar block h-full rounded-sm transition-all duration-500 dot-${lvl(r.g95, s95)}`} style={`width:${width(r.g95, s95)}%`}></span>
             </span>
-            <span class="prov-price price text-[15px] w-14 text-right">{fmtPrice(r.g95)}</span>
+            <span class="prov-price price text-[17px] w-16 text-right">{fmtPrice(r.g95)}</span>
           </a>
         </li>
       ))}
