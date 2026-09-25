@@ -4,24 +4,24 @@
     "slug": "a-coruna",
     "ccaa": "Galicia",
     "total_stations": 288,
-    "avg_gasolina95": 1.972,
-    "avg_diesel": 1.949,
-    "min_gasolina95": 1.779,
+    "avg_gasolina95": 1.97,
+    "avg_diesel": 1.945,
+    "min_gasolina95": 1.799,
     "min_diesel": 1.779,
     "top_municipalities": [
       {
         "name": "Coruña (A)",
         "slug": "coruna-a",
         "count": 30,
-        "min_p95": 1.849,
-        "min_diesel": 1.799
+        "min_p95": 1.839,
+        "min_diesel": 1.789
       },
       {
         "name": "Santiago De Compostela",
         "slug": "santiago-de-compostela",
         "count": 28,
-        "min_p95": 1.839,
-        "min_diesel": 1.817
+        "min_p95": 1.829,
+        "min_diesel": 1.785
       },
       {
         "name": "Narón",
@@ -34,22 +34,22 @@
         "name": "Arteixo",
         "slug": "arteixo",
         "count": 12,
-        "min_p95": 1.829,
-        "min_diesel": 1.789
+        "min_p95": 1.859,
+        "min_diesel": 1.819
       },
       {
         "name": "Carballo",
         "slug": "carballo",
         "count": 10,
-        "min_p95": 1.849,
-        "min_diesel": 1.829
+        "min_p95": 1.879,
+        "min_diesel": 1.849
       },
       {
         "name": "Culleredo",
         "slug": "culleredo",
         "count": 8,
-        "min_p95": 1.829,
-        "min_diesel": 1.789
+        "min_p95": 1.859,
+        "min_diesel": 1.819
       },
       {
         "name": "Ferrol",
@@ -62,22 +62,22 @@
         "name": "Oleiros",
         "slug": "oleiros",
         "count": 8,
-        "min_p95": 1.859,
-        "min_diesel": 1.809
+        "min_p95": 1.879,
+        "min_diesel": 1.829
       },
       {
         "name": "Betanzos",
         "slug": "betanzos",
         "count": 7,
-        "min_p95": 1.819,
-        "min_diesel": 1.799
+        "min_p95": 1.839,
+        "min_diesel": 1.809
       },
       {
         "name": "Cambre",
         "slug": "cambre",
         "count": 7,
-        "min_p95": 1.829,
-        "min_diesel": 1.789
+        "min_p95": 1.859,
+        "min_diesel": 1.819
       },
       {
         "name": "Teo",
@@ -99,9 +99,9 @@
     "name": "Albacete",
     "slug": "albacete",
     "ccaa": "Castilla-La Mancha",
-    "total_stations": 154,
-    "avg_gasolina95": 1.943,
-    "avg_diesel": 1.948,
+    "total_stations": 155,
+    "avg_gasolina95": 1.944,
+    "avg_diesel": 1.945,
     "min_gasolina95": 1.659,
     "min_diesel": 1.499,
     "top_municipalities": [
@@ -109,36 +109,36 @@
         "name": "Albacete",
         "slug": "albacete",
         "count": 43,
-        "min_p95": 1.739,
-        "min_diesel": 1.719
+        "min_p95": 1.759,
+        "min_diesel": 1.739
       },
       {
         "name": "Villarrobledo",
         "slug": "villarrobledo",
         "count": 16,
         "min_p95": 1.769,
-        "min_diesel": 1.799
+        "min_diesel": 1.829
       },
       {
         "name": "Hellín",
         "slug": "hellin",
         "count": 12,
-        "min_p95": 1.849,
-        "min_diesel": 1.849
+        "min_p95": 1.859,
+        "min_diesel": 1.859
       },
       {
         "name": "Roda (La)",
         "slug": "roda-la",
         "count": 10,
-        "min_p95": 1.749,
-        "min_diesel": 1.789
+        "min_p95": 1.739,
+        "min_diesel": 1.749
       },
       {
         "name": "Almansa",
         "slug": "almansa",
         "count": 9,
-        "min_p95": 1.779,
-        "min_diesel": 1.789
+        "min_p95": 1.809,
+        "min_diesel": 1.819
       },
       {
         "name": "Caudete",
@@ -151,8 +151,8 @@
         "name": "Chinchilla De Monte-Aragón",
         "slug": "chinchilla-de-monte-aragon",
         "count": 5,
-        "min_p95": 2.029,
-        "min_diesel": 2.049
+        "min_p95": 2.015,
+        "min_diesel": 2.019
       },
       {
         "name": "Tobarra",
@@ -165,29 +165,29 @@
         "name": "Villamalea",
         "slug": "villamalea",
         "count": 3,
-        "min_p95": 1.816,
-        "min_diesel": 1.795
+        "min_p95": 1.815,
+        "min_diesel": 1.799
       },
       {
         "name": "Alcaraz",
         "slug": "alcaraz",
         "count": 2,
         "min_p95": 1.985,
-        "min_diesel": 2.005
+        "min_diesel": 1.995
       },
       {
         "name": "Bonete",
         "slug": "bonete",
         "count": 2,
         "min_p95": 2.019,
-        "min_diesel": 2.039
+        "min_diesel": 2.029
       },
       {
         "name": "Elche De La Sierra",
         "slug": "elche-de-la-sierra",
         "count": 2,
-        "min_p95": 1.975,
-        "min_diesel": 1.999
+        "min_p95": 1.939,
+        "min_diesel": 1.989
       }
     ]
   },
@@ -195,18 +195,18 @@
     "name": "Alicante",
     "slug": "alicante",
     "ccaa": "Comunitat Valenciana",
-    "total_stations": 480,
-    "avg_gasolina95": 1.959,
-    "avg_diesel": 1.928,
+    "total_stations": 481,
+    "avg_gasolina95": 1.956,
+    "avg_diesel": 1.927,
     "min_gasolina95": 1.749,
-    "min_diesel": 1.728,
+    "min_diesel": 1.739,
     "top_municipalities": [
       {
         "name": "Alicante/Alacant",
         "slug": "alicantealacant",
         "count": 49,
-        "min_p95": 1.775,
-        "min_diesel": 1.739
+        "min_p95": 1.749,
+        "min_diesel": 1.749
       },
       {
         "name": "Elche/Elx",
@@ -219,36 +219,36 @@
         "name": "Orihuela",
         "slug": "orihuela",
         "count": 31,
-        "min_p95": 1.819,
-        "min_diesel": 1.819
+        "min_p95": 1.849,
+        "min_diesel": 1.829
       },
       {
         "name": "Torrevieja",
         "slug": "torrevieja",
         "count": 26,
-        "min_p95": 1.799,
-        "min_diesel": 1.789
+        "min_p95": 1.819,
+        "min_diesel": 1.799
       },
       {
         "name": "San Vicente Del Raspeig/Sant Vicent Del Raspeig",
         "slug": "san-vicente-del-raspeigsant-vicent-del-raspeig",
         "count": 12,
         "min_p95": 1.885,
-        "min_diesel": 1.849
+        "min_diesel": 1.829
       },
       {
         "name": "Alcoy/Alcoi",
         "slug": "alcoyalcoi",
         "count": 10,
-        "min_p95": 1.819,
-        "min_diesel": 1.839
+        "min_p95": 1.829,
+        "min_diesel": 1.859
       },
       {
         "name": "Benidorm",
         "slug": "benidorm",
         "count": 10,
-        "min_p95": 1.819,
-        "min_diesel": 1.799
+        "min_p95": 1.856,
+        "min_diesel": 1.816
       },
       {
         "name": "Crevillent",
@@ -261,29 +261,29 @@
         "name": "Dénia",
         "slug": "denia",
         "count": 10,
-        "min_p95": 1.849,
-        "min_diesel": 1.837
+        "min_p95": 1.839,
+        "min_diesel": 1.839
       },
       {
         "name": "Villajoyosa/Vila Joiosa (La)",
         "slug": "villajoyosavila-joiosa-la",
         "count": 10,
-        "min_p95": 1.806,
-        "min_diesel": 1.808
+        "min_p95": 1.749,
+        "min_diesel": 1.749
       },
       {
         "name": "Cocentaina",
         "slug": "cocentaina",
         "count": 9,
-        "min_p95": 1.819,
+        "min_p95": 1.827,
         "min_diesel": 1.859
       },
       {
         "name": "Elda",
         "slug": "elda",
         "count": 9,
-        "min_p95": 1.839,
-        "min_diesel": 1.799
+        "min_p95": 1.765,
+        "min_diesel": 1.765
       }
     ]
   },
@@ -291,38 +291,38 @@
     "name": "Almería",
     "slug": "almeria",
     "ccaa": "Andalucía",
-    "total_stations": 228,
-    "avg_gasolina95": 1.904,
-    "avg_diesel": 1.905,
+    "total_stations": 229,
+    "avg_gasolina95": 1.907,
+    "avg_diesel": 1.912,
     "min_gasolina95": 1.499,
-    "min_diesel": 1.695,
+    "min_diesel": 1.744,
     "top_municipalities": [
       {
         "name": "Ejido (El)",
         "slug": "ejido-el",
-        "count": 37,
-        "min_p95": 1.75,
-        "min_diesel": 1.777
+        "count": 38,
+        "min_p95": 1.714,
+        "min_diesel": 1.763
       },
       {
         "name": "Almería",
         "slug": "almeria",
         "count": 34,
         "min_p95": 1.808,
-        "min_diesel": 1.827
+        "min_diesel": 1.829
       },
       {
         "name": "Roquetas De Mar",
         "slug": "roquetas-de-mar",
         "count": 17,
-        "min_p95": 1.779,
-        "min_diesel": 1.777
+        "min_p95": 1.769,
+        "min_diesel": 1.763
       },
       {
         "name": "Níjar",
         "slug": "nijar",
         "count": 16,
-        "min_p95": 1.857,
+        "min_p95": 1.855,
         "min_diesel": 1.819
       },
       {
@@ -336,8 +336,8 @@
         "name": "Vícar",
         "slug": "vicar",
         "count": 9,
-        "min_p95": 1.81,
-        "min_diesel": 1.781
+        "min_p95": 1.815,
+        "min_diesel": 1.753
       },
       {
         "name": "Vera",
@@ -350,8 +350,8 @@
         "name": "Adra",
         "slug": "adra",
         "count": 6,
-        "min_p95": 1.759,
-        "min_diesel": 1.759
+        "min_p95": 1.763,
+        "min_diesel": 1.744
       },
       {
         "name": "Cuevas Del Almanzora",
@@ -365,13 +365,13 @@
         "slug": "viator",
         "count": 6,
         "min_p95": 1.81,
-        "min_diesel": 1.809
+        "min_diesel": 1.82
       },
       {
         "name": "Albox",
         "slug": "albox",
         "count": 5,
-        "min_p95": 1.829,
+        "min_p95": 1.839,
         "min_diesel": 1.829
       },
       {
@@ -379,7 +379,7 @@
         "slug": "antas",
         "count": 5,
         "min_p95": 1.818,
-        "min_diesel": 1.842
+        "min_diesel": 1.824
       }
     ]
   },
@@ -387,11 +387,11 @@
     "name": "Asturias",
     "slug": "asturias",
     "ccaa": "Principado de Asturias",
-    "total_stations": 241,
-    "avg_gasolina95": 1.988,
-    "avg_diesel": 1.991,
-    "min_gasolina95": 1.819,
-    "min_diesel": 1.789,
+    "total_stations": 242,
+    "avg_gasolina95": 1.987,
+    "avg_diesel": 1.988,
+    "min_gasolina95": 1.839,
+    "min_diesel": 1.809,
     "top_municipalities": [
       {
         "name": "Gijón",
@@ -403,7 +403,7 @@
       {
         "name": "Siero",
         "slug": "siero",
-        "count": 21,
+        "count": 22,
         "min_p95": 1.879,
         "min_diesel": 1.827
       },
@@ -419,7 +419,7 @@
         "slug": "aviles",
         "count": 15,
         "min_p95": 1.889,
-        "min_diesel": 1.915
+        "min_diesel": 1.889
       },
       {
         "name": "Langreo",
@@ -433,27 +433,27 @@
         "slug": "llanera",
         "count": 9,
         "min_p95": 1.979,
-        "min_diesel": 1.995
+        "min_diesel": 1.999
       },
       {
         "name": "Valdés",
         "slug": "valdes",
         "count": 9,
-        "min_p95": 1.839,
+        "min_p95": 1.887,
         "min_diesel": 1.85
       },
       {
         "name": "Mieres",
         "slug": "mieres",
         "count": 8,
-        "min_p95": 1.829,
-        "min_diesel": 1.857
+        "min_p95": 1.849,
+        "min_diesel": 1.877
       },
       {
         "name": "Carreño",
         "slug": "carreno",
         "count": 7,
-        "min_p95": 1.974,
+        "min_p95": 1.979,
         "min_diesel": 1.939
       },
       {
@@ -467,15 +467,15 @@
         "name": "Corvera De Asturias",
         "slug": "corvera-de-asturias",
         "count": 5,
-        "min_p95": 1.889,
+        "min_p95": 1.879,
         "min_diesel": 1.829
       },
       {
         "name": "Salas",
         "slug": "salas",
         "count": 5,
-        "min_p95": 1.989,
-        "min_diesel": 1.85
+        "min_p95": 2.009,
+        "min_diesel": 1.89
       }
     ]
   },
@@ -483,32 +483,32 @@
     "name": "Badajoz",
     "slug": "badajoz",
     "ccaa": "Extremadura",
-    "total_stations": 280,
-    "avg_gasolina95": 1.923,
-    "avg_diesel": 1.93,
-    "min_gasolina95": 1.729,
+    "total_stations": 284,
+    "avg_gasolina95": 1.93,
+    "avg_diesel": 1.936,
+    "min_gasolina95": 1.759,
     "min_diesel": 1.694,
     "top_municipalities": [
       {
         "name": "Badajoz",
         "slug": "badajoz",
-        "count": 39,
+        "count": 40,
         "min_p95": 1.789,
-        "min_diesel": 1.762
+        "min_diesel": 1.798
       },
       {
         "name": "Mérida",
         "slug": "merida",
         "count": 24,
-        "min_p95": 1.729,
-        "min_diesel": 1.77
+        "min_p95": 1.79,
+        "min_diesel": 1.74
       },
       {
         "name": "Don Benito",
         "slug": "don-benito",
         "count": 18,
         "min_p95": 1.79,
-        "min_diesel": 1.73
+        "min_diesel": 1.802
       },
       {
         "name": "Almendralejo",
@@ -521,15 +521,22 @@
         "name": "Villanueva De La Serena",
         "slug": "villanueva-de-la-serena",
         "count": 10,
-        "min_p95": 1.829,
+        "min_p95": 1.849,
         "min_diesel": 1.84
       },
       {
         "name": "Villafranca De Los Barros",
         "slug": "villafranca-de-los-barros",
         "count": 6,
-        "min_p95": 1.789,
-        "min_diesel": 1.799
+        "min_p95": 1.809,
+        "min_diesel": 1.819
+      },
+      {
+        "name": "Zafra",
+        "slug": "zafra",
+        "count": 6,
+        "min_p95": 1.779,
+        "min_diesel": 1.818
       },
       {
         "name": "Monesterio",
@@ -542,8 +549,8 @@
         "name": "Montijo",
         "slug": "montijo",
         "count": 5,
-        "min_p95": 1.779,
-        "min_diesel": 1.799
+        "min_p95": 1.799,
+        "min_diesel": 1.809
       },
       {
         "name": "Olivenza",
@@ -553,25 +560,18 @@
         "min_diesel": 1.849
       },
       {
-        "name": "Zafra",
-        "slug": "zafra",
-        "count": 5,
-        "min_p95": 1.759,
-        "min_diesel": 1.798
-      },
-      {
         "name": "Azuaga",
         "slug": "azuaga",
         "count": 4,
-        "min_p95": 1.789,
-        "min_diesel": 1.799
+        "min_p95": 1.809,
+        "min_diesel": 1.819
       },
       {
         "name": "Talavera La Real",
         "slug": "talavera-la-real",
         "count": 4,
         "min_p95": 1.83,
-        "min_diesel": 1.81
+        "min_diesel": 1.785
       }
     ]
   },
@@ -579,17 +579,17 @@
     "name": "Barcelona",
     "slug": "barcelona",
     "ccaa": "Catalunya",
-    "total_stations": 796,
-    "avg_gasolina95": 1.904,
-    "avg_diesel": 1.925,
+    "total_stations": 800,
+    "avg_gasolina95": 1.903,
+    "avg_diesel": 1.923,
     "min_gasolina95": 1.69,
-    "min_diesel": 1.699,
+    "min_diesel": 1.719,
     "top_municipalities": [
       {
         "name": "Barcelona",
         "slug": "barcelona",
         "count": 77,
-        "min_p95": 1.758,
+        "min_p95": 1.788,
         "min_diesel": 1.797
       },
       {
@@ -597,77 +597,77 @@
         "slug": "terrassa",
         "count": 36,
         "min_p95": 1.729,
-        "min_diesel": 1.729
+        "min_diesel": 1.739
       },
       {
         "name": "Hospitalet De Llobregat (L')",
         "slug": "hospitalet-de-llobregat-l",
         "count": 30,
-        "min_p95": 1.705,
-        "min_diesel": 1.729
+        "min_p95": 1.739,
+        "min_diesel": 1.739
       },
       {
         "name": "Sabadell",
         "slug": "sabadell",
         "count": 23,
-        "min_p95": 1.699,
-        "min_diesel": 1.699
+        "min_p95": 1.719,
+        "min_diesel": 1.719
       },
       {
         "name": "Mataró",
         "slug": "mataro",
         "count": 18,
-        "min_p95": 1.699,
-        "min_diesel": 1.699
+        "min_p95": 1.719,
+        "min_diesel": 1.719
       },
       {
         "name": "Badalona",
         "slug": "badalona",
         "count": 17,
-        "min_p95": 1.705,
-        "min_diesel": 1.73
+        "min_p95": 1.742,
+        "min_diesel": 1.742
       },
       {
         "name": "Manresa",
         "slug": "manresa",
         "count": 17,
-        "min_p95": 1.709,
-        "min_diesel": 1.734
+        "min_p95": 1.739,
+        "min_diesel": 1.746
       },
       {
         "name": "Granollers",
         "slug": "granollers",
         "count": 15,
-        "min_p95": 1.757,
-        "min_diesel": 1.772
+        "min_p95": 1.755,
+        "min_diesel": 1.775
       },
       {
         "name": "Santa Perpètua De Mogoda",
         "slug": "santa-perpetua-de-mogoda",
         "count": 14,
-        "min_p95": 1.759,
-        "min_diesel": 1.779
+        "min_p95": 1.799,
+        "min_diesel": 1.799
       },
       {
         "name": "Vic",
         "slug": "vic",
         "count": 14,
         "min_p95": 1.737,
-        "min_diesel": 1.749
+        "min_diesel": 1.757
       },
       {
         "name": "Igualada",
         "slug": "igualada",
         "count": 13,
         "min_p95": 1.69,
-        "min_diesel": 1.729
+        "min_diesel": 1.759
       },
       {
         "name": "Rubí",
         "slug": "rubi",
         "count": 13,
         "min_p95": 1.809,
-        "min_diesel": 1.799
+        "min_diesel": 1.769
       }
     ]
   },
@@ -675,11 +675,11 @@
     "name": "Burgos",
     "slug": "burgos",
     "ccaa": "Castilla y León",
-    "total_stations": 139,
-    "avg_gasolina95": 1.976,
-    "avg_diesel": 1.941,
-    "min_gasolina95": 1.809,
-    "min_diesel": 1.72,
+    "total_stations": 138,
+    "avg_gasolina95": 1.971,
+    "avg_diesel": 1.938,
+    "min_gasolina95": 1.759,
+    "min_diesel": 1.722,
     "top_municipalities": [
       {
         "name": "Burgos",
@@ -691,23 +691,23 @@
       {
         "name": "Aranda De Duero",
         "slug": "aranda-de-duero",
-        "count": 13,
-        "min_p95": 1.829,
-        "min_diesel": 1.72
+        "count": 12,
+        "min_p95": 1.819,
+        "min_diesel": 1.779
       },
       {
         "name": "Miranda De Ebro",
         "slug": "miranda-de-ebro",
         "count": 9,
-        "min_p95": 1.809,
-        "min_diesel": 1.809
+        "min_p95": 1.759,
+        "min_diesel": 1.759
       },
       {
         "name": "Briviesca",
         "slug": "briviesca",
         "count": 7,
-        "min_p95": 1.869,
-        "min_diesel": 1.849
+        "min_p95": 1.845,
+        "min_diesel": 1.839
       },
       {
         "name": "Villagonzalo Pedernales",
@@ -721,7 +721,7 @@
         "slug": "sarracin",
         "count": 3,
         "min_p95": 2.024,
-        "min_diesel": 1.959
+        "min_diesel": 1.999
       },
       {
         "name": "Valle De Mena",
@@ -741,7 +741,7 @@
         "name": "Ameyugo",
         "slug": "ameyugo",
         "count": 2,
-        "min_p95": 2.029,
+        "min_p95": 2.039,
         "min_diesel": 1.994
       },
       {
@@ -755,8 +755,8 @@
         "name": "Condado De Treviño",
         "slug": "condado-de-trevino",
         "count": 2,
-        "min_p95": 1.859,
-        "min_diesel": 1.859
+        "min_p95": 1.849,
+        "min_diesel": 1.839
       },
       {
         "name": "Estépar",
@@ -772,8 +772,8 @@
     "slug": "cantabria",
     "ccaa": "Cantabria",
     "total_stations": 167,
-    "avg_gasolina95": 1.972,
-    "avg_diesel": 1.96,
+    "avg_gasolina95": 1.969,
+    "avg_diesel": 1.958,
     "min_gasolina95": 1.789,
     "min_diesel": 1.769,
     "top_municipalities": [
@@ -788,22 +788,22 @@
         "name": "Torrelavega",
         "slug": "torrelavega",
         "count": 12,
-        "min_p95": 1.797,
-        "min_diesel": 1.777
+        "min_p95": 1.857,
+        "min_diesel": 1.797
       },
       {
         "name": "Camargo",
         "slug": "camargo",
         "count": 11,
-        "min_p95": 1.829,
-        "min_diesel": 1.809
+        "min_p95": 1.849,
+        "min_diesel": 1.819
       },
       {
         "name": "Castro-Urdiales",
         "slug": "castro-urdiales",
         "count": 7,
-        "min_p95": 1.839,
-        "min_diesel": 1.819
+        "min_p95": 1.819,
+        "min_diesel": 1.799
       },
       {
         "name": "Cartes",
@@ -816,15 +816,15 @@
         "name": "Santa Cruz De Bezana",
         "slug": "santa-cruz-de-bezana",
         "count": 6,
-        "min_p95": 1.829,
-        "min_diesel": 1.809
+        "min_p95": 1.819,
+        "min_diesel": 1.789
       },
       {
         "name": "Astillero (El)",
         "slug": "astillero-el",
         "count": 4,
-        "min_p95": 2.039,
-        "min_diesel": 2.019
+        "min_p95": 2.049,
+        "min_diesel": 2.044
       },
       {
         "name": "Corrales De Buelna (Los)",
@@ -837,22 +837,22 @@
         "name": "Entrambasaguas",
         "slug": "entrambasaguas",
         "count": 4,
-        "min_p95": 2.029,
+        "min_p95": 2.035,
         "min_diesel": 2.039
       },
       {
         "name": "Villaescusa",
         "slug": "villaescusa",
         "count": 4,
-        "min_p95": 1.869,
-        "min_diesel": 1.829
+        "min_p95": 1.899,
+        "min_diesel": 1.859
       },
       {
         "name": "Cabezón De La Sal",
         "slug": "cabezon-de-la-sal",
         "count": 3,
-        "min_p95": 2.025,
-        "min_diesel": 2.049
+        "min_p95": 2.015,
+        "min_diesel": 2.044
       },
       {
         "name": "Medio Cudeyo",
@@ -868,31 +868,31 @@
     "slug": "castellon",
     "ccaa": "Comunitat Valenciana",
     "total_stations": 198,
-    "avg_gasolina95": 1.921,
-    "avg_diesel": 1.935,
+    "avg_gasolina95": 1.922,
+    "avg_diesel": 1.937,
     "min_gasolina95": 1.699,
-    "min_diesel": 1.719,
+    "min_diesel": 1.699,
     "top_municipalities": [
       {
         "name": "Castellón De La Plana/Castelló De La Plana",
         "slug": "castellon-de-la-planacastello-de-la-plana",
         "count": 37,
         "min_p95": 1.819,
-        "min_diesel": 1.799
+        "min_diesel": 1.809
       },
       {
         "name": "Onda",
         "slug": "onda",
         "count": 15,
-        "min_p95": 1.709,
-        "min_diesel": 1.739
+        "min_p95": 1.699,
+        "min_diesel": 1.699
       },
       {
         "name": "Villarreal/Vila-Real",
         "slug": "villarrealvila-real",
         "count": 14,
-        "min_p95": 1.714,
-        "min_diesel": 1.739
+        "min_p95": 1.739,
+        "min_diesel": 1.751
       },
       {
         "name": "Benicarló",
@@ -905,15 +905,15 @@
         "name": "Burriana",
         "slug": "burriana",
         "count": 10,
-        "min_p95": 1.819,
-        "min_diesel": 1.819
+        "min_p95": 1.839,
+        "min_diesel": 1.839
       },
       {
         "name": "Vinaròs",
         "slug": "vinaros",
         "count": 10,
-        "min_p95": 1.699,
-        "min_diesel": 1.719
+        "min_p95": 1.709,
+        "min_diesel": 1.729
       },
       {
         "name": "Vall D'Uixó (La)",
@@ -933,8 +933,8 @@
         "name": "Cabanes",
         "slug": "cabanes",
         "count": 6,
-        "min_p95": 1.84,
-        "min_diesel": 1.88
+        "min_p95": 1.88,
+        "min_diesel": 1.89
       },
       {
         "name": "Nules",
@@ -954,8 +954,8 @@
         "name": "Alcora (L')",
         "slug": "alcora-l",
         "count": 4,
-        "min_p95": 1.889,
-        "min_diesel": 1.869
+        "min_p95": 1.897,
+        "min_diesel": 1.897
       }
     ]
   },
@@ -964,17 +964,17 @@
     "slug": "ceuta",
     "ccaa": "Ceuta",
     "total_stations": 10,
-    "avg_gasolina95": 1.683,
-    "avg_diesel": 1.736,
-    "min_gasolina95": 1.644,
-    "min_diesel": 1.674,
+    "avg_gasolina95": 1.693,
+    "avg_diesel": 1.737,
+    "min_gasolina95": 1.679,
+    "min_diesel": 1.709,
     "top_municipalities": [
       {
         "name": "Ceuta",
         "slug": "ceuta",
         "count": 10,
-        "min_p95": 1.644,
-        "min_diesel": 1.674
+        "min_p95": 1.679,
+        "min_diesel": 1.709
       }
     ]
   },
@@ -982,46 +982,46 @@
     "name": "Ciudad Real",
     "slug": "ciudad-real",
     "ccaa": "Castilla-La Mancha",
-    "total_stations": 216,
-    "avg_gasolina95": 1.917,
-    "avg_diesel": 1.922,
-    "min_gasolina95": 1.649,
-    "min_diesel": 1.629,
+    "total_stations": 215,
+    "avg_gasolina95": 1.924,
+    "avg_diesel": 1.928,
+    "min_gasolina95": 1.699,
+    "min_diesel": 1.699,
     "top_municipalities": [
       {
         "name": "Ciudad Real",
         "slug": "ciudad-real",
         "count": 21,
-        "min_p95": 1.795,
-        "min_diesel": 1.795
+        "min_p95": 1.829,
+        "min_diesel": 1.829
       },
       {
         "name": "Valdepeñas",
         "slug": "valdepenas",
         "count": 21,
-        "min_p95": 1.759,
-        "min_diesel": 1.819
+        "min_p95": 1.829,
+        "min_diesel": 1.839
       },
       {
         "name": "Tomelloso",
         "slug": "tomelloso",
         "count": 13,
-        "min_p95": 1.649,
-        "min_diesel": 1.629
+        "min_p95": 1.699,
+        "min_diesel": 1.699
       },
       {
         "name": "Alcázar De San Juan",
         "slug": "alcazar-de-san-juan",
         "count": 11,
         "min_p95": 1.855,
-        "min_diesel": 1.855
+        "min_diesel": 1.879
       },
       {
         "name": "Manzanares",
         "slug": "manzanares",
         "count": 10,
         "min_p95": 1.785,
-        "min_diesel": 1.765
+        "min_diesel": 1.795
       },
       {
         "name": "Puertollano",
@@ -1035,7 +1035,7 @@
         "slug": "daimiel",
         "count": 9,
         "min_p95": 1.899,
-        "min_diesel": 1.799
+        "min_diesel": 1.829
       },
       {
         "name": "Campo De Criptana",
@@ -1048,29 +1048,29 @@
         "name": "Santa Cruz De Mudela",
         "slug": "santa-cruz-de-mudela",
         "count": 7,
-        "min_p95": 1.999,
-        "min_diesel": 1.795
+        "min_p95": 1.995,
+        "min_diesel": 1.818
       },
       {
         "name": "Socuéllamos",
         "slug": "socuellamos",
         "count": 7,
-        "min_p95": 1.819,
-        "min_diesel": 1.718
+        "min_p95": 1.839,
+        "min_diesel": 1.748
       },
       {
         "name": "Membrilla",
         "slug": "membrilla",
         "count": 6,
         "min_p95": 1.789,
-        "min_diesel": 1.784
+        "min_diesel": 1.804
       },
       {
         "name": "Solana (La)",
         "slug": "solana-la",
         "count": 6,
         "min_p95": 1.789,
-        "min_diesel": 1.779
+        "min_diesel": 1.799
       }
     ]
   },
@@ -1078,18 +1078,18 @@
     "name": "Cuenca",
     "slug": "cuenca",
     "ccaa": "Castilla-La Mancha",
-    "total_stations": 121,
-    "avg_gasolina95": 1.967,
-    "avg_diesel": 1.949,
-    "min_gasolina95": 1.709,
-    "min_diesel": 1.665,
+    "total_stations": 122,
+    "avg_gasolina95": 1.969,
+    "avg_diesel": 1.951,
+    "min_gasolina95": 1.719,
+    "min_diesel": 1.719,
     "top_municipalities": [
       {
         "name": "Cuenca",
         "slug": "cuenca",
         "count": 14,
         "min_p95": 1.799,
-        "min_diesel": 1.809
+        "min_diesel": 1.819
       },
       {
         "name": "Tarancón",
@@ -1116,22 +1116,22 @@
         "name": "Belinchón",
         "slug": "belinchon",
         "count": 3,
-        "min_p95": 2.019,
+        "min_p95": 2.015,
         "min_diesel": 2.039
       },
       {
         "name": "Castillejo De Iniesta",
         "slug": "castillejo-de-iniesta",
         "count": 3,
-        "min_p95": 2.039,
-        "min_diesel": 2.024
+        "min_p95": 2.045,
+        "min_diesel": 2.014
       },
       {
         "name": "Castillo De Garcimuñoz",
         "slug": "castillo-de-garcimunoz",
         "count": 3,
         "min_p95": 2.034,
-        "min_diesel": 2.014
+        "min_diesel": 1.994
       },
       {
         "name": "Honrubia",
@@ -1144,15 +1144,15 @@
         "name": "Huete",
         "slug": "huete",
         "count": 3,
-        "min_p95": 2.019,
-        "min_diesel": 1.989
+        "min_p95": 2.029,
+        "min_diesel": 2.019
       },
       {
         "name": "Iniesta",
         "slug": "iniesta",
         "count": 3,
         "min_p95": 2.025,
-        "min_diesel": 1.665
+        "min_diesel": 1.735
       },
       {
         "name": "Mota Del Cuervo",
@@ -1166,7 +1166,7 @@
         "slug": "pedroneras-las",
         "count": 3,
         "min_p95": 1.899,
-        "min_diesel": 1.759
+        "min_diesel": 1.818
       }
     ]
   },
@@ -1174,25 +1174,25 @@
     "name": "Cáceres",
     "slug": "caceres",
     "ccaa": "Extremadura",
-    "total_stations": 159,
+    "total_stations": 160,
     "avg_gasolina95": 1.963,
-    "avg_diesel": 1.983,
+    "avg_diesel": 1.98,
     "min_gasolina95": 1.779,
-    "min_diesel": 1.769,
+    "min_diesel": 1.759,
     "top_municipalities": [
       {
         "name": "Cáceres",
         "slug": "caceres",
         "count": 18,
         "min_p95": 1.779,
-        "min_diesel": 1.824
+        "min_diesel": 1.834
       },
       {
         "name": "Trujillo",
         "slug": "trujillo",
         "count": 9,
-        "min_p95": 1.965,
-        "min_diesel": 1.965
+        "min_p95": 1.95,
+        "min_diesel": 1.95
       },
       {
         "name": "Miajadas",
@@ -1205,8 +1205,8 @@
         "name": "Navalmoral De La Mata",
         "slug": "navalmoral-de-la-mata",
         "count": 8,
-        "min_p95": 1.819,
-        "min_diesel": 1.799
+        "min_p95": 1.839,
+        "min_diesel": 1.829
       },
       {
         "name": "Plasencia",
@@ -1227,20 +1227,20 @@
         "slug": "casar-de-caceres",
         "count": 4,
         "min_p95": 1.829,
-        "min_diesel": 1.829
+        "min_diesel": 1.849
       },
       {
         "name": "Coria",
         "slug": "coria",
         "count": 4,
-        "min_p95": 1.999,
-        "min_diesel": 1.929
+        "min_p95": 1.979,
+        "min_diesel": 1.891
       },
       {
         "name": "Jaraíz De La Vera",
         "slug": "jaraiz-de-la-vera",
-        "count": 3,
-        "min_p95": 1.809,
+        "count": 4,
+        "min_p95": 1.849,
         "min_diesel": 1.849
       },
       {
@@ -1254,8 +1254,8 @@
         "name": "Montehermoso",
         "slug": "montehermoso",
         "count": 3,
-        "min_p95": 1.809,
-        "min_diesel": 1.819
+        "min_p95": 1.799,
+        "min_diesel": 1.759
       },
       {
         "name": "Valencia De Alcántara",
@@ -1270,45 +1270,45 @@
     "name": "Cádiz",
     "slug": "cadiz",
     "ccaa": "Andalucía",
-    "total_stations": 291,
-    "avg_gasolina95": 1.96,
-    "avg_diesel": 1.934,
-    "min_gasolina95": 1.789,
+    "total_stations": 292,
+    "avg_gasolina95": 1.962,
+    "avg_diesel": 1.939,
+    "min_gasolina95": 1.799,
     "min_diesel": 1.768,
     "top_municipalities": [
       {
         "name": "Jerez De La Frontera",
         "slug": "jerez-de-la-frontera",
         "count": 50,
-        "min_p95": 1.809,
-        "min_diesel": 1.799
+        "min_p95": 1.829,
+        "min_diesel": 1.819
       },
       {
         "name": "Chiclana De La Frontera",
         "slug": "chiclana-de-la-frontera",
         "count": 28,
-        "min_p95": 1.879,
-        "min_diesel": 1.825
+        "min_p95": 1.899,
+        "min_diesel": 1.875
       },
       {
         "name": "Puerto De Santa María (El)",
         "slug": "puerto-de-santa-maria-el",
         "count": 23,
-        "min_p95": 1.789,
-        "min_diesel": 1.809
+        "min_p95": 1.799,
+        "min_diesel": 1.819
       },
       {
         "name": "Algeciras",
         "slug": "algeciras",
         "count": 19,
-        "min_p95": 1.829,
-        "min_diesel": 1.797
+        "min_p95": 1.867,
+        "min_diesel": 1.847
       },
       {
         "name": "Cádiz",
         "slug": "cadiz",
         "count": 17,
-        "min_p95": 1.879,
+        "min_p95": 1.899,
         "min_diesel": 1.768
       },
       {
@@ -1322,43 +1322,43 @@
         "name": "San Fernando",
         "slug": "san-fernando",
         "count": 12,
-        "min_p95": 1.925,
-        "min_diesel": 1.859
+        "min_p95": 1.899,
+        "min_diesel": 1.879
       },
       {
         "name": "San Roque",
         "slug": "san-roque",
         "count": 12,
         "min_p95": 1.859,
-        "min_diesel": 1.779
+        "min_diesel": 1.789
       },
       {
         "name": "Sanlúcar De Barrameda",
         "slug": "sanlucar-de-barrameda",
         "count": 12,
-        "min_p95": 1.829,
-        "min_diesel": 1.799
+        "min_p95": 1.839,
+        "min_diesel": 1.809
       },
       {
         "name": "Arcos De La Frontera",
         "slug": "arcos-de-la-frontera",
         "count": 11,
-        "min_p95": 1.819,
-        "min_diesel": 1.828
+        "min_p95": 1.839,
+        "min_diesel": 1.839
       },
       {
         "name": "Barrios (Los)",
         "slug": "barrios-los",
         "count": 9,
-        "min_p95": 1.829,
-        "min_diesel": 1.797
+        "min_p95": 1.869,
+        "min_diesel": 1.847
       },
       {
         "name": "Línea De La Concepción (La)",
         "slug": "linea-de-la-concepcion-la",
         "count": 8,
         "min_p95": 1.859,
-        "min_diesel": 1.779
+        "min_diesel": 1.789
       }
     ]
   },
@@ -1367,17 +1367,17 @@
     "slug": "cordoba",
     "ccaa": "Andalucía",
     "total_stations": 209,
-    "avg_gasolina95": 1.925,
-    "avg_diesel": 1.953,
+    "avg_gasolina95": 1.928,
+    "avg_diesel": 1.956,
     "min_gasolina95": 1.649,
-    "min_diesel": 1.739,
+    "min_diesel": 1.759,
     "top_municipalities": [
       {
         "name": "Córdoba",
         "slug": "cordoba",
         "count": 59,
-        "min_p95": 1.859,
-        "min_diesel": 1.849
+        "min_p95": 1.879,
+        "min_diesel": 1.875
       },
       {
         "name": "Lucena",
@@ -1390,15 +1390,15 @@
         "name": "Carlota (La)",
         "slug": "carlota-la",
         "count": 11,
-        "min_p95": 1.829,
-        "min_diesel": 1.839
+        "min_p95": 1.849,
+        "min_diesel": 1.859
       },
       {
         "name": "Puente Genil",
         "slug": "puente-genil",
         "count": 10,
-        "min_p95": 1.859,
-        "min_diesel": 1.889
+        "min_p95": 1.869,
+        "min_diesel": 1.899
       },
       {
         "name": "Montilla",
@@ -1411,36 +1411,36 @@
         "name": "Priego De Córdoba",
         "slug": "priego-de-cordoba",
         "count": 6,
-        "min_p95": 1.855,
-        "min_diesel": 1.869
+        "min_p95": 1.885,
+        "min_diesel": 1.889
       },
       {
         "name": "Cabra",
         "slug": "cabra",
         "count": 5,
-        "min_p95": 1.841,
-        "min_diesel": 1.836
+        "min_p95": 1.862,
+        "min_diesel": 1.856
       },
       {
         "name": "Palma Del Río",
         "slug": "palma-del-rio",
         "count": 5,
-        "min_p95": 1.839,
-        "min_diesel": 1.839
+        "min_p95": 1.859,
+        "min_diesel": 1.859
       },
       {
         "name": "Castro Del Río",
         "slug": "castro-del-rio",
         "count": 4,
         "min_p95": 1.819,
-        "min_diesel": 1.795
+        "min_diesel": 1.799
       },
       {
         "name": "Fuente Palmera",
         "slug": "fuente-palmera",
         "count": 4,
-        "min_p95": 1.939,
-        "min_diesel": 1.929
+        "min_p95": 1.979,
+        "min_diesel": 1.979
       },
       {
         "name": "Peñarroya-Pueblonuevo",
@@ -1462,32 +1462,32 @@
     "name": "Girona",
     "slug": "girona",
     "ccaa": "Catalunya",
-    "total_stations": 272,
-    "avg_gasolina95": 1.937,
-    "avg_diesel": 1.921,
-    "min_gasolina95": 1.699,
-    "min_diesel": 1.698,
+    "total_stations": 271,
+    "avg_gasolina95": 1.938,
+    "avg_diesel": 1.923,
+    "min_gasolina95": 1.718,
+    "min_diesel": 1.718,
     "top_municipalities": [
       {
         "name": "Jonquera (La)",
         "slug": "jonquera-la",
         "count": 21,
         "min_p95": 1.919,
-        "min_diesel": 1.914
+        "min_diesel": 1.915
       },
       {
         "name": "Girona",
         "slug": "girona",
         "count": 18,
-        "min_p95": 1.699,
-        "min_diesel": 1.698
+        "min_p95": 1.718,
+        "min_diesel": 1.718
       },
       {
         "name": "Figueres",
         "slug": "figueres",
         "count": 15,
         "min_p95": 1.809,
-        "min_diesel": 1.829
+        "min_diesel": 1.799
       },
       {
         "name": "Olot",
@@ -1500,8 +1500,8 @@
         "name": "Blanes",
         "slug": "blanes",
         "count": 7,
-        "min_p95": 1.799,
-        "min_diesel": 1.799
+        "min_p95": 1.819,
+        "min_diesel": 1.819
       },
       {
         "name": "Banyoles",
@@ -1521,8 +1521,8 @@
         "name": "Lloret De Mar",
         "slug": "lloret-de-mar",
         "count": 6,
-        "min_p95": 1.804,
-        "min_diesel": 1.804
+        "min_p95": 1.809,
+        "min_diesel": 1.809
       },
       {
         "name": "Palafrugell",
@@ -1550,7 +1550,7 @@
         "slug": "llers",
         "count": 5,
         "min_p95": 2.029,
-        "min_diesel": 1.969
+        "min_diesel": 1.939
       }
     ]
   },
@@ -1559,24 +1559,24 @@
     "slug": "granada",
     "ccaa": "Andalucía",
     "total_stations": 285,
-    "avg_gasolina95": 1.937,
-    "avg_diesel": 1.929,
-    "min_gasolina95": 1.67,
-    "min_diesel": 1.67,
+    "avg_gasolina95": 1.941,
+    "avg_diesel": 1.933,
+    "min_gasolina95": 1.735,
+    "min_diesel": 1.759,
     "top_municipalities": [
       {
         "name": "Granada",
         "slug": "granada",
         "count": 28,
-        "min_p95": 1.799,
-        "min_diesel": 1.809
+        "min_p95": 1.779,
+        "min_diesel": 1.799
       },
       {
         "name": "Motril",
         "slug": "motril",
         "count": 18,
-        "min_p95": 1.67,
-        "min_diesel": 1.67
+        "min_p95": 1.735,
+        "min_diesel": 1.791
       },
       {
         "name": "Albolote",
@@ -1590,35 +1590,35 @@
         "slug": "baza",
         "count": 11,
         "min_p95": 1.859,
-        "min_diesel": 1.849
+        "min_diesel": 1.869
       },
       {
         "name": "Loja",
         "slug": "loja",
         "count": 10,
         "min_p95": 1.751,
-        "min_diesel": 1.802
+        "min_diesel": 1.779
       },
       {
         "name": "Guadix",
         "slug": "guadix",
         "count": 9,
         "min_p95": 1.797,
-        "min_diesel": 1.789
+        "min_diesel": 1.799
       },
       {
         "name": "Huétor Tájar",
         "slug": "huetor-tajar",
         "count": 9,
         "min_p95": 1.749,
-        "min_diesel": 1.749
+        "min_diesel": 1.759
       },
       {
         "name": "Armilla",
         "slug": "armilla",
         "count": 8,
-        "min_p95": 1.809,
-        "min_diesel": 1.789
+        "min_p95": 1.819,
+        "min_diesel": 1.809
       },
       {
         "name": "Atarfe",
@@ -1645,8 +1645,8 @@
         "name": "Santa Fe",
         "slug": "santa-fe",
         "count": 6,
-        "min_p95": 1.859,
-        "min_diesel": 1.859
+        "min_p95": 1.899,
+        "min_diesel": 1.889
       }
     ]
   },
@@ -1655,94 +1655,94 @@
     "slug": "guadalajara",
     "ccaa": "Castilla-La Mancha",
     "total_stations": 93,
-    "avg_gasolina95": 1.966,
-    "avg_diesel": 1.971,
-    "min_gasolina95": 1.779,
-    "min_diesel": 1.799,
+    "avg_gasolina95": 1.956,
+    "avg_diesel": 1.97,
+    "min_gasolina95": 1.769,
+    "min_diesel": 1.789,
     "top_municipalities": [
       {
         "name": "Guadalajara",
         "slug": "guadalajara",
         "count": 24,
-        "min_p95": 1.799,
+        "min_p95": 1.769,
         "min_diesel": 1.799
       },
       {
         "name": "Azuqueca De Henares",
         "slug": "azuqueca-de-henares",
         "count": 8,
-        "min_p95": 1.779,
-        "min_diesel": 1.799
+        "min_p95": 1.809,
+        "min_diesel": 1.809
       },
       {
         "name": "Cabanillas Del Campo",
         "slug": "cabanillas-del-campo",
         "count": 6,
-        "min_p95": 1.829,
-        "min_diesel": 1.829
+        "min_p95": 1.769,
+        "min_diesel": 1.799
       },
       {
         "name": "Alovera",
         "slug": "alovera",
         "count": 4,
-        "min_p95": 1.779,
-        "min_diesel": 1.799
+        "min_p95": 1.829,
+        "min_diesel": 1.839
       },
       {
         "name": "Molina De Aragón",
         "slug": "molina-de-aragon",
         "count": 4,
-        "min_p95": 1.819,
-        "min_diesel": 1.819
+        "min_p95": 1.799,
+        "min_diesel": 1.789
       },
       {
         "name": "Alcolea Del Pinar",
         "slug": "alcolea-del-pinar",
         "count": 2,
-        "min_p95": 2.039,
-        "min_diesel": 2.045
+        "min_p95": 2.035,
+        "min_diesel": 2.035
       },
       {
         "name": "Almadrones",
         "slug": "almadrones",
         "count": 2,
         "min_p95": 2.039,
-        "min_diesel": 2.064
+        "min_diesel": 2.054
       },
       {
         "name": "Casar (El)",
         "slug": "casar-el",
         "count": 2,
         "min_p95": 2.049,
-        "min_diesel": 2.064
+        "min_diesel": 2.044
       },
       {
         "name": "Saúca",
         "slug": "sauca",
         "count": 2,
-        "min_p95": 1.965,
-        "min_diesel": 1.895
+        "min_p95": 2.035,
+        "min_diesel": 2.035
       },
       {
         "name": "Sigüenza",
         "slug": "siguenza",
         "count": 2,
-        "min_p95": 2.025,
-        "min_diesel": 2.029
+        "min_p95": 2.035,
+        "min_diesel": 2.045
       },
       {
         "name": "Torija",
         "slug": "torija",
         "count": 2,
         "min_p95": 2.039,
-        "min_diesel": 2.049
+        "min_diesel": 2.044
       },
       {
         "name": "Torrejón Del Rey",
         "slug": "torrejon-del-rey",
         "count": 2,
-        "min_p95": 1.919,
-        "min_diesel": 1.889
+        "min_p95": 1.899,
+        "min_diesel": 1.879
       }
     ]
   },
@@ -1751,8 +1751,8 @@
     "slug": "guipuzcoa",
     "ccaa": "País Vasco",
     "total_stations": 147,
-    "avg_gasolina95": 1.969,
-    "avg_diesel": 1.971,
+    "avg_gasolina95": 1.966,
+    "avg_diesel": 1.97,
     "min_gasolina95": 1.699,
     "min_diesel": 1.699,
     "top_municipalities": [
@@ -1760,8 +1760,8 @@
         "name": "Irun",
         "slug": "irun",
         "count": 22,
-        "min_p95": 1.889,
-        "min_diesel": 1.869
+        "min_p95": 1.859,
+        "min_diesel": 1.809
       },
       {
         "name": "Donostia-San Sebastián",
@@ -1774,15 +1774,15 @@
         "name": "Oiartzun",
         "slug": "oiartzun",
         "count": 9,
-        "min_p95": 1.869,
-        "min_diesel": 1.819
+        "min_p95": 1.859,
+        "min_diesel": 1.809
       },
       {
         "name": "Arrasate/Mondragón",
         "slug": "arrasatemondragon",
         "count": 6,
-        "min_p95": 1.799,
-        "min_diesel": 1.779
+        "min_p95": 1.819,
+        "min_diesel": 1.799
       },
       {
         "name": "Bergara",
@@ -1796,14 +1796,14 @@
         "slug": "usurbil",
         "count": 6,
         "min_p95": 1.877,
-        "min_diesel": 1.827
+        "min_diesel": 1.837
       },
       {
         "name": "Azpeitia",
         "slug": "azpeitia",
         "count": 5,
-        "min_p95": 1.819,
-        "min_diesel": 1.809
+        "min_p95": 1.839,
+        "min_diesel": 1.829
       },
       {
         "name": "Hernani",
@@ -1816,29 +1816,29 @@
         "name": "Beasain",
         "slug": "beasain",
         "count": 4,
-        "min_p95": 1.944,
-        "min_diesel": 1.964
+        "min_p95": 1.939,
+        "min_diesel": 1.969
       },
       {
         "name": "Deba",
         "slug": "deba",
         "count": 4,
-        "min_p95": 1.979,
-        "min_diesel": 1.959
+        "min_p95": 2.009,
+        "min_diesel": 1.979
       },
       {
         "name": "Eibar",
         "slug": "eibar",
         "count": 4,
-        "min_p95": 1.819,
-        "min_diesel": 1.799
+        "min_p95": 1.839,
+        "min_diesel": 1.819
       },
       {
         "name": "Olaberria",
         "slug": "olaberria",
         "count": 4,
         "min_p95": 1.979,
-        "min_diesel": 1.949
+        "min_diesel": 1.999
       }
     ]
   },
@@ -1847,45 +1847,45 @@
     "slug": "huelva",
     "ccaa": "Andalucía",
     "total_stations": 143,
-    "avg_gasolina95": 1.959,
-    "avg_diesel": 1.972,
-    "min_gasolina95": 1.47,
-    "min_diesel": 1.783,
+    "avg_gasolina95": 1.966,
+    "avg_diesel": 1.97,
+    "min_gasolina95": 1.764,
+    "min_diesel": 1.747,
     "top_municipalities": [
       {
         "name": "Huelva",
         "slug": "huelva",
         "count": 19,
-        "min_p95": 1.819,
-        "min_diesel": 1.799
+        "min_p95": 1.839,
+        "min_diesel": 1.819
       },
       {
         "name": "Lepe",
         "slug": "lepe",
         "count": 11,
         "min_p95": 1.785,
-        "min_diesel": 1.799
+        "min_diesel": 1.769
       },
       {
         "name": "Cartaya",
         "slug": "cartaya",
         "count": 10,
-        "min_p95": 1.809,
-        "min_diesel": 1.799
+        "min_p95": 1.827,
+        "min_diesel": 1.819
       },
       {
         "name": "Ayamonte",
         "slug": "ayamonte",
         "count": 7,
-        "min_p95": 1.899,
-        "min_diesel": 1.969
+        "min_p95": 1.909,
+        "min_diesel": 1.959
       },
       {
         "name": "Palos De La Frontera",
         "slug": "palos-de-la-frontera",
         "count": 7,
-        "min_p95": 1.799,
-        "min_diesel": 1.799
+        "min_p95": 1.819,
+        "min_diesel": 1.819
       },
       {
         "name": "Almonte",
@@ -1905,8 +1905,8 @@
         "name": "Bollullos Par Del Condado",
         "slug": "bollullos-par-del-condado",
         "count": 4,
-        "min_p95": 1.839,
-        "min_diesel": 1.798
+        "min_p95": 1.859,
+        "min_diesel": 1.818
       },
       {
         "name": "Chucena",
@@ -1919,14 +1919,14 @@
         "name": "Moguer",
         "slug": "moguer",
         "count": 4,
-        "min_p95": 1.47,
-        "min_diesel": 1.827
+        "min_p95": 1.895,
+        "min_diesel": 1.879
       },
       {
         "name": "Aljaraque",
         "slug": "aljaraque",
         "count": 3,
-        "min_p95": 1.927,
+        "min_p95": 1.899,
         "min_diesel": 1.897
       },
       {
@@ -1942,25 +1942,25 @@
     "name": "Huesca",
     "slug": "huesca",
     "ccaa": "Aragón",
-    "total_stations": 122,
-    "avg_gasolina95": 1.935,
-    "avg_diesel": 1.935,
-    "min_gasolina95": 1.673,
-    "min_diesel": 1.653,
+    "total_stations": 123,
+    "avg_gasolina95": 1.936,
+    "avg_diesel": 1.936,
+    "min_gasolina95": 1.72,
+    "min_diesel": 1.71,
     "top_municipalities": [
       {
         "name": "Huesca",
         "slug": "huesca",
         "count": 16,
-        "min_p95": 1.717,
-        "min_diesel": 1.739
+        "min_p95": 1.754,
+        "min_diesel": 1.753
       },
       {
         "name": "Fraga",
         "slug": "fraga",
         "count": 11,
-        "min_p95": 1.713,
-        "min_diesel": 1.737
+        "min_p95": 1.75,
+        "min_diesel": 1.75
       },
       {
         "name": "Barbastro",
@@ -1973,15 +1973,15 @@
         "name": "Binéfar",
         "slug": "binefar",
         "count": 4,
-        "min_p95": 1.713,
-        "min_diesel": 1.738
+        "min_p95": 1.75,
+        "min_diesel": 1.75
       },
       {
         "name": "Monzón",
         "slug": "monzon",
         "count": 4,
-        "min_p95": 1.714,
-        "min_diesel": 1.739
+        "min_p95": 1.751,
+        "min_diesel": 1.751
       },
       {
         "name": "Sabiñánigo",
@@ -2001,29 +2001,29 @@
         "name": "Grañén",
         "slug": "granen",
         "count": 3,
-        "min_p95": 1.959,
-        "min_diesel": 1.653
+        "min_p95": 1.969,
+        "min_diesel": 1.767
       },
       {
         "name": "Jaca",
         "slug": "jaca",
         "count": 3,
         "min_p95": 1.909,
-        "min_diesel": 1.954
+        "min_diesel": 1.939
       },
       {
         "name": "Almudévar",
         "slug": "almudevar",
         "count": 2,
         "min_p95": 1.76,
-        "min_diesel": 1.75
+        "min_diesel": 1.77
       },
       {
         "name": "Benabarre",
         "slug": "benabarre",
         "count": 2,
-        "min_p95": 1.929,
-        "min_diesel": 1.899
+        "min_p95": 1.879,
+        "min_diesel": 1.879
       },
       {
         "name": "Binaced",
@@ -2038,18 +2038,18 @@
     "name": "Illes Balears",
     "slug": "baleares",
     "ccaa": "Illes Balears",
-    "total_stations": 223,
-    "avg_gasolina95": 2.041,
-    "avg_diesel": 2.044,
-    "min_gasolina95": 1.839,
-    "min_diesel": 1.825,
+    "total_stations": 224,
+    "avg_gasolina95": 2.037,
+    "avg_diesel": 2.041,
+    "min_gasolina95": 1.855,
+    "min_diesel": 1.685,
     "top_municipalities": [
       {
         "name": "Palma De Mallorca",
         "slug": "palma-de-mallorca",
         "count": 59,
         "min_p95": 1.929,
-        "min_diesel": 1.889
+        "min_diesel": 1.685
       },
       {
         "name": "Calvià",
@@ -2062,8 +2062,8 @@
         "name": "Manacor",
         "slug": "manacor",
         "count": 11,
-        "min_p95": 1.939,
-        "min_diesel": 1.939
+        "min_p95": 1.949,
+        "min_diesel": 1.959
       },
       {
         "name": "Mahón",
@@ -2076,22 +2076,22 @@
         "name": "Eivissa",
         "slug": "eivissa",
         "count": 8,
-        "min_p95": 1.939,
-        "min_diesel": 1.919
+        "min_p95": 1.949,
+        "min_diesel": 1.939
       },
       {
         "name": "Inca",
         "slug": "inca",
         "count": 8,
-        "min_p95": 1.849,
-        "min_diesel": 1.835
+        "min_p95": 1.865,
+        "min_diesel": 1.819
       },
       {
         "name": "Sant Antoni De Portmany",
         "slug": "sant-antoni-de-portmany",
         "count": 7,
-        "min_p95": 1.889,
-        "min_diesel": 1.869
+        "min_p95": 1.899,
+        "min_diesel": 1.889
       },
       {
         "name": "Felanitx",
@@ -2104,28 +2104,28 @@
         "name": "Llucmajor",
         "slug": "llucmajor",
         "count": 6,
-        "min_p95": 2.055,
+        "min_p95": 2.059,
         "min_diesel": 2.049
       },
       {
         "name": "Ciutadella De Menorca",
         "slug": "ciutadella-de-menorca",
         "count": 5,
-        "min_p95": 2.059,
-        "min_diesel": 2.049
+        "min_p95": 2.049,
+        "min_diesel": 2.039
       },
       {
         "name": "Marratxí",
         "slug": "marratxi",
         "count": 5,
         "min_p95": 1.967,
-        "min_diesel": 1.937
+        "min_diesel": 1.967
       },
       {
         "name": "Santa Eulalia Del Río",
         "slug": "santa-eulalia-del-rio",
         "count": 5,
-        "min_p95": 2.049,
+        "min_p95": 2.069,
         "min_diesel": 1.929
       }
     ]
@@ -2134,9 +2134,9 @@
     "name": "Jaén",
     "slug": "jaen",
     "ccaa": "Andalucía",
-    "total_stations": 214,
-    "avg_gasolina95": 1.932,
-    "avg_diesel": 1.963,
+    "total_stations": 213,
+    "avg_gasolina95": 1.935,
+    "avg_diesel": 1.969,
     "min_gasolina95": 1.709,
     "min_diesel": 1.759,
     "top_municipalities": [
@@ -2144,8 +2144,8 @@
         "name": "Jaén",
         "slug": "jaen",
         "count": 22,
-        "min_p95": 1.809,
-        "min_diesel": 1.829
+        "min_p95": 1.839,
+        "min_diesel": 1.859
       },
       {
         "name": "Andújar",
@@ -2165,22 +2165,22 @@
         "name": "Guarromán",
         "slug": "guarroman",
         "count": 11,
-        "min_p95": 1.819,
-        "min_diesel": 1.799
+        "min_p95": 1.849,
+        "min_diesel": 1.819
       },
       {
         "name": "Úbeda",
         "slug": "ubeda",
         "count": 11,
-        "min_p95": 1.779,
+        "min_p95": 1.799,
         "min_diesel": 1.825
       },
       {
         "name": "Alcalá La Real",
         "slug": "alcala-la-real",
         "count": 8,
-        "min_p95": 1.838,
-        "min_diesel": 1.839
+        "min_p95": 1.859,
+        "min_diesel": 1.859
       },
       {
         "name": "Bailén",
@@ -2193,29 +2193,29 @@
         "name": "Carolina (La)",
         "slug": "carolina-la",
         "count": 6,
-        "min_p95": 1.849,
-        "min_diesel": 1.859
+        "min_p95": 1.889,
+        "min_diesel": 1.899
       },
       {
         "name": "Torre Del Campo",
         "slug": "torre-del-campo",
         "count": 6,
-        "min_p95": 1.809,
-        "min_diesel": 1.825
+        "min_p95": 1.823,
+        "min_diesel": 1.855
       },
       {
         "name": "Baeza",
         "slug": "baeza",
         "count": 5,
-        "min_p95": 1.729,
-        "min_diesel": 1.799
+        "min_p95": 1.749,
+        "min_diesel": 1.81
       },
       {
         "name": "Martos",
         "slug": "martos",
         "count": 5,
-        "min_p95": 1.849,
-        "min_diesel": 1.799
+        "min_p95": 1.819,
+        "min_diesel": 1.809
       },
       {
         "name": "Alcaudete",
@@ -2231,17 +2231,17 @@
     "slug": "la-rioja",
     "ccaa": "La Rioja",
     "total_stations": 83,
-    "avg_gasolina95": 1.937,
-    "avg_diesel": 1.938,
-    "min_gasolina95": 1.713,
-    "min_diesel": 1.738,
+    "avg_gasolina95": 1.936,
+    "avg_diesel": 1.934,
+    "min_gasolina95": 1.779,
+    "min_diesel": 1.759,
     "top_municipalities": [
       {
         "name": "Logroño",
         "slug": "logrono",
         "count": 22,
-        "min_p95": 1.759,
-        "min_diesel": 1.759
+        "min_p95": 1.779,
+        "min_diesel": 1.778
       },
       {
         "name": "Calahorra",
@@ -2261,15 +2261,15 @@
         "name": "Alfaro",
         "slug": "alfaro",
         "count": 4,
-        "min_p95": 1.837,
-        "min_diesel": 1.8
+        "min_p95": 1.809,
+        "min_diesel": 1.763
       },
       {
         "name": "Haro",
         "slug": "haro",
         "count": 4,
         "min_p95": 1.969,
-        "min_diesel": 1.949
+        "min_diesel": 1.969
       },
       {
         "name": "Cervera Del Río Alhama",
@@ -2296,7 +2296,7 @@
         "name": "Autol",
         "slug": "autol",
         "count": 2,
-        "min_p95": 1.959,
+        "min_p95": 1.969,
         "min_diesel": 1.829
       },
       {
@@ -2311,14 +2311,14 @@
         "slug": "pradejon",
         "count": 2,
         "min_p95": 1.92,
-        "min_diesel": 1.9
+        "min_diesel": 1.86
       },
       {
         "name": "Rincón De Soto",
         "slug": "rincon-de-soto",
         "count": 2,
-        "min_p95": 1.713,
-        "min_diesel": 1.738
+        "min_p95": 1.799,
+        "min_diesel": 1.759
       }
     ]
   },
@@ -2327,38 +2327,38 @@
     "slug": "las-palmas",
     "ccaa": "Canarias",
     "total_stations": 253,
-    "avg_gasolina95": 1.499,
-    "avg_diesel": 1.639,
-    "min_gasolina95": 1.359,
-    "min_diesel": 1.467,
+    "avg_gasolina95": 1.507,
+    "avg_diesel": 1.655,
+    "min_gasolina95": 1.369,
+    "min_diesel": 1.527,
     "top_municipalities": [
       {
         "name": "Palmas De Gran Canaria (Las)",
         "slug": "palmas-de-gran-canaria-las",
         "count": 55,
-        "min_p95": 1.382,
-        "min_diesel": 1.549
+        "min_p95": 1.369,
+        "min_diesel": 1.529
       },
       {
         "name": "Telde",
         "slug": "telde",
         "count": 31,
         "min_p95": 1.399,
-        "min_diesel": 1.559
+        "min_diesel": 1.539
       },
       {
         "name": "Arrecife",
         "slug": "arrecife",
         "count": 21,
-        "min_p95": 1.417,
-        "min_diesel": 1.467
+        "min_p95": 1.477,
+        "min_diesel": 1.527
       },
       {
         "name": "Agüimes",
         "slug": "aguimes",
         "count": 20,
         "min_p95": 1.399,
-        "min_diesel": 1.529
+        "min_diesel": 1.559
       },
       {
         "name": "Puerto Del Rosario",
@@ -2371,43 +2371,43 @@
         "name": "Ingenio",
         "slug": "ingenio",
         "count": 11,
-        "min_p95": 1.359,
-        "min_diesel": 1.509
+        "min_p95": 1.375,
+        "min_diesel": 1.529
       },
       {
         "name": "San Bartolomé De Tirajana",
         "slug": "san-bartolome-de-tirajana",
         "count": 11,
-        "min_p95": 1.439,
-        "min_diesel": 1.559
+        "min_p95": 1.449,
+        "min_diesel": 1.569
       },
       {
         "name": "Arucas",
         "slug": "arucas",
         "count": 10,
         "min_p95": 1.439,
-        "min_diesel": 1.559
+        "min_diesel": 1.605
       },
       {
         "name": "Santa Lucía De Tirajana",
         "slug": "santa-lucia-de-tirajana",
         "count": 10,
-        "min_p95": 1.439,
-        "min_diesel": 1.579
+        "min_p95": 1.459,
+        "min_diesel": 1.619
       },
       {
         "name": "Tías",
         "slug": "tias",
         "count": 8,
         "min_p95": 1.492,
-        "min_diesel": 1.609
+        "min_diesel": 1.633
       },
       {
         "name": "Teguise",
         "slug": "teguise",
         "count": 7,
-        "min_p95": 1.565,
-        "min_diesel": 1.659
+        "min_p95": 1.575,
+        "min_diesel": 1.679
       },
       {
         "name": "Gáldar",
@@ -2423,17 +2423,17 @@
     "slug": "leon",
     "ccaa": "Castilla y León",
     "total_stations": 166,
-    "avg_gasolina95": 1.948,
-    "avg_diesel": 1.969,
-    "min_gasolina95": 1.699,
-    "min_diesel": 1.699,
+    "avg_gasolina95": 1.949,
+    "avg_diesel": 1.968,
+    "min_gasolina95": 1.719,
+    "min_diesel": 1.719,
     "top_municipalities": [
       {
         "name": "León",
         "slug": "leon",
         "count": 23,
-        "min_p95": 1.699,
-        "min_diesel": 1.699
+        "min_p95": 1.719,
+        "min_diesel": 1.719
       },
       {
         "name": "Ponferrada",
@@ -2446,15 +2446,15 @@
         "name": "Villaquilambre",
         "slug": "villaquilambre",
         "count": 9,
-        "min_p95": 1.699,
-        "min_diesel": 1.699
+        "min_p95": 1.719,
+        "min_diesel": 1.719
       },
       {
         "name": "San Andrés Del Rabanedo",
         "slug": "san-andres-del-rabanedo",
         "count": 8,
-        "min_p95": 1.699,
-        "min_diesel": 1.699
+        "min_p95": 1.719,
+        "min_diesel": 1.719
       },
       {
         "name": "Bañeza (La)",
@@ -2488,29 +2488,29 @@
         "name": "Camponaraya",
         "slug": "camponaraya",
         "count": 3,
-        "min_p95": 1.985,
-        "min_diesel": 2.019
+        "min_p95": 1.969,
+        "min_diesel": 2.015
       },
       {
         "name": "Onzonilla",
         "slug": "onzonilla",
         "count": 3,
-        "min_p95": 1.859,
+        "min_p95": 1.879,
         "min_diesel": 1.829
       },
       {
         "name": "Villablino",
         "slug": "villablino",
         "count": 3,
-        "min_p95": 1.899,
-        "min_diesel": 1.899
+        "min_p95": 1.949,
+        "min_diesel": 1.929
       },
       {
         "name": "Villadangos Del Páramo",
         "slug": "villadangos-del-paramo",
         "count": 3,
         "min_p95": 1.989,
-        "min_diesel": 2.054
+        "min_diesel": 2.039
       }
     ]
   },
@@ -2518,46 +2518,46 @@
     "name": "Lleida",
     "slug": "lleida",
     "ccaa": "Catalunya",
-    "total_stations": 182,
-    "avg_gasolina95": 1.874,
-    "avg_diesel": 1.881,
-    "min_gasolina95": 1.579,
-    "min_diesel": 1.596,
+    "total_stations": 184,
+    "avg_gasolina95": 1.884,
+    "avg_diesel": 1.89,
+    "min_gasolina95": 1.726,
+    "min_diesel": 1.727,
     "top_municipalities": [
       {
         "name": "Lleida",
         "slug": "lleida",
-        "count": 25,
-        "min_p95": 1.711,
-        "min_diesel": 1.735
+        "count": 27,
+        "min_p95": 1.747,
+        "min_diesel": 1.747
       },
       {
         "name": "Balaguer",
         "slug": "balaguer",
         "count": 8,
-        "min_p95": 1.699,
-        "min_diesel": 1.737
+        "min_p95": 1.749,
+        "min_diesel": 1.749
       },
       {
         "name": "Tàrrega",
         "slug": "tarrega",
         "count": 6,
-        "min_p95": 1.709,
-        "min_diesel": 1.733
+        "min_p95": 1.745,
+        "min_diesel": 1.745
       },
       {
         "name": "Borges Blanques (Les)",
         "slug": "borges-blanques-les",
         "count": 5,
-        "min_p95": 1.711,
-        "min_diesel": 1.735
+        "min_p95": 1.748,
+        "min_diesel": 1.748
       },
       {
         "name": "Alcarràs",
         "slug": "alcarras",
         "count": 4,
-        "min_p95": 1.712,
-        "min_diesel": 1.736
+        "min_p95": 1.749,
+        "min_diesel": 1.749
       },
       {
         "name": "Bellver De Cerdanya",
@@ -2570,29 +2570,29 @@
         "name": "Cervera",
         "slug": "cervera",
         "count": 4,
-        "min_p95": 1.711,
-        "min_diesel": 1.736
+        "min_p95": 1.748,
+        "min_diesel": 1.748
       },
       {
         "name": "Mollerussa",
         "slug": "mollerussa",
         "count": 4,
-        "min_p95": 1.709,
-        "min_diesel": 1.735
+        "min_p95": 1.747,
+        "min_diesel": 1.747
       },
       {
         "name": "Tremp",
         "slug": "tremp",
         "count": 4,
-        "min_p95": 1.715,
-        "min_diesel": 1.74
+        "min_p95": 1.752,
+        "min_diesel": 1.752
       },
       {
         "name": "Alfés",
         "slug": "alfes",
         "count": 3,
-        "min_p95": 1.965,
-        "min_diesel": 1.989
+        "min_p95": 1.949,
+        "min_diesel": 1.979
       },
       {
         "name": "Bellpuig",
@@ -2605,8 +2605,8 @@
         "name": "Golmés",
         "slug": "golmes",
         "count": 3,
-        "min_p95": 1.712,
-        "min_diesel": 1.737
+        "min_p95": 1.749,
+        "min_diesel": 1.749
       }
     ]
   },
@@ -2615,17 +2615,17 @@
     "slug": "lugo",
     "ccaa": "Galicia",
     "total_stations": 130,
-    "avg_gasolina95": 1.978,
-    "avg_diesel": 1.978,
-    "min_gasolina95": 1.789,
-    "min_diesel": 1.754,
+    "avg_gasolina95": 1.98,
+    "avg_diesel": 1.976,
+    "min_gasolina95": 1.799,
+    "min_diesel": 1.749,
     "top_municipalities": [
       {
         "name": "Lugo",
         "slug": "lugo",
         "count": 28,
-        "min_p95": 1.789,
-        "min_diesel": 1.769
+        "min_p95": 1.859,
+        "min_diesel": 1.839
       },
       {
         "name": "Monforte De Lemos",
@@ -2638,22 +2638,22 @@
         "name": "Sarria",
         "slug": "sarria",
         "count": 7,
-        "min_p95": 1.859,
-        "min_diesel": 1.839
+        "min_p95": 1.889,
+        "min_diesel": 1.859
       },
       {
         "name": "Ribadeo",
         "slug": "ribadeo",
         "count": 6,
-        "min_p95": 1.889,
-        "min_diesel": 1.754
+        "min_p95": 1.899,
+        "min_diesel": 1.799
       },
       {
         "name": "Vilalba",
         "slug": "vilalba",
         "count": 6,
         "min_p95": 1.859,
-        "min_diesel": 1.839
+        "min_diesel": 1.849
       },
       {
         "name": "Corgo (O)",
@@ -2666,7 +2666,7 @@
         "name": "Viveiro",
         "slug": "viveiro",
         "count": 5,
-        "min_p95": 1.979,
+        "min_p95": 1.969,
         "min_diesel": 1.959
       },
       {
@@ -2674,21 +2674,21 @@
         "slug": "guitiriz",
         "count": 4,
         "min_p95": 1.799,
-        "min_diesel": 1.779
+        "min_diesel": 1.749
       },
       {
         "name": "Burela",
         "slug": "burela",
         "count": 3,
-        "min_p95": 1.889,
-        "min_diesel": 1.849
+        "min_p95": 1.899,
+        "min_diesel": 1.879
       },
       {
         "name": "Castro De Rei",
         "slug": "castro-de-rei",
         "count": 3,
-        "min_p95": 1.849,
-        "min_diesel": 1.829
+        "min_p95": 1.857,
+        "min_diesel": 1.847
       },
       {
         "name": "Chantada",
@@ -2702,7 +2702,7 @@
         "slug": "cospeito",
         "count": 3,
         "min_p95": 1.859,
-        "min_diesel": 1.839
+        "min_diesel": 1.849
       }
     ]
   },
@@ -2711,17 +2711,17 @@
     "slug": "madrid",
     "ccaa": "Comunidad de Madrid",
     "total_stations": 893,
-    "avg_gasolina95": 1.949,
-    "avg_diesel": 1.956,
-    "min_gasolina95": 1.739,
-    "min_diesel": 1.769,
+    "avg_gasolina95": 1.948,
+    "avg_diesel": 1.954,
+    "min_gasolina95": 1.749,
+    "min_diesel": 1.759,
     "top_municipalities": [
       {
         "name": "Madrid",
         "slug": "madrid",
         "count": 245,
-        "min_p95": 1.789,
-        "min_diesel": 1.798
+        "min_p95": 1.799,
+        "min_diesel": 1.797
       },
       {
         "name": "Alcalá De Henares",
@@ -2734,71 +2734,71 @@
         "name": "Alcorcón",
         "slug": "alcorcon",
         "count": 32,
-        "min_p95": 1.789,
-        "min_diesel": 1.789
+        "min_p95": 1.759,
+        "min_diesel": 1.759
       },
       {
         "name": "Leganés",
         "slug": "leganes",
         "count": 32,
         "min_p95": 1.809,
-        "min_diesel": 1.789
+        "min_diesel": 1.799
       },
       {
         "name": "Torrejón De Ardoz",
         "slug": "torrejon-de-ardoz",
         "count": 29,
-        "min_p95": 1.809,
-        "min_diesel": 1.819
+        "min_p95": 1.799,
+        "min_diesel": 1.799
       },
       {
         "name": "Getafe",
         "slug": "getafe",
         "count": 28,
-        "min_p95": 1.799,
-        "min_diesel": 1.809
+        "min_p95": 1.809,
+        "min_diesel": 1.819
       },
       {
         "name": "Fuenlabrada",
         "slug": "fuenlabrada",
         "count": 26,
-        "min_p95": 1.789,
-        "min_diesel": 1.791
+        "min_p95": 1.769,
+        "min_diesel": 1.759
       },
       {
         "name": "Móstoles",
         "slug": "mostoles",
         "count": 25,
-        "min_p95": 1.739,
-        "min_diesel": 1.769
+        "min_p95": 1.769,
+        "min_diesel": 1.779
       },
       {
         "name": "Alcobendas",
         "slug": "alcobendas",
         "count": 23,
-        "min_p95": 1.829,
-        "min_diesel": 1.817
+        "min_p95": 1.849,
+        "min_diesel": 1.827
       },
       {
         "name": "San Sebastián De Los Reyes",
         "slug": "san-sebastian-de-los-reyes",
         "count": 18,
-        "min_p95": 1.839,
-        "min_diesel": 1.827
+        "min_p95": 1.859,
+        "min_diesel": 1.847
       },
       {
         "name": "Valdemoro",
         "slug": "valdemoro",
         "count": 18,
         "min_p95": 1.769,
-        "min_diesel": 1.779
+        "min_diesel": 1.797
       },
       {
         "name": "Pinto",
         "slug": "pinto",
         "count": 17,
-        "min_p95": 1.779,
-        "min_diesel": 1.789
+        "min_p95": 1.809,
+        "min_diesel": 1.809
       }
     ]
   },
@@ -2807,17 +2807,17 @@
     "slug": "melilla",
     "ccaa": "Melilla",
     "total_stations": 12,
-    "avg_gasolina95": 1.531,
-    "avg_diesel": 1.514,
-    "min_gasolina95": 1.525,
-    "min_diesel": 1.505,
+    "avg_gasolina95": 1.556,
+    "avg_diesel": 1.538,
+    "min_gasolina95": 1.544,
+    "min_diesel": 1.525,
     "top_municipalities": [
       {
         "name": "Melilla",
         "slug": "melilla",
         "count": 12,
-        "min_p95": 1.525,
-        "min_diesel": 1.505
+        "min_p95": 1.544,
+        "min_diesel": 1.525
       }
     ]
   },
@@ -2826,7 +2826,7 @@
     "slug": "murcia",
     "ccaa": "Región de Murcia",
     "total_stations": 466,
-    "avg_gasolina95": 1.923,
+    "avg_gasolina95": 1.921,
     "avg_diesel": 1.918,
     "min_gasolina95": 1.698,
     "min_diesel": 1.678,
@@ -2836,14 +2836,14 @@
         "slug": "murcia",
         "count": 111,
         "min_p95": 1.769,
-        "min_diesel": 1.779
+        "min_diesel": 1.739
       },
       {
         "name": "Cartagena",
         "slug": "cartagena",
         "count": 60,
-        "min_p95": 1.759,
-        "min_diesel": 1.729
+        "min_p95": 1.717,
+        "min_diesel": 1.717
       },
       {
         "name": "Lorca",
@@ -2856,22 +2856,22 @@
         "name": "Molina De Segura",
         "slug": "molina-de-segura",
         "count": 25,
-        "min_p95": 1.748,
-        "min_diesel": 1.748
+        "min_p95": 1.768,
+        "min_diesel": 1.768
       },
       {
         "name": "Torre-Pacheco",
         "slug": "torre-pacheco",
         "count": 18,
-        "min_p95": 1.839,
-        "min_diesel": 1.799
+        "min_p95": 1.859,
+        "min_diesel": 1.819
       },
       {
         "name": "Mazarrón",
         "slug": "mazarron",
         "count": 14,
-        "min_p95": 1.819,
-        "min_diesel": 1.829
+        "min_p95": 1.839,
+        "min_diesel": 1.849
       },
       {
         "name": "San Javier",
@@ -2885,7 +2885,7 @@
         "slug": "alcantarilla",
         "count": 13,
         "min_p95": 1.769,
-        "min_diesel": 1.749
+        "min_diesel": 1.759
       },
       {
         "name": "Caravaca De La Cruz",
@@ -2898,22 +2898,22 @@
         "name": "Totana",
         "slug": "totana",
         "count": 11,
-        "min_p95": 1.7,
-        "min_diesel": 1.75
+        "min_p95": 1.73,
+        "min_diesel": 1.78
       },
       {
         "name": "Águilas",
         "slug": "aguilas",
         "count": 10,
-        "min_p95": 1.769,
-        "min_diesel": 1.799
+        "min_p95": 1.809,
+        "min_diesel": 1.819
       },
       {
         "name": "Alhama De Murcia",
         "slug": "alhama-de-murcia",
         "count": 9,
         "min_p95": 1.8,
-        "min_diesel": 1.83
+        "min_diesel": 1.814
       }
     ]
   },
@@ -2921,46 +2921,46 @@
     "name": "Málaga",
     "slug": "malaga",
     "ccaa": "Andalucía",
-    "total_stations": 307,
-    "avg_gasolina95": 1.964,
-    "avg_diesel": 1.972,
-    "min_gasolina95": 1.739,
-    "min_diesel": 1.699,
+    "total_stations": 310,
+    "avg_gasolina95": 1.968,
+    "avg_diesel": 1.974,
+    "min_gasolina95": 1.778,
+    "min_diesel": 1.739,
     "top_municipalities": [
       {
         "name": "Málaga",
         "slug": "malaga",
-        "count": 56,
+        "count": 58,
         "min_p95": 1.849,
-        "min_diesel": 1.847
+        "min_diesel": 1.827
       },
       {
         "name": "Marbella",
         "slug": "marbella",
         "count": 29,
-        "min_p95": 1.819,
-        "min_diesel": 1.799
+        "min_p95": 1.839,
+        "min_diesel": 1.819
       },
       {
         "name": "Antequera",
         "slug": "antequera",
-        "count": 21,
-        "min_p95": 1.879,
+        "count": 22,
+        "min_p95": 1.885,
         "min_diesel": 1.889
       },
       {
         "name": "Estepona",
         "slug": "estepona",
         "count": 19,
-        "min_p95": 1.809,
-        "min_diesel": 1.809
+        "min_p95": 1.829,
+        "min_diesel": 1.829
       },
       {
         "name": "Vélez-Málaga",
         "slug": "velez-malaga",
         "count": 17,
-        "min_p95": 1.839,
-        "min_diesel": 1.819
+        "min_p95": 1.829,
+        "min_diesel": 1.809
       },
       {
         "name": "Mijas",
@@ -2980,22 +2980,22 @@
         "name": "Torremolinos",
         "slug": "torremolinos",
         "count": 13,
-        "min_p95": 1.769,
-        "min_diesel": 1.799
+        "min_p95": 1.789,
+        "min_diesel": 1.819
       },
       {
         "name": "Fuengirola",
         "slug": "fuengirola",
         "count": 12,
-        "min_p95": 1.879,
+        "min_p95": 1.884,
         "min_diesel": 1.877
       },
       {
         "name": "Ronda",
         "slug": "ronda",
         "count": 12,
-        "min_p95": 1.789,
-        "min_diesel": 1.699
+        "min_p95": 1.819,
+        "min_diesel": 1.739
       },
       {
         "name": "Cártama",
@@ -3008,8 +3008,8 @@
         "name": "Alhaurín De La Torre",
         "slug": "alhaurin-de-la-torre",
         "count": 7,
-        "min_p95": 1.889,
-        "min_diesel": 1.889
+        "min_p95": 1.829,
+        "min_diesel": 1.829
       }
     ]
   },
@@ -3018,17 +3018,17 @@
     "slug": "navarra",
     "ccaa": "Comunidad Foral de Navarra",
     "total_stations": 247,
-    "avg_gasolina95": 1.927,
-    "avg_diesel": 1.907,
+    "avg_gasolina95": 1.92,
+    "avg_diesel": 1.901,
     "min_gasolina95": 1.699,
-    "min_diesel": 1.699,
+    "min_diesel": 1.719,
     "top_municipalities": [
       {
         "name": "Tudela",
         "slug": "tudela",
         "count": 18,
         "min_p95": 1.699,
-        "min_diesel": 1.699
+        "min_diesel": 1.725
       },
       {
         "name": "Pamplona/Iruña",
@@ -3076,15 +3076,15 @@
         "name": "Egüés",
         "slug": "egues",
         "count": 6,
-        "min_p95": 1.849,
-        "min_diesel": 1.839
+        "min_p95": 1.839,
+        "min_diesel": 1.819
       },
       {
         "name": "Berrioplano",
         "slug": "berrioplano",
         "count": 5,
         "min_p95": 1.839,
-        "min_diesel": 1.789
+        "min_diesel": 1.799
       },
       {
         "name": "Castejón",
@@ -3098,14 +3098,14 @@
         "slug": "urdazubiurdax",
         "count": 5,
         "min_p95": 1.999,
-        "min_diesel": 1.939
+        "min_diesel": 1.929
       },
       {
         "name": "Valtierra",
         "slug": "valtierra",
         "count": 5,
         "min_p95": 1.839,
-        "min_diesel": 1.799
+        "min_diesel": 1.829
       }
     ]
   },
@@ -3113,25 +3113,25 @@
     "name": "Ourense",
     "slug": "ourense",
     "ccaa": "Galicia",
-    "total_stations": 87,
-    "avg_gasolina95": 1.972,
-    "avg_diesel": 1.981,
-    "min_gasolina95": 1.819,
-    "min_diesel": 1.857,
+    "total_stations": 89,
+    "avg_gasolina95": 1.974,
+    "avg_diesel": 1.974,
+    "min_gasolina95": 1.829,
+    "min_diesel": 1.785,
     "top_municipalities": [
       {
         "name": "Ourense",
         "slug": "ourense",
         "count": 13,
-        "min_p95": 1.819,
-        "min_diesel": 1.869
+        "min_p95": 1.849,
+        "min_diesel": 1.835
       },
       {
         "name": "San Cibrao Das Viñas",
         "slug": "san-cibrao-das-vinas",
         "count": 7,
-        "min_p95": 1.819,
-        "min_diesel": 1.857
+        "min_p95": 1.829,
+        "min_diesel": 1.785
       },
       {
         "name": "Verín",
@@ -3144,7 +3144,7 @@
         "name": "Xinzo De Limia",
         "slug": "xinzo-de-limia",
         "count": 5,
-        "min_p95": 1.879,
+        "min_p95": 1.889,
         "min_diesel": 1.929
       },
       {
@@ -3165,29 +3165,36 @@
         "name": "Gudiña (A)",
         "slug": "gudina-a",
         "count": 3,
-        "min_p95": 1.999,
-        "min_diesel": 1.948
+        "min_p95": 1.969,
+        "min_diesel": 1.898
       },
       {
         "name": "Pereiro De Aguiar (O)",
         "slug": "pereiro-de-aguiar-o",
         "count": 3,
-        "min_p95": 1.819,
-        "min_diesel": 1.857
+        "min_p95": 1.829,
+        "min_diesel": 1.785
       },
       {
         "name": "Barbadás",
         "slug": "barbadas",
         "count": 2,
-        "min_p95": 1.819,
-        "min_diesel": 1.869
+        "min_p95": 1.849,
+        "min_diesel": 1.849
+      },
+      {
+        "name": "Barco De Valdeorras (O)",
+        "slug": "barco-de-valdeorras-o",
+        "count": 2,
+        "min_p95": 1.989,
+        "min_diesel": 1.989
       },
       {
         "name": "Cualedro",
         "slug": "cualedro",
         "count": 2,
-        "min_p95": 1.969,
-        "min_diesel": 1.979
+        "min_p95": 1.979,
+        "min_diesel": 1.999
       },
       {
         "name": "Maceda",
@@ -3195,13 +3202,6 @@
         "count": 2,
         "min_p95": 1.999,
         "min_diesel": 1.999
-      },
-      {
-        "name": "Maside",
-        "slug": "maside",
-        "count": 2,
-        "min_p95": 1.959,
-        "min_diesel": 1.959
       }
     ]
   },
@@ -3210,17 +3210,17 @@
     "slug": "palencia",
     "ccaa": "Castilla y León",
     "total_stations": 68,
-    "avg_gasolina95": 2.002,
-    "avg_diesel": 2.006,
-    "min_gasolina95": 1.787,
-    "min_diesel": 1.787,
+    "avg_gasolina95": 1.996,
+    "avg_diesel": 1.998,
+    "min_gasolina95": 1.837,
+    "min_diesel": 1.799,
     "top_municipalities": [
       {
         "name": "Palencia",
         "slug": "palencia",
         "count": 17,
         "min_p95": 1.879,
-        "min_diesel": 1.829
+        "min_diesel": 1.799
       },
       {
         "name": "Aguilar De Campoo",
@@ -3233,15 +3233,15 @@
         "name": "Torquemada",
         "slug": "torquemada",
         "count": 4,
-        "min_p95": 2.015,
-        "min_diesel": 2.035
+        "min_p95": 2.009,
+        "min_diesel": 2.025
       },
       {
         "name": "Dueñas",
         "slug": "duenas",
         "count": 3,
-        "min_p95": 2.059,
-        "min_diesel": 2.079
+        "min_p95": 2.055,
+        "min_diesel": 2.049
       },
       {
         "name": "Osorno La Mayor",
@@ -3255,28 +3255,28 @@
         "slug": "villamuriel-de-cerrato",
         "count": 3,
         "min_p95": 1.999,
-        "min_diesel": 2.037
+        "min_diesel": 1.995
       },
       {
         "name": "Alar Del Rey",
         "slug": "alar-del-rey",
         "count": 2,
-        "min_p95": 1.849,
+        "min_p95": 1.879,
         "min_diesel": 1.859
       },
       {
         "name": "Carrión De Los Condes",
         "slug": "carrion-de-los-condes",
         "count": 2,
-        "min_p95": 1.859,
-        "min_diesel": 1.849
+        "min_p95": 1.839,
+        "min_diesel": 1.829
       },
       {
         "name": "Guardo",
         "slug": "guardo",
         "count": 2,
-        "min_p95": 1.895,
-        "min_diesel": 1.909
+        "min_p95": 1.879,
+        "min_diesel": 1.895
       },
       {
         "name": "Paredes De Nava",
@@ -3289,15 +3289,15 @@
         "name": "Saldaña",
         "slug": "saldana",
         "count": 2,
-        "min_p95": 2.039,
-        "min_diesel": 2.069
+        "min_p95": 2.059,
+        "min_diesel": 2.064
       },
       {
         "name": "Villarramiel",
         "slug": "villarramiel",
         "count": 2,
-        "min_p95": 2.009,
-        "min_diesel": 2.009
+        "min_p95": 1.999,
+        "min_diesel": 2.019
       }
     ]
   },
@@ -3306,45 +3306,45 @@
     "slug": "pontevedra",
     "ccaa": "Galicia",
     "total_stations": 227,
-    "avg_gasolina95": 1.961,
-    "avg_diesel": 1.96,
-    "min_gasolina95": 1.759,
-    "min_diesel": 1.789,
+    "avg_gasolina95": 1.96,
+    "avg_diesel": 1.957,
+    "min_gasolina95": 1.789,
+    "min_diesel": 1.768,
     "top_municipalities": [
       {
         "name": "Vigo",
         "slug": "vigo",
         "count": 38,
-        "min_p95": 1.899,
-        "min_diesel": 1.879
+        "min_p95": 1.907,
+        "min_diesel": 1.889
       },
       {
         "name": "Pontevedra",
         "slug": "pontevedra",
         "count": 14,
-        "min_p95": 1.789,
-        "min_diesel": 1.809
+        "min_p95": 1.809,
+        "min_diesel": 1.819
       },
       {
         "name": "Mos",
         "slug": "mos",
         "count": 10,
-        "min_p95": 1.868,
-        "min_diesel": 1.848
+        "min_p95": 1.828,
+        "min_diesel": 1.768
       },
       {
         "name": "Porriño (O)",
         "slug": "porrino-o",
         "count": 10,
-        "min_p95": 1.869,
-        "min_diesel": 1.849
+        "min_p95": 1.829,
+        "min_diesel": 1.769
       },
       {
         "name": "Lalín",
         "slug": "lalin",
         "count": 9,
-        "min_p95": 1.759,
-        "min_diesel": 1.789
+        "min_p95": 1.849,
+        "min_diesel": 1.819
       },
       {
         "name": "Vilagarcía De Arousa",
@@ -3357,8 +3357,8 @@
         "name": "Sanxenxo",
         "slug": "sanxenxo",
         "count": 8,
-        "min_p95": 1.839,
-        "min_diesel": 1.809
+        "min_p95": 1.829,
+        "min_diesel": 1.819
       },
       {
         "name": "Tui",
@@ -3371,7 +3371,7 @@
         "name": "Ponteareas",
         "slug": "ponteareas",
         "count": 6,
-        "min_p95": 1.955,
+        "min_p95": 1.965,
         "min_diesel": 1.969
       },
       {
@@ -3379,21 +3379,21 @@
         "slug": "silleda",
         "count": 6,
         "min_p95": 1.859,
-        "min_diesel": 1.829
+        "min_diesel": 1.817
       },
       {
         "name": "Vilanova De Arousa",
         "slug": "vilanova-de-arousa",
         "count": 6,
-        "min_p95": 1.779,
-        "min_diesel": 1.799
+        "min_p95": 1.799,
+        "min_diesel": 1.819
       },
       {
         "name": "Barro",
         "slug": "barro",
         "count": 5,
-        "min_p95": 1.779,
-        "min_diesel": 1.799
+        "min_p95": 1.799,
+        "min_diesel": 1.819
       }
     ]
   },
@@ -3402,10 +3402,10 @@
     "slug": "salamanca",
     "ccaa": "Castilla y León",
     "total_stations": 112,
-    "avg_gasolina95": 1.96,
-    "avg_diesel": 1.955,
+    "avg_gasolina95": 1.956,
+    "avg_diesel": 1.951,
     "min_gasolina95": 1.786,
-    "min_diesel": 1.78,
+    "min_diesel": 1.774,
     "top_municipalities": [
       {
         "name": "Salamanca",
@@ -3418,8 +3418,8 @@
         "name": "Carbajosa De La Sagrada",
         "slug": "carbajosa-de-la-sagrada",
         "count": 9,
-        "min_p95": 1.848,
-        "min_diesel": 1.808
+        "min_p95": 1.828,
+        "min_diesel": 1.778
       },
       {
         "name": "Santa Marta De Tormes",
@@ -3439,22 +3439,22 @@
         "name": "Ciudad Rodrigo",
         "slug": "ciudad-rodrigo",
         "count": 6,
-        "min_p95": 1.889,
-        "min_diesel": 1.919
+        "min_p95": 1.869,
+        "min_diesel": 1.909
       },
       {
         "name": "Fuentes De Oñoro",
         "slug": "fuentes-de-onoro",
         "count": 4,
-        "min_p95": 1.968,
-        "min_diesel": 1.919
+        "min_p95": 1.978,
+        "min_diesel": 1.929
       },
       {
         "name": "Sancti-Spíritus",
         "slug": "sancti-spiritus",
         "count": 4,
-        "min_p95": 1.939,
-        "min_diesel": 1.929
+        "min_p95": 1.924,
+        "min_diesel": 1.934
       },
       {
         "name": "Arapiles",
@@ -3481,7 +3481,7 @@
         "name": "Martín De Yeltes",
         "slug": "martin-de-yeltes",
         "count": 3,
-        "min_p95": 2.019,
+        "min_p95": null,
         "min_diesel": 1.994
       },
       {
@@ -3489,7 +3489,7 @@
         "slug": "penaranda-de-bracamonte",
         "count": 3,
         "min_p95": 1.786,
-        "min_diesel": 1.78
+        "min_diesel": 1.774
       }
     ]
   },
@@ -3498,72 +3498,72 @@
     "slug": "santa-cruz-de-tenerife",
     "ccaa": "Canarias",
     "total_stations": 243,
-    "avg_gasolina95": 1.561,
-    "avg_diesel": 1.699,
-    "min_gasolina95": 1.388,
-    "min_diesel": 1.5,
+    "avg_gasolina95": 1.568,
+    "avg_diesel": 1.716,
+    "min_gasolina95": 1.289,
+    "min_diesel": 1.519,
     "top_municipalities": [
       {
         "name": "Santa Cruz De Tenerife",
         "slug": "santa-cruz-de-tenerife",
         "count": 33,
-        "min_p95": 1.388,
-        "min_diesel": 1.51
+        "min_p95": 1.385,
+        "min_diesel": 1.559
       },
       {
         "name": "San Cristóbal De La Laguna",
         "slug": "san-cristobal-de-la-laguna",
         "count": 28,
         "min_p95": 1.398,
-        "min_diesel": 1.618
+        "min_diesel": 1.648
       },
       {
         "name": "Arona",
         "slug": "arona",
         "count": 15,
-        "min_p95": 1.519,
-        "min_diesel": 1.639
+        "min_p95": 1.469,
+        "min_diesel": 1.609
       },
       {
         "name": "Adeje",
         "slug": "adeje",
         "count": 14,
-        "min_p95": 1.399,
-        "min_diesel": 1.51
+        "min_p95": 1.459,
+        "min_diesel": 1.585
       },
       {
         "name": "Realejos (Los)",
         "slug": "realejos-los",
         "count": 13,
-        "min_p95": 1.423,
-        "min_diesel": 1.5
+        "min_p95": 1.425,
+        "min_diesel": 1.519
       },
       {
         "name": "Granadilla De Abona",
         "slug": "granadilla-de-abona",
         "count": 11,
-        "min_p95": 1.499,
-        "min_diesel": 1.644
+        "min_p95": 1.524,
+        "min_diesel": 1.669
       },
       {
         "name": "Orotava (La)",
         "slug": "orotava-la",
         "count": 10,
         "min_p95": 1.439,
-        "min_diesel": 1.579
+        "min_diesel": 1.589
       },
       {
         "name": "San Miguel De Abona",
         "slug": "san-miguel-de-abona",
         "count": 10,
-        "min_p95": 1.439,
-        "min_diesel": 1.559
+        "min_p95": 1.469,
+        "min_diesel": 1.589
       },
       {
         "name": "Arafo",
         "slug": "arafo",
         "count": 7,
-        "min_p95": 1.437,
+        "min_p95": 1.289,
         "min_diesel": 1.589
       },
       {
@@ -3584,8 +3584,8 @@
         "name": "Tacoronte",
         "slug": "tacoronte",
         "count": 6,
-        "min_p95": 1.519,
-        "min_diesel": 1.659
+        "min_p95": 1.499,
+        "min_diesel": 1.649
       }
     ]
   },
@@ -3594,38 +3594,38 @@
     "slug": "segovia",
     "ccaa": "Castilla y León",
     "total_stations": 77,
-    "avg_gasolina95": 1.963,
-    "avg_diesel": 1.958,
-    "min_gasolina95": 1.789,
-    "min_diesel": 1.799,
+    "avg_gasolina95": 1.964,
+    "avg_diesel": 1.956,
+    "min_gasolina95": 1.809,
+    "min_diesel": 1.815,
     "top_municipalities": [
       {
         "name": "Segovia",
         "slug": "segovia",
         "count": 13,
-        "min_p95": 1.839,
-        "min_diesel": 1.819
+        "min_p95": 1.895,
+        "min_diesel": 1.869
       },
       {
         "name": "Villacastín",
         "slug": "villacastin",
         "count": 5,
         "min_p95": 1.949,
-        "min_diesel": 2.039
+        "min_diesel": 2.029
       },
       {
         "name": "Cuéllar",
         "slug": "cuellar",
         "count": 4,
-        "min_p95": 1.859,
-        "min_diesel": 1.849
+        "min_p95": 1.839,
+        "min_diesel": 1.829
       },
       {
         "name": "Espinar (El)",
         "slug": "espinar-el",
         "count": 4,
-        "min_p95": 1.859,
-        "min_diesel": 1.849
+        "min_p95": 1.839,
+        "min_diesel": 1.839
       },
       {
         "name": "Cantalejo",
@@ -3638,8 +3638,8 @@
         "name": "Lastrilla (La)",
         "slug": "lastrilla-la",
         "count": 3,
-        "min_p95": 1.789,
-        "min_diesel": 1.799
+        "min_p95": 1.809,
+        "min_diesel": 1.819
       },
       {
         "name": "Navalmanzano",
@@ -3659,8 +3659,8 @@
         "name": "Carbonero El Mayor",
         "slug": "carbonero-el-mayor",
         "count": 2,
-        "min_p95": 1.859,
-        "min_diesel": 1.849
+        "min_p95": 1.839,
+        "min_diesel": 1.829
       },
       {
         "name": "Castillejo De Mesleón",
@@ -3689,18 +3689,18 @@
     "name": "Sevilla",
     "slug": "sevilla",
     "ccaa": "Andalucía",
-    "total_stations": 443,
-    "avg_gasolina95": 1.921,
-    "avg_diesel": 1.933,
-    "min_gasolina95": 1.68,
-    "min_diesel": 1.62,
+    "total_stations": 441,
+    "avg_gasolina95": 1.925,
+    "avg_diesel": 1.937,
+    "min_gasolina95": 1.728,
+    "min_diesel": 1.68,
     "top_municipalities": [
       {
         "name": "Sevilla",
         "slug": "sevilla",
-        "count": 73,
+        "count": 72,
         "min_p95": 1.759,
-        "min_diesel": 1.769
+        "min_diesel": 1.765
       },
       {
         "name": "Alcalá De Guadaíra",
@@ -3714,20 +3714,20 @@
         "slug": "dos-hermanas",
         "count": 26,
         "min_p95": 1.84,
-        "min_diesel": 1.849
+        "min_diesel": 1.85
       },
       {
         "name": "Carmona",
         "slug": "carmona",
         "count": 15,
-        "min_p95": 1.749,
-        "min_diesel": 1.769
+        "min_p95": 1.829,
+        "min_diesel": 1.829
       },
       {
         "name": "Écija",
         "slug": "ecija",
         "count": 15,
-        "min_p95": 1.799,
+        "min_p95": 1.819,
         "min_diesel": 1.819
       },
       {
@@ -3762,8 +3762,8 @@
         "name": "Lebrija",
         "slug": "lebrija",
         "count": 8,
-        "min_p95": 1.839,
-        "min_diesel": 1.799
+        "min_p95": 1.819,
+        "min_diesel": 1.795
       },
       {
         "name": "Mairena Del Alcor",
@@ -3776,8 +3776,8 @@
         "name": "San Juan De Aznalfarache",
         "slug": "san-juan-de-aznalfarache",
         "count": 8,
-        "min_p95": 1.817,
-        "min_diesel": 1.817
+        "min_p95": 1.839,
+        "min_diesel": 1.839
       }
     ]
   },
@@ -3786,30 +3786,30 @@
     "slug": "soria",
     "ccaa": "Castilla y León",
     "total_stations": 43,
-    "avg_gasolina95": 1.941,
-    "avg_diesel": 1.916,
-    "min_gasolina95": 1.769,
-    "min_diesel": 1.739,
+    "avg_gasolina95": 1.934,
+    "avg_diesel": 1.918,
+    "min_gasolina95": 1.76,
+    "min_diesel": 1.752,
     "top_municipalities": [
       {
         "name": "Soria",
         "slug": "soria",
         "count": 12,
-        "min_p95": 1.775,
-        "min_diesel": 1.739
+        "min_p95": 1.76,
+        "min_diesel": 1.752
       },
       {
         "name": "Almazán",
         "slug": "almazan",
         "count": 4,
-        "min_p95": 1.879,
-        "min_diesel": 1.849
+        "min_p95": 1.899,
+        "min_diesel": 1.869
       },
       {
         "name": "Arcos De Jalón",
         "slug": "arcos-de-jalon",
         "count": 4,
-        "min_p95": 2.029,
+        "min_p95": 2.024,
         "min_diesel": 1.859
       },
       {
@@ -3823,22 +3823,22 @@
         "name": "Ágreda",
         "slug": "agreda",
         "count": 2,
-        "min_p95": 1.879,
-        "min_diesel": 1.985
+        "min_p95": 1.839,
+        "min_diesel": 1.989
       },
       {
         "name": "Medinaceli",
         "slug": "medinaceli",
         "count": 2,
-        "min_p95": 2.025,
-        "min_diesel": 1.985
+        "min_p95": 2.015,
+        "min_diesel": 1.989
       },
       {
         "name": "Abejar",
         "slug": "abejar",
         "count": 1,
-        "min_p95": 2.055,
-        "min_diesel": 2.019
+        "min_p95": 2.039,
+        "min_diesel": 2.025
       },
       {
         "name": "Alcubilla De Las Peñas",
@@ -3858,15 +3858,15 @@
         "name": "Berlanga De Duero",
         "slug": "berlanga-de-duero",
         "count": 1,
-        "min_p95": 2.029,
-        "min_diesel": 2.029
+        "min_p95": 1.999,
+        "min_diesel": 1.999
       },
       {
         "name": "Cabrejas Del Pinar",
         "slug": "cabrejas-del-pinar",
         "count": 1,
-        "min_p95": 1.819,
-        "min_diesel": 1.789
+        "min_p95": 1.859,
+        "min_diesel": 1.859
       },
       {
         "name": "Calatañazor",
@@ -3882,52 +3882,52 @@
     "slug": "tarragona",
     "ccaa": "Catalunya",
     "total_stations": 235,
-    "avg_gasolina95": 1.927,
-    "avg_diesel": 1.913,
+    "avg_gasolina95": 1.928,
+    "avg_diesel": 1.914,
     "min_gasolina95": 1.465,
-    "min_diesel": 1.6,
+    "min_diesel": 1.719,
     "top_municipalities": [
       {
         "name": "Tarragona",
         "slug": "tarragona",
         "count": 30,
         "min_p95": 1.465,
-        "min_diesel": 1.699
+        "min_diesel": 1.719
       },
       {
         "name": "Reus",
         "slug": "reus",
         "count": 21,
-        "min_p95": 1.707,
-        "min_diesel": 1.732
+        "min_p95": 1.744,
+        "min_diesel": 1.744
       },
       {
         "name": "Amposta",
         "slug": "amposta",
         "count": 10,
-        "min_p95": 1.711,
-        "min_diesel": 1.6
+        "min_p95": 1.719,
+        "min_diesel": 1.727
       },
       {
         "name": "Valls",
         "slug": "valls",
         "count": 10,
-        "min_p95": 1.707,
-        "min_diesel": 1.729
+        "min_p95": 1.739,
+        "min_diesel": 1.739
       },
       {
         "name": "Tortosa",
         "slug": "tortosa",
         "count": 9,
-        "min_p95": 1.779,
-        "min_diesel": 1.759
+        "min_p95": 1.769,
+        "min_diesel": 1.769
       },
       {
         "name": "Vandellòs I L'Hospitalet De L'Infant",
         "slug": "vandellos-i-lhospitalet-de-linfant",
         "count": 9,
-        "min_p95": 1.709,
-        "min_diesel": 1.733
+        "min_p95": 1.745,
+        "min_diesel": 1.745
       },
       {
         "name": "Vendrell (El)",
@@ -3940,22 +3940,22 @@
         "name": "Cambrils",
         "slug": "cambrils",
         "count": 6,
-        "min_p95": 1.707,
-        "min_diesel": 1.732
+        "min_p95": 1.744,
+        "min_diesel": 1.744
       },
       {
         "name": "Deltebre",
         "slug": "deltebre",
         "count": 6,
-        "min_p95": 1.711,
-        "min_diesel": 1.734
+        "min_p95": 1.747,
+        "min_diesel": 1.747
       },
       {
         "name": "Montblanc",
         "slug": "montblanc",
         "count": 6,
-        "min_p95": 1.709,
-        "min_diesel": 1.733
+        "min_p95": 1.746,
+        "min_diesel": 1.746
       },
       {
         "name": "Vila-Seca",
@@ -3978,73 +3978,73 @@
     "slug": "teruel",
     "ccaa": "Aragón",
     "total_stations": 71,
-    "avg_gasolina95": 1.934,
-    "avg_diesel": 1.92,
-    "min_gasolina95": 1.71,
-    "min_diesel": 1.728,
+    "avg_gasolina95": 1.938,
+    "avg_diesel": 1.913,
+    "min_gasolina95": 1.72,
+    "min_diesel": 1.718,
     "top_municipalities": [
       {
         "name": "Teruel",
         "slug": "teruel",
         "count": 11,
-        "min_p95": 1.802,
-        "min_diesel": 1.79
+        "min_p95": 1.789,
+        "min_diesel": 1.769
       },
       {
         "name": "Alcañiz",
         "slug": "alcaniz",
         "count": 5,
-        "min_p95": 1.71,
-        "min_diesel": 1.743
+        "min_p95": 1.756,
+        "min_diesel": 1.756
       },
       {
         "name": "Cella",
         "slug": "cella",
         "count": 4,
         "min_p95": 1.837,
-        "min_diesel": 1.758
+        "min_diesel": 1.718
       },
       {
         "name": "Monreal Del Campo",
         "slug": "monreal-del-campo",
         "count": 4,
-        "min_p95": 1.779,
+        "min_p95": 1.809,
         "min_diesel": 1.769
       },
       {
         "name": "Andorra",
         "slug": "andorra",
         "count": 2,
-        "min_p95": 2.04,
-        "min_diesel": 1.998
+        "min_p95": 2.023,
+        "min_diesel": 1.965
       },
       {
         "name": "Calamocha",
         "slug": "calamocha",
         "count": 2,
         "min_p95": 1.869,
-        "min_diesel": 1.898
+        "min_diesel": 1.879
       },
       {
         "name": "Calanda",
         "slug": "calanda",
         "count": 2,
-        "min_p95": 1.849,
-        "min_diesel": 1.779
+        "min_p95": 1.879,
+        "min_diesel": 1.859
       },
       {
         "name": "Ferreruela De Huerva",
         "slug": "ferreruela-de-huerva",
         "count": 2,
-        "min_p95": 1.975,
+        "min_p95": 1.989,
         "min_diesel": 1.769
       },
       {
         "name": "Mas De Las Matas",
         "slug": "mas-de-las-matas",
         "count": 2,
-        "min_p95": 1.919,
-        "min_diesel": 1.939
+        "min_p95": 1.929,
+        "min_diesel": 1.949
       },
       {
         "name": "Valderrobres",
@@ -4057,15 +4057,15 @@
         "name": "Aguaviva",
         "slug": "aguaviva",
         "count": 1,
-        "min_p95": 1.969,
-        "min_diesel": 1.949
+        "min_p95": 1.989,
+        "min_diesel": 1.999
       },
       {
         "name": "Albalate Del Arzobispo",
         "slug": "albalate-del-arzobispo",
         "count": 1,
         "min_p95": 1.979,
-        "min_diesel": 2.008
+        "min_diesel": 1.993
       }
     ]
   },
@@ -4073,32 +4073,32 @@
     "name": "Toledo",
     "slug": "toledo",
     "ccaa": "Castilla-La Mancha",
-    "total_stations": 243,
-    "avg_gasolina95": 1.954,
-    "avg_diesel": 1.955,
+    "total_stations": 240,
+    "avg_gasolina95": 1.957,
+    "avg_diesel": 1.957,
     "min_gasolina95": 1.679,
     "min_diesel": 1.709,
     "top_municipalities": [
       {
         "name": "Talavera De La Reina",
         "slug": "talavera-de-la-reina",
-        "count": 24,
-        "min_p95": 1.729,
-        "min_diesel": 1.779
+        "count": 22,
+        "min_p95": 1.791,
+        "min_diesel": 1.786
       },
       {
         "name": "Toledo",
         "slug": "toledo",
-        "count": 18,
+        "count": 17,
         "min_p95": 1.879,
-        "min_diesel": 1.855
+        "min_diesel": 1.859
       },
       {
         "name": "Seseña",
         "slug": "sesena",
         "count": 11,
         "min_p95": 1.869,
-        "min_diesel": 1.859
+        "min_diesel": 1.879
       },
       {
         "name": "Illescas",
@@ -4111,36 +4111,36 @@
         "name": "Madridejos",
         "slug": "madridejos",
         "count": 8,
-        "min_p95": 1.809,
-        "min_diesel": 1.799
+        "min_p95": 1.829,
+        "min_diesel": 1.819
       },
       {
         "name": "Olías Del Rey",
         "slug": "olias-del-rey",
         "count": 6,
         "min_p95": 1.899,
-        "min_diesel": 1.865
+        "min_diesel": 1.879
       },
       {
         "name": "Torrijos",
         "slug": "torrijos",
         "count": 6,
-        "min_p95": 1.807,
-        "min_diesel": 1.827
+        "min_p95": 1.857,
+        "min_diesel": 1.867
       },
       {
         "name": "Casarrubios Del Monte",
         "slug": "casarrubios-del-monte",
         "count": 5,
-        "min_p95": 1.779,
-        "min_diesel": 1.779
+        "min_p95": 1.799,
+        "min_diesel": 1.799
       },
       {
         "name": "Mora",
         "slug": "mora",
         "count": 5,
         "min_p95": 1.899,
-        "min_diesel": 1.839
+        "min_diesel": 1.899
       },
       {
         "name": "Numancia De La Sagra",
@@ -4160,8 +4160,8 @@
         "name": "Cazalegas",
         "slug": "cazalegas",
         "count": 4,
-        "min_p95": 1.779,
-        "min_diesel": 1.799
+        "min_p95": 1.799,
+        "min_diesel": 1.819
       }
     ]
   },
@@ -4169,67 +4169,67 @@
     "name": "Valencia",
     "slug": "valencia",
     "ccaa": "Comunitat Valenciana",
-    "total_stations": 637,
-    "avg_gasolina95": 1.91,
-    "avg_diesel": 1.893,
+    "total_stations": 642,
+    "avg_gasolina95": 1.915,
+    "avg_diesel": 1.895,
     "min_gasolina95": 1.677,
-    "min_diesel": 1.695,
+    "min_diesel": 1.699,
     "top_municipalities": [
       {
         "name": "Valencia",
         "slug": "valencia",
         "count": 65,
-        "min_p95": 1.729,
-        "min_diesel": 1.695
+        "min_p95": 1.74,
+        "min_diesel": 1.769
       },
       {
         "name": "Sagunto/Sagunt",
         "slug": "saguntosagunt",
         "count": 26,
-        "min_p95": 1.749,
+        "min_p95": 1.769,
         "min_diesel": 1.759
       },
       {
         "name": "Paterna",
         "slug": "paterna",
         "count": 22,
-        "min_p95": 1.759,
-        "min_diesel": 1.738
+        "min_p95": 1.779,
+        "min_diesel": 1.745
       },
       {
         "name": "Riba-Roja De Túria",
         "slug": "riba-roja-de-turia",
         "count": 19,
-        "min_p95": 1.739,
-        "min_diesel": 1.775
+        "min_p95": 1.75,
+        "min_diesel": 1.799
       },
       {
         "name": "Torrent",
         "slug": "torrent",
         "count": 18,
         "min_p95": 1.795,
-        "min_diesel": 1.779
+        "min_diesel": 1.799
       },
       {
         "name": "Gandia",
         "slug": "gandia",
         "count": 17,
-        "min_p95": 1.797,
-        "min_diesel": 1.777
+        "min_p95": 1.887,
+        "min_diesel": 1.877
       },
       {
         "name": "Alzira",
         "slug": "alzira",
         "count": 14,
         "min_p95": 1.707,
-        "min_diesel": 1.737
+        "min_diesel": 1.757
       },
       {
         "name": "Quart De Poblet",
         "slug": "quart-de-poblet",
-        "count": 11,
+        "count": 12,
         "min_p95": 1.749,
-        "min_diesel": 1.767
+        "min_diesel": 1.755
       },
       {
         "name": "Llíria",
@@ -4242,7 +4242,7 @@
         "name": "Ontinyent",
         "slug": "ontinyent",
         "count": 10,
-        "min_p95": 1.759,
+        "min_p95": 1.757,
         "min_diesel": 1.777
       },
       {
@@ -4256,7 +4256,7 @@
         "name": "Sueca",
         "slug": "sueca",
         "count": 10,
-        "min_p95": 1.759,
+        "min_p95": 1.795,
         "min_diesel": 1.755
       }
     ]
@@ -4265,25 +4265,25 @@
     "name": "Valladolid",
     "slug": "valladolid",
     "ccaa": "Castilla y León",
-    "total_stations": 150,
+    "total_stations": 151,
     "avg_gasolina95": 1.955,
-    "avg_diesel": 1.948,
-    "min_gasolina95": 1.699,
-    "min_diesel": 1.699,
+    "avg_diesel": 1.945,
+    "min_gasolina95": 1.719,
+    "min_diesel": 1.719,
     "top_municipalities": [
       {
         "name": "Valladolid",
         "slug": "valladolid",
         "count": 53,
-        "min_p95": 1.799,
-        "min_diesel": 1.779
+        "min_p95": 1.819,
+        "min_diesel": 1.769
       },
       {
         "name": "Medina Del Campo",
         "slug": "medina-del-campo",
         "count": 8,
-        "min_p95": 1.699,
-        "min_diesel": 1.699
+        "min_p95": 1.719,
+        "min_diesel": 1.719
       },
       {
         "name": "Tordesillas",
@@ -4296,22 +4296,22 @@
         "name": "Arroyo De La Encomienda",
         "slug": "arroyo-de-la-encomienda",
         "count": 4,
-        "min_p95": 1.829,
-        "min_diesel": 1.797
+        "min_p95": 1.859,
+        "min_diesel": 1.827
       },
       {
         "name": "Peñafiel",
         "slug": "penafiel",
         "count": 4,
-        "min_p95": 1.859,
-        "min_diesel": 1.859
+        "min_p95": 1.829,
+        "min_diesel": 1.819
       },
       {
         "name": "Zaratán",
         "slug": "zaratan",
         "count": 4,
-        "min_p95": 1.819,
-        "min_diesel": 1.789
+        "min_p95": 1.849,
+        "min_diesel": 1.819
       },
       {
         "name": "Íscar",
@@ -4324,15 +4324,15 @@
         "name": "Laguna De Duero",
         "slug": "laguna-de-duero",
         "count": 3,
-        "min_p95": 1.829,
-        "min_diesel": 1.797
+        "min_p95": 1.859,
+        "min_diesel": 1.827
       },
       {
         "name": "Medina De Rioseco",
         "slug": "medina-de-rioseco",
         "count": 3,
-        "min_p95": 1.859,
-        "min_diesel": 1.848
+        "min_p95": 1.839,
+        "min_diesel": 1.829
       },
       {
         "name": "Mojados",
@@ -4352,8 +4352,8 @@
         "name": "Simancas",
         "slug": "simancas",
         "count": 3,
-        "min_p95": 2.059,
-        "min_diesel": 2.074
+        "min_p95": 2.069,
+        "min_diesel": 2.064
       }
     ]
   },
@@ -4362,94 +4362,94 @@
     "slug": "vizcaya",
     "ccaa": "País Vasco",
     "total_stations": 132,
-    "avg_gasolina95": 1.963,
-    "avg_diesel": 1.941,
-    "min_gasolina95": 1.697,
-    "min_diesel": 1.697,
+    "avg_gasolina95": 1.956,
+    "avg_diesel": 1.932,
+    "min_gasolina95": 1.717,
+    "min_diesel": 1.712,
     "top_municipalities": [
       {
         "name": "Bilbao",
         "slug": "bilbao",
         "count": 10,
         "min_p95": 1.999,
-        "min_diesel": 1.959
+        "min_diesel": 1.712
       },
       {
         "name": "Galdakao",
         "slug": "galdakao",
         "count": 6,
-        "min_p95": 1.839,
-        "min_diesel": 1.797
+        "min_p95": 1.819,
+        "min_diesel": 1.789
       },
       {
         "name": "Mungia",
         "slug": "mungia",
         "count": 6,
-        "min_p95": 1.819,
-        "min_diesel": 1.789
+        "min_p95": 1.799,
+        "min_diesel": 1.779
       },
       {
         "name": "Amorebieta-Etxano",
         "slug": "amorebieta-etxano",
         "count": 5,
-        "min_p95": 2.029,
-        "min_diesel": 2.015
+        "min_p95": 2.035,
+        "min_diesel": 2.005
       },
       {
         "name": "Barakaldo",
         "slug": "barakaldo",
         "count": 5,
-        "min_p95": 1.859,
-        "min_diesel": 1.849
+        "min_p95": 1.794,
+        "min_diesel": 1.794
       },
       {
         "name": "Basauri",
         "slug": "basauri",
         "count": 5,
-        "min_p95": 1.815,
-        "min_diesel": 1.795
+        "min_p95": 1.777,
+        "min_diesel": 1.766
       },
       {
         "name": "Erandio",
         "slug": "erandio",
         "count": 5,
-        "min_p95": 1.999,
-        "min_diesel": 1.944
+        "min_p95": 1.994,
+        "min_diesel": 1.949
       },
       {
         "name": "Sestao",
         "slug": "sestao",
         "count": 5,
-        "min_p95": 1.999,
-        "min_diesel": 1.989
+        "min_p95": 1.899,
+        "min_diesel": 1.899
       },
       {
         "name": "Abanto Y Ciérvana-Abanto Zierbena",
         "slug": "abanto-y-ciervana-abanto-zierbena",
         "count": 4,
-        "min_p95": 2.019,
+        "min_p95": 2.025,
         "min_diesel": 1.999
       },
       {
         "name": "Iurreta",
         "slug": "iurreta",
         "count": 4,
-        "min_p95": 1.859,
-        "min_diesel": 1.839
+        "min_p95": 1.869,
+        "min_diesel": 1.859
       },
       {
         "name": "Leioa",
         "slug": "leioa",
         "count": 4,
-        "min_p95": 1.969,
-        "min_diesel": 1.904
+        "min_p95": 1.959,
+        "min_diesel": 2.059
       },
       {
         "name": "Santurtzi",
         "slug": "santurtzi",
         "count": 4,
-        "min_p95": 1.887,
-        "min_diesel": 1.877
+        "min_p95": 1.819,
+        "min_diesel": 1.819
       }
     ]
   },
@@ -4458,38 +4458,38 @@
     "slug": "zamora",
     "ccaa": "Castilla y León",
     "total_stations": 86,
-    "avg_gasolina95": 1.965,
-    "avg_diesel": 1.957,
-    "min_gasolina95": 1.763,
-    "min_diesel": 1.773,
+    "avg_gasolina95": 1.96,
+    "avg_diesel": 1.954,
+    "min_gasolina95": 1.779,
+    "min_diesel": 1.75,
     "top_municipalities": [
       {
         "name": "Zamora",
         "slug": "zamora",
         "count": 15,
-        "min_p95": 1.763,
-        "min_diesel": 1.773
+        "min_p95": 1.786,
+        "min_diesel": 1.76
       },
       {
         "name": "Benavente",
         "slug": "benavente",
         "count": 14,
-        "min_p95": 1.809,
-        "min_diesel": 1.787
+        "min_p95": 1.829,
+        "min_diesel": 1.799
       },
       {
         "name": "Toro",
         "slug": "toro",
         "count": 5,
         "min_p95": 1.859,
-        "min_diesel": 1.787
+        "min_diesel": 1.817
       },
       {
         "name": "Villalpando",
         "slug": "villalpando",
         "count": 4,
-        "min_p95": 1.83,
-        "min_diesel": 1.79
+        "min_p95": 1.81,
+        "min_diesel": 1.76
       },
       {
         "name": "Bóveda De Toro (La)",
@@ -4503,49 +4503,49 @@
         "slug": "cobreros",
         "count": 2,
         "min_p95": 2.019,
-        "min_diesel": 2.035
+        "min_diesel": 2.025
       },
       {
         "name": "Corrales",
         "slug": "corrales",
         "count": 2,
         "min_p95": 1.829,
-        "min_diesel": 1.787
+        "min_diesel": 1.799
       },
       {
         "name": "Granja De Moreruela",
         "slug": "granja-de-moreruela",
         "count": 2,
         "min_p95": 1.995,
-        "min_diesel": 2.025
+        "min_diesel": 2.015
       },
       {
         "name": "Monfarracinos",
         "slug": "monfarracinos",
         "count": 2,
-        "min_p95": 2.038,
-        "min_diesel": 2.045
+        "min_p95": 2.015,
+        "min_diesel": 2.025
       },
       {
         "name": "Quintanilla De Urz",
         "slug": "quintanilla-de-urz",
         "count": 2,
-        "min_p95": 2.049,
-        "min_diesel": 2.049
+        "min_p95": 2.039,
+        "min_diesel": 2.059
       },
       {
         "name": "San Cristóbal De Entreviñas",
         "slug": "san-cristobal-de-entrevinas",
         "count": 2,
-        "min_p95": 1.819,
-        "min_diesel": 1.786
+        "min_p95": 1.779,
+        "min_diesel": 1.75
       },
       {
         "name": "Torre Del Valle (La)",
         "slug": "torre-del-valle-la",
         "count": 2,
-        "min_p95": 2.009,
-        "min_diesel": 2.075
+        "min_p95": 2.019,
+        "min_diesel": 2.059
       }
     ]
   },
@@ -4554,73 +4554,73 @@
     "slug": "zaragoza",
     "ccaa": "Aragón",
     "total_stations": 234,
-    "avg_gasolina95": 1.94,
-    "avg_diesel": 1.927,
-    "min_gasolina95": 1.708,
-    "min_diesel": 1.706,
+    "avg_gasolina95": 1.941,
+    "avg_diesel": 1.924,
+    "min_gasolina95": 1.749,
+    "min_diesel": 1.739,
     "top_municipalities": [
       {
         "name": "Zaragoza",
         "slug": "zaragoza",
         "count": 75,
-        "min_p95": 1.715,
+        "min_p95": 1.749,
         "min_diesel": 1.739
       },
       {
         "name": "Calatayud",
         "slug": "calatayud",
         "count": 9,
-        "min_p95": 1.721,
-        "min_diesel": 1.745
+        "min_p95": 1.758,
+        "min_diesel": 1.757
       },
       {
         "name": "Ejea De Los Caballeros",
         "slug": "ejea-de-los-caballeros",
         "count": 7,
-        "min_p95": 1.764,
-        "min_diesel": 1.772
-      },
-      {
-        "name": "Tauste",
-        "slug": "tauste",
-        "count": 6,
-        "min_p95": 1.717,
-        "min_diesel": 1.706
+        "min_p95": 1.779,
+        "min_diesel": 1.769
       },
       {
         "name": "Utebo",
         "slug": "utebo",
         "count": 6,
-        "min_p95": 1.716,
-        "min_diesel": 1.74
+        "min_p95": 1.753,
+        "min_diesel": 1.753
       },
       {
         "name": "Alagón",
         "slug": "alagon",
         "count": 5,
-        "min_p95": 1.779,
-        "min_diesel": 1.787
+        "min_p95": 1.789,
+        "min_diesel": 1.796
       },
       {
         "name": "Almunia De Doña Godina (La)",
         "slug": "almunia-de-dona-godina-la",
         "count": 5,
-        "min_p95": 1.899,
-        "min_diesel": 1.839
+        "min_p95": 1.939,
+        "min_diesel": 1.889
+      },
+      {
+        "name": "Calatorao",
+        "slug": "calatorao",
+        "count": 5,
+        "min_p95": 1.939,
+        "min_diesel": 1.869
       },
       {
         "name": "Caspe",
         "slug": "caspe",
         "count": 5,
-        "min_p95": 1.718,
-        "min_diesel": 1.742
+        "min_p95": 1.749,
+        "min_diesel": 1.754
       },
       {
         "name": "Épila",
         "slug": "epila",
         "count": 5,
-        "min_p95": 1.718,
-        "min_diesel": 1.743
+        "min_p95": 1.755,
+        "min_diesel": 1.755
       },
       {
         "name": "Muela (La)",
@@ -4630,18 +4630,18 @@
         "min_diesel": 1.808
       },
       {
+        "name": "Tauste",
+        "slug": "tauste",
+        "count": 5,
+        "min_p95": 1.754,
+        "min_diesel": 1.754
+      },
+      {
         "name": "Alfajarín",
         "slug": "alfajarin",
         "count": 4,
         "min_p95": 1.849,
         "min_diesel": 1.879
-      },
-      {
-        "name": "Calatorao",
-        "slug": "calatorao",
-        "count": 4,
-        "min_p95": 1.939,
-        "min_diesel": 1.979
       }
     ]
   },
@@ -4649,74 +4649,81 @@
     "name": "Álava",
     "slug": "alava",
     "ccaa": "País Vasco",
-    "total_stations": 74,
-    "avg_gasolina95": 1.949,
-    "avg_diesel": 1.948,
-    "min_gasolina95": 1.767,
+    "total_stations": 75,
+    "avg_gasolina95": 1.945,
+    "avg_diesel": 1.946,
+    "min_gasolina95": 1.759,
     "min_diesel": 1.759,
     "top_municipalities": [
       {
         "name": "Vitoria-Gasteiz",
         "slug": "vitoria-gasteiz",
         "count": 39,
-        "min_p95": 1.767,
+        "min_p95": 1.769,
         "min_diesel": 1.759
       },
       {
         "name": "Ribera Baja/Erribera Beitia",
         "slug": "ribera-bajaerribera-beitia",
         "count": 5,
-        "min_p95": 1.809,
-        "min_diesel": 1.809
+        "min_p95": 1.759,
+        "min_diesel": 1.8
       },
       {
         "name": "San Millán/Donemiliaga",
         "slug": "san-millandonemiliaga",
         "count": 4,
         "min_p95": 1.998,
-        "min_diesel": 1.969
+        "min_diesel": 1.999
       },
       {
         "name": "Amurrio",
         "slug": "amurrio",
         "count": 3,
-        "min_p95": 1.779,
-        "min_diesel": 1.799
+        "min_p95": 1.799,
+        "min_diesel": 1.819
       },
       {
         "name": "Iruña Oka/Iruña De Oca",
         "slug": "iruna-okairuna-de-oca",
         "count": 3,
-        "min_p95": 1.869,
-        "min_diesel": 1.799
+        "min_p95": 1.809,
+        "min_diesel": 1.789
       },
       {
         "name": "Salvatierra/Agurain",
         "slug": "salvatierraagurain",
         "count": 3,
-        "min_p95": 1.899,
-        "min_diesel": 1.849
+        "min_p95": 1.894,
+        "min_diesel": 1.844
       },
       {
         "name": "Zuia",
         "slug": "zuia",
         "count": 3,
         "min_p95": 2.049,
-        "min_diesel": 2.045
+        "min_diesel": 2.035
+      },
+      {
+        "name": "Arrazua-Ubarrundia",
+        "slug": "arrazua-ubarrundia",
+        "count": 2,
+        "min_p95": 2.029,
+        "min_diesel": 2.044
       },
       {
         "name": "Llodio",
         "slug": "llodio",
         "count": 2,
-        "min_p95": 1.835,
-        "min_diesel": 1.815
+        "min_p95": 1.789,
+        "min_diesel": 1.769
       },
       {
         "name": "Alegría-Dulantzi",
         "slug": "alegria-dulantzi",
         "count": 1,
-        "min_p95": 2.069,
-        "min_diesel": 2.069
+        "min_p95": 2.059,
+        "min_diesel": 2.059
       },
       {
         "name": "Arraia-Maeztu",
@@ -4724,13 +4731,6 @@
         "count": 1,
         "min_p95": 1.94,
         "min_diesel": 1.84
-      },
-      {
-        "name": "Arrazua-Ubarrundia",
-        "slug": "arrazua-ubarrundia",
-        "count": 1,
-        "min_p95": 2.029,
-        "min_diesel": 2.095
       },
       {
         "name": "Artziniega",
@@ -4746,17 +4746,17 @@
     "slug": "avila",
     "ccaa": "Castilla y León",
     "total_stations": 70,
-    "avg_gasolina95": 1.972,
-    "avg_diesel": 1.985,
-    "min_gasolina95": 1.839,
-    "min_diesel": 1.849,
+    "avg_gasolina95": 1.976,
+    "avg_diesel": 1.988,
+    "min_gasolina95": 1.859,
+    "min_diesel": 1.829,
     "top_municipalities": [
       {
         "name": "Ávila",
         "slug": "avila",
         "count": 18,
-        "min_p95": 1.839,
-        "min_diesel": 1.849
+        "min_p95": 1.859,
+        "min_diesel": 1.859
       },
       {
         "name": "Arévalo",
@@ -4776,14 +4776,14 @@
         "name": "Candeleda",
         "slug": "candeleda",
         "count": 3,
-        "min_p95": 1.945,
-        "min_diesel": 1.999
+        "min_p95": 1.975,
+        "min_diesel": 2.039
       },
       {
         "name": "Adanero",
         "slug": "adanero",
         "count": 2,
-        "min_p95": 1.989,
+        "min_p95": 1.999,
         "min_diesel": 2.044
       },
       {
@@ -4805,7 +4805,7 @@
         "slug": "madrigal-de-las-altas-torres",
         "count": 2,
         "min_p95": 2.039,
-        "min_diesel": 1.849
+        "min_diesel": 1.829
       },
       {
         "name": "Muñana",
@@ -4825,15 +4825,15 @@
         "name": "Piedrahíta",
         "slug": "piedrahita",
         "count": 2,
-        "min_p95": 1.975,
-        "min_diesel": 2.029
+        "min_p95": 1.969,
+        "min_diesel": 1.999
       },
       {
         "name": "San Pedro Del Arroyo",
         "slug": "san-pedro-del-arroyo",
         "count": 2,
-        "min_p95": 2.019,
-        "min_diesel": 2.039
+        "min_p95": 2.039,
+        "min_diesel": 2.049
       }
     ]
   }
